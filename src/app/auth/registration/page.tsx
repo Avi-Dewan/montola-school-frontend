@@ -5,47 +5,73 @@ import { register } from "@/lib/auth";
 
 export default function RegisterPage() {
     const [email, setEmail] = useState("");
+    const [phone, setPhone] = useState(""); // optional
     const [password, setPassword] = useState("");
     const [role, setRole] = useState<"ADMIN" | "STUDENT">("STUDENT");
-    const [error, setError] = useState("");
+    const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setErrors({});
+
         try {
-            await register(email, password, [role]);
-            router.push("/auth/login");
-        } catch (err) {
-            setError("Failed to register");
+            res = await register(email, password, [role], phone || null);
+
+            console.log(res)
+
+            router.push("/auth/check-email?email=" + encodeURIComponent(email));
+
+        } catch (err: any) {
+
+            setErrors({ general: "Failed to register" });
+
+            console.log(err)
+
+            const data = err?.response?.data;
+
+            if (data?.fieldErrors) {
+                setErrors(data.fieldErrors);
+
+            }
         }
     };
 
     return (
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
-            <form
-                onSubmit={handleSubmit}
-                className="bg-white shadow-lg p-8 rounded-xl w-96"
-            >
+            <form className="bg-white shadow-lg p-8 rounded-xl w-96" onSubmit={handleSubmit}>
                 <h1 className="text-2xl font-bold mb-6">Register</h1>
-                {error && <p className="text-red-500 mb-3">{error}</p>}
+
+                {errors.general && <p className="text-red-500 mb-3">{errors.general}</p>}
 
                 <input
                     type="email"
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full mb-4 p-2 border rounded"
+                    className="w-full mb-2 p-2 border rounded"
                     required
                 />
+                {errors.email && <p className="text-red-500 mb-2">{errors.email}</p>}
+
+                <input
+                    type="text"
+                    placeholder="Phone (optional)"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="w-full mb-2 p-2 border rounded"
+                />
+                {errors.phone && <p className="text-red-500 mb-2">{errors.phone}</p>}
 
                 <input
                     type="password"
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full mb-4 p-2 border rounded"
+                    className="w-full mb-2 p-2 border rounded"
                     required
                 />
+                {errors.password && <p className="text-red-500 mb-2">{errors.password}</p>}
 
                 <select
                     value={role}

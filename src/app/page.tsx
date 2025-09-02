@@ -10,14 +10,12 @@ import Footer from "@/components/Footer";
 export default function HomePage() {
     return (
         <main>
-            <Navbar />
             <Hero />
             <ValueProps />
             <FeaturedCourses />
             <TeacherSpotlight />
             <Testimonials />
             <Pricing />
-            <Footer />
         </main>
     );
 }
