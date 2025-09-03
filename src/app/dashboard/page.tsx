@@ -28,6 +28,7 @@ export default function DashboardPage() {
             try {
                 const res = await api.get<User[]>("/users");
                 setUsers(res.data);
+
             } catch (err: any) {
                 setError(err.response?.data?.message || "Failed to fetch users");
             }

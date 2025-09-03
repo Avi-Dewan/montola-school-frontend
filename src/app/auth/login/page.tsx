@@ -16,7 +16,7 @@ export default function LoginPage() {
             const res = await login(email, password)
             console.log(res)
 
-            localStorage.setItem("token", res.data.token);
+            localStorage.setItem("accessToken", res.data.token);
 
             router.push("/dashboard");
 
