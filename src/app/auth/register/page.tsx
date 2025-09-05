@@ -2,6 +2,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { register } from "@/lib/auth";
+import { useI18n } from "@/contexts/I18nProvider";
+import { Alert } from "@/components/Alert";
+import { toast } from "react-toastify";
 
 export default function RegisterPage() {
     const [email, setEmail] = useState("");
@@ -9,7 +12,10 @@ export default function RegisterPage() {
     const [password, setPassword] = useState("");
     const [role, setRole] = useState<"ADMIN" | "STUDENT">("STUDENT");
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
+    const [loading, setLoading] = useState(false);
+
     const router = useRouter();
+    const { t } = useI18n();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -79,6 +85,8 @@ export default function RegisterPage() {
                     className="w-full mb-4 p-2 border rounded"
                 >
                     <option value="STUDENT">Student</option>
+                    <option value="TEACHER">Teacher</option>
+                    <option value="MANAGER">MANAGER</option>
                     <option value="ADMIN">Admin</option>
                 </select>
 

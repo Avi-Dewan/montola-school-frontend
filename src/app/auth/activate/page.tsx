@@ -2,15 +2,20 @@
 import { useEffect, useState } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { activateAccount, resendActivationToken } from "@/lib/auth";
+import { useI18n }from "@/contexts/I18nProvider"
+import { toast } from "react-toastify";
+import { Alert } from "@/components/Alert";
 
 export default function ActivatePage() {
     const searchParams = useSearchParams();
     const router = useRouter();
+    const { t } = useI18n();
 
     const email = searchParams.get("email") || "";
     const token = searchParams.get("token") || "";
 
-    const [message, setMessage] = useState("Activating your account...");
+    const [message, setMessage] = useState(t("auth.activating"));
+    const [alertType, setAlertType] = useState<"info" | "success" | "error">("info");
     const [showResend, setShowResend] = useState(false);
     const [showRegister, setShowRegister] = useState(false);
 
@@ -19,7 +24,10 @@ export default function ActivatePage() {
             try {
                 await activateAccount(email, token);
 
-                setMessage("✅ Account activated successfully! Redirecting to login...");
+                setAlertType("success");
+                setMessage(t("auth.activationSuccess"));
+                toast.success(t("auth.activationSuccess"));
+
                 setTimeout(() => router.push("/auth/login"), 2000);
 
             } catch (err: any) {
@@ -29,20 +37,24 @@ export default function ActivatePage() {
                 const status = errorData?.status;
                 const msg = errorData?.message;
 
+                setAlertType("error");
+
                 if (status === 400 && msg === "Verification token expired") {
-                    setMessage("⏳ Activation token expired. You can resend the activation link.");
+                    setMessage(t("auth.activationExpired"));
                     setShowResend(true);
 
                 } else if (status === 409 && msg === "No verification token found") {
-                    setMessage("⚠️ No verification token found. Please register again.");
+                    setMessage(t("auth.activationFailed"));
                     setShowRegister(true);
 
                 } else if (status === 409 && msg === "User is already verified") {
-                    setMessage("ℹ️ Account already activated. Redirecting to login...");
+                    setAlertType("success");
+                    setMessage(t("auth.activationAlreadyDone"));
+                    toast.info(t("auth.activationAlreadyDone"));
                     setTimeout(() => router.push("/auth/login"), 2000);
 
                 } else {
-                    setMessage(msg || "❌ Activation failed. Please try again.");
+                    setMessage(msg || t("auth.activationFailed"));
                 }
             }
         };
@@ -52,9 +64,13 @@ export default function ActivatePage() {
     const handleResend = async () => {
         try {
             await resendActivationToken(email);
+            toast.success(t("auth.resendSuccess"));
             router.push("/auth/check-email?email=" + encodeURIComponent(email));
+
         } catch (err) {
-            setMessage("❌ Failed to resend token. Please try again later.");
+            setAlertType("error");
+            setMessage(t("auth.resendFailed"));
+            toast.error(t("auth.resendFailed"));
         }
     };
 
@@ -62,14 +78,14 @@ export default function ActivatePage() {
         <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100">
             <div className="bg-white p-8 rounded-xl shadow-lg w-96 text-center">
 
-                <p className="mb-4">{message}</p>
+                <Alert type={alertType} message={message} />
 
                 {showResend && (
                     <button
                         onClick={handleResend}
                         className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
                     >
-                        Resend Activation Link
+                        {t("auth.resendActivation")}
                     </button>
                 )}
 
@@ -78,7 +94,7 @@ export default function ActivatePage() {
                         onClick={() => router.push("/auth/register")}
                         className="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700"
                     >
-                        Go to Register
+                        {t("auth.goToRegister")}
                     </button>
                 )}
 

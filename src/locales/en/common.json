@@ -1,0 +1,92 @@
+{
+  "nav": {
+    "home": "Home",
+    "courses": "Courses",
+    "teachers": "Teachers",
+    "pricing": "Pricing",
+    "about": "About Us"
+  },
+
+  "auth": {
+    "login": "Log In",
+    "register": "Register",
+    "logout": "Logout",
+
+    "loginSuccess": "Logged in successfully",
+    "logoutSuccess": "Logged out successfully",
+    "passwordPolicy": "Password must be at least 5 characters long and include at least one letter and one number",
+
+    "invalidEmail": "Please enter a valid email address",
+    "registrationFailed": "Failed to register",
+    "registrationSuccess": "Registration successful! Please check your email to activate your account.",
+
+    "verifyEmailTitle": "Verify Your Email",
+    "verifyEmailMessage": "A verification link has been sent to {{email}}. Please verify within 15 minutes.",
+
+    "activating": "Activating your account...",
+    "resendFailed": "Failed to resend token. Please try again later.",
+    "resendActivation": "Resend Activation Link",
+    "activationSuccess": "Account activated successfully! Redirecting to login...",
+    "activationExpired": "Activation token expired. You can resend the activation link.",
+    "activationAlreadyDone": "Account already activated. Redirecting to login...",
+    "activationFailed": "Activation failed. Please try again.",
+
+
+    "goToLogin": "Go to Login",
+    "goToRegister": "Go to Register",
+
+    "invalidCredentials": "Invalid username or password",
+    "sessionExpired": "Your session has expired. Please log in again."
+  },
+
+  "roles": {
+    "student": "Student",
+    "teacher": "Teacher",
+    "manager": "Manager",
+    "admin": "Admin"
+  },
+
+
+  "form": {
+    "user": {
+      "email": "Email",
+      "phone": "Phone (optional)",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "firstName": "First Name",
+      "lastName": "Last Name"
+    },
+    "course": {
+      "title": "Course Title",
+      "description": "Description",
+      "price": "Price",
+      "enroll": "Enroll Now"
+    },
+    "package": {
+      "name": "Package Name",
+      "description": "Description",
+      "price": "Price"
+    }
+  },
+
+  "messages": {
+    "loading": "Loading...",
+    "error": "Something went wrong. Please try again later.",
+    "success": "Operation completed successfully."
+  },
+
+  "course": {
+    "title": "Courses",
+    "noCourses": "No courses available."
+  },
+
+  "teacher": {
+    "title": "Teachers",
+    "noTeachers": "No teachers available."
+  },
+
+  "student": {
+    "title": "Students",
+    "noStudents": "No students available."
+  }
+}

@@ -1,28 +1,62 @@
 "use client";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/lib/auth";
+import { useI18n } from "@/contexts/I18nProvider";
+import { Alert } from "@/components/Alert";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
+    const [errors, setErrors] = useState<{ email?: string; password?: string; general?: string }>({});
+    const [loading, setLoading] = useState(false);
+
     const router = useRouter();
+    const { t } = useI18n();
+
+    // simple validation before submit
+    const validate = () => {
+        const newErrors: { email?: string; password?: string } = {};
+
+        if (!email) {
+            newErrors.email = t("form.user.email") + " is required";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            newErrors.email = t("form.user.email") + " is invalid";
+        }
+
+        if (!password) {
+            newErrors.password = t("form.user.password") + " is required";
+        } else if (!/^(?=.*[A-Za-z])(?=.*\d).{5,}$/.test(password)) {
+            newErrors.password = t("auth.passwordPolicy");
+        }
+
+        setErrors(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        try {
-            const res = await login(email, password)
-            console.log(res)
+        if (!validate()) return;
 
+        setLoading(true);
+        setErrors({});
+
+        try {
+            const res = await login(email, password);
             localStorage.setItem("accessToken", res.data.token);
 
+            toast.success(t("auth.loginSuccess"));
             router.push("/dashboard");
 
         } catch (err) {
-            console.log(err)
-            setError("Invalid credentials");
+            console.error(err);
+            setErrors({ general: t("auth.invalidCredentials") });
+
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -32,35 +66,41 @@ export default function LoginPage() {
                 onSubmit={handleSubmit}
                 className="bg-white shadow-lg p-8 rounded-xl w-96"
             >
-                <h1 className="text-2xl font-bold mb-6">Login</h1>
+                <h1 className="text-2xl font-bold mb-6">{t("auth.login")}</h1>
 
-                {error && <p className="text-red-500 mb-3">{error}</p>}
+                {errors.general && <Alert type="error" message={errors.general} />}
 
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full mb-4 p-2 border rounded"
-                    required
-                />
+                <div className="mb-4">
+                    <input
+                        type="email"
+                        placeholder={t("form.user.email")}
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full p-2 border rounded"
+                    />
+                    {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
+                </div>
 
-                <input
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full mb-4 p-2 border rounded"
-                    required
-                />
+                <div className="mb-4">
+                    <input
+                        type="password"
+                        placeholder={t("form.user.password")}
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full p-2 border rounded"
+                    />
+                    {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                </div>
 
                 <button
                     type="submit"
-                    className="w-full bg-blue-600 text-white p-2 rounded hover:bg-blue-700"
+                    disabled={loading}
+                    className={`w-full p-2 rounded text-white ${
+                        loading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
+                    }`}
                 >
-                    Login
+                    {loading ? t("messages.loading") : t("auth.login")}
                 </button>
-
             </form>
         </div>
     );

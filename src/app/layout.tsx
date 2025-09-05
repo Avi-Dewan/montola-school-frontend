@@ -2,6 +2,8 @@
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import { AuthProvider } from "@/contexts/AuthContext";
+import { I18nProvider } from "@/contexts/I18nProvider";
 
 export const metadata = {
   title: "Montola School",
@@ -16,11 +18,16 @@ export default function RootLayout({
   return (
       <html lang="en">
       <body>
-          <Navbar />
+          <AuthProvider>
+              <I18nProvider>
 
-          <main>{children}</main>
+                  <Navbar />
+                  <main>{children}</main>
+                  <Footer />
 
-          <Footer />
+              </I18nProvider>
+
+          </AuthProvider>
       </body>
       </html>
   );
