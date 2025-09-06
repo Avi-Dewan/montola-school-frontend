@@ -7,8 +7,8 @@ type AuthContextType = {
     isLoggedIn: boolean;
     accessToken: string | null;
     refreshToken: string | null;
-    login: (tokens: { accessToken: string; refreshToken: string }) => void;
-    logout: () => void;
+    setAuthTokens: (tokens: { accessToken: string; refreshToken: string }) => void;
+    removeAuthTokens: () => void;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -16,23 +16,34 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [accessToken, setAccessToken] = useState<string | null>(null);
     const [refreshToken, setRefreshToken] = useState<string | null>(null);
+    const [isLoading, setIsLoading] = useState(true);
+
     const router = useRouter();
 
     useEffect(() => {
-        const storedAccess = localStorage.getItem("accessToken");
-        const storedRefresh = localStorage.getItem("refreshToken");
-        setAccessToken(storedAccess);
-        setRefreshToken(storedRefresh);
+        try {
+            const storedAccess = localStorage.getItem("accessToken");
+            const storedRefresh = localStorage.getItem("refreshToken");
+
+            setAccessToken(storedAccess);
+            setRefreshToken(storedRefresh);
+
+        } catch (error) {
+            console.error("Failed to load tokens from localStorage:", error);
+
+        } finally {
+            setIsLoading(false); // Always set loading to false when done
+        }
     }, []);
 
-    const login = ({ accessToken, refreshToken }: { accessToken: string; refreshToken: string }) => {
+    const setAuthTokens = ({ accessToken, refreshToken }: { accessToken: string; refreshToken: string }) => {
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
         setAccessToken(accessToken);
         setRefreshToken(refreshToken);
     };
 
-    const logout = () => {
+    const removeAuthTokens = () => {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         setAccessToken(null);
@@ -43,10 +54,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     return (
         <AuthContext.Provider
-            value={{ isLoggedIn: !!accessToken, accessToken, refreshToken, login, logout }}
+            value={{
+                isLoggedIn: !!accessToken,
+                isLoading,
+                accessToken,
+                refreshToken,
+                setAuthTokens,
+                removeAuthTokens
+            }}
         >
             {children}
-         </AuthContext.Provider>
+        </AuthContext.Provider>
     );
 
 }

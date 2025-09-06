@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { login } from "@/lib/auth";
 import { useI18n } from "@/contexts/I18nProvider";
+import { useAuth } from "@/contexts/AuthContext";
 import { Alert } from "@/components/Alert";
 import { toast } from "react-toastify";
 
@@ -15,6 +16,7 @@ export default function LoginPage() {
 
     const router = useRouter();
     const { t } = useI18n();
+    const { setAuthTokens } = useAuth();
 
     // simple validation before submit
     const validate = () => {
@@ -28,11 +30,13 @@ export default function LoginPage() {
 
         if (!password) {
             newErrors.password = t("form.user.password") + " is required";
+
         } else if (!/^(?=.*[A-Za-z])(?=.*\d).{5,}$/.test(password)) {
             newErrors.password = t("auth.passwordPolicy");
         }
 
         setErrors(newErrors);
+
         return Object.keys(newErrors).length === 0;
     };
 
@@ -46,7 +50,11 @@ export default function LoginPage() {
 
         try {
             const res = await login(email, password);
-            localStorage.setItem("accessToken", res.data.token);
+
+            setAuthTokens({
+                accessToken: res.data.token,
+                refreshToken: res.data.refreshToken || res.data.token // Adjust based on your API response
+            });
 
             toast.success(t("auth.loginSuccess"));
             router.push("/dashboard");
@@ -71,24 +79,34 @@ export default function LoginPage() {
                 {errors.general && <Alert type="error" message={errors.general} />}
 
                 <div className="mb-4">
+                    <label className="block mb-1 font-semibold">
+                        {t("form.user.email")} <span className="text-red-500">*</span>
+                    </label>
+
                     <input
                         type="email"
-                        placeholder={t("form.user.email")}
+                        placeholder={t("form.user.emailPlaceholder")}
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="w-full p-2 border rounded"
                     />
+
                     {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                 </div>
 
                 <div className="mb-4">
+                    <label className="block mb-1 font-semibold">
+                        {t("form.user.password")} <span className="text-red-500">*</span>
+                    </label>
+
                     <input
                         type="password"
-                        placeholder={t("form.user.password")}
+                        placeholder={t("form.user.passwordPlaceholder")}
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         className="w-full p-2 border rounded"
                     />
+
                     {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
                 </div>
 

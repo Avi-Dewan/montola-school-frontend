@@ -43,19 +43,22 @@ export default function ActivatePage() {
                     setMessage(t("auth.activationExpired"));
                     setShowResend(true);
 
-                } else if (status === 409 && msg === "No verification token found") {
-                    setMessage(t("auth.activationFailed"));
-                    setShowRegister(true);
-
                 } else if (status === 409 && msg === "User is already verified") {
                     setAlertType("success");
                     setMessage(t("auth.activationAlreadyDone"));
                     toast.info(t("auth.activationAlreadyDone"));
+
                     setTimeout(() => router.push("/auth/login"), 2000);
+
+                } else if (status === 409 && msg === "No verification token found") {
+                    setMessage(t("auth.activationFailed"));
+
+                    setShowRegister(true);
 
                 } else {
                     setMessage(msg || t("auth.activationFailed"));
                 }
+
             }
         };
         activate();
