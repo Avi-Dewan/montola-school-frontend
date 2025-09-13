@@ -14,6 +14,7 @@ export default function ResetPasswordPage() {
     const [loading, setLoading] = useState(false);
     const [tokenExpired, setTokenExpired] = useState(false);
     const [resendLoading, setResendLoading] = useState(false);
+    const [linkResent, setLinkResent] = useState(false);
 
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -56,7 +57,8 @@ export default function ResetPasswordPage() {
         try {
             await resetPassword(email, token, newPassword);
             toast.success(t("auth.passwordResetSuccess"));
-            router.push("/auth/login");
+
+            setTimeout(() => router.push("/auth/login"), 2000);
 
         } catch (err: any) {
             console.error(err);
@@ -86,7 +88,8 @@ export default function ResetPasswordPage() {
             await requestPasswordReset(email);
             toast.success(t("auth.resetResent"));
 
-
+            setLinkResent(true);
+            setErrors({})
 
         } catch (err) {
             toast.error(t("auth.resetResendFailed"));
@@ -145,17 +148,26 @@ export default function ResetPasswordPage() {
                     </>
                 ) : (
                     <div className="flex flex-col gap-4">
-                        <p className="text-gray-700 text-sm text-center">{t("auth.resetTokenExpiredInfo")}</p>
-                        <button
-                            type="button"
-                            onClick={handleResend}
-                            disabled={resendLoading}
-                            className={`w-full p-2 rounded text-white ${
-                                resendLoading ? "bg-green-400" : "bg-green-600 hover:bg-green-700"
-                            }`}
-                        >
-                            {resendLoading ? t("messages.loading") : t("auth.resendReset")}
-                        </button>
+                        {!linkResent ? (
+                            <>
+                                <p className="text-gray-700 text-sm text-center">{t("auth.resetTokenExpiredInfo")}</p>
+                                <button
+                                    type="button"
+                                    onClick={handleResend}
+                                    disabled={resendLoading}
+                                    className={`w-full p-2 rounded text-white ${
+                                        resendLoading ? "bg-green-400" : "bg-green-600 hover:bg-green-700"
+                                    }`}
+                                >
+                                    {resendLoading ? t("messages.loading") : t("auth.resendReset")}
+                                </button>
+                            </>
+                        ) : (
+                            <Alert
+                                type="success"
+                                message={t("auth.resetLinkSentCheckEmail")}
+                            />
+                        )}
                     </div>
                 )}
 

@@ -57,7 +57,7 @@ export default function RegisterPage() {
         setLoading(true);
 
         try {
-            res = await register(email, password, [role], phone || null);
+            const res = await register(email, password, [role], phone || null);
             console.log(res)
 
             toast.success(t("auth.registrationSuccess"));
@@ -92,15 +92,6 @@ export default function RegisterPage() {
                 <h1 className="text-2xl font-bold mb-6">Register</h1>
 
                 {errors.general && <Alert type="error" message={errors.general} />}
-
-                {errors.general === t("auth.alreadyRegistered") && (
-                    <p className="text-sm text-gray-600 mb-3">
-                        {t("auth.alreadyRegistered")}{" "}
-                        <a href="/auth/login" className="text-green-600 hover:underline">
-                            {t("auth.login")}
-                        </a>
-                    </p>
-                )}
 
                 {/* Email */}
                 <label className="block mb-1 font-semibold">
