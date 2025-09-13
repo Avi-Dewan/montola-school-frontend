@@ -11,6 +11,7 @@
     "login": "Log In",
     "register": "Register",
     "logout": "Logout",
+    "backToLogin": "Back To Login",
 
     "loginSuccess": "Logged in successfully",
     "logoutSuccess": "Logged out successfully",
@@ -35,9 +36,23 @@
     "activationAlreadyDone": "Account already activated. Redirecting to login...",
     "activationFailed": "Activation failed. Please try again.",
 
+    "forgotPassword" : "Forgot Password?",
+    "resetPassword": "Reset Password",
+    "sendResetLink": "Send Reset Link",
+    "resetLinkSentCheckEmail": "Reset Link sent. Please check your mail",
+    "passwordResetSuccess": "Password has been reset successfully. Please log in.",
+    "resetFailed": "Password reset failed. Please try again.",
+    "resetTokenExpired": "Your reset link has expired.",
+    "resetTokenExpiredInfo": "The reset link has expired. Click below to resend a new link.",
+    "resendReset": "Resend Reset Link",
+    "resetResent": "A new reset link has been sent to your email.",
+    "resetResendFailed": "Failed to resend reset link.",
+    "invalidResetLink": "Invalid or missing reset link.",
 
     "goToLogin": "Go to Login",
     "goToRegister": "Go to Register",
+
+    "userNotFound": "User not found",
 
     "invalidCredentials": "Invalid username or password",
     "sessionExpired": "Your session has expired. Please log in again."
@@ -50,12 +65,12 @@
     "admin": "Admin"
   },
 
-
   "form": {
     "user": {
       "email": "Email",
       "phone": "Phone (optional)",
       "password": "Password",
+      "newPassword": "New Password",
       "confirmPassword": "Confirm Password",
       "firstName": "First Name",
       "lastName": "Last Name",

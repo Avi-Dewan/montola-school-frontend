@@ -12,13 +12,11 @@ export const activateAccount = (email: string, token: string) =>
 export const resendActivationToken = (email: string) =>
     api.post("/auth/resend-activation", { email });
 
-export const logout = () => {
-    // Option 1: If backend supports logout API (token blacklist / refresh revoke)
-    // return api.post("/auth/logout");
+export const  changePassword = (oldPassword: string, newPassword: string) =>
+    api.post("/auth/change-password", { oldPassword, newPassword });
 
-    // Option 2: If using JWT (stateless), just remove local storage/session
-    localStorage.removeItem("accessToken");
-    localStorage.removeItem("refreshToken");
+export const requestPasswordReset = (email: string) =>
+    api.post("/auth/forgot-password", { email });
 
-    return Promise.resolve();
-};
+export const resetPassword = (email: string, token: string, newPassword: string) =>
+    api.post("/auth/reset-password", { email, token, newPassword });

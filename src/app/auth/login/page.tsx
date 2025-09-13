@@ -7,6 +7,7 @@ import { useI18n } from "@/contexts/I18nProvider";
 import { useAuth } from "@/contexts/AuthContext";
 import { Alert } from "@/components/Alert";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -78,6 +79,7 @@ export default function LoginPage() {
 
                 {errors.general && <Alert type="error" message={errors.general} />}
 
+                {/* email */}
                 <div className="mb-4">
                     <label className="block mb-1 font-semibold">
                         {t("form.user.email")} <span className="text-red-500">*</span>
@@ -94,6 +96,7 @@ export default function LoginPage() {
                     {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
                 </div>
 
+                {/* password */}
                 <div className="mb-4">
                     <label className="block mb-1 font-semibold">
                         {t("form.user.password")} <span className="text-red-500">*</span>
@@ -108,6 +111,13 @@ export default function LoginPage() {
                     />
 
                     {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
+                </div>
+
+                {/* Forgot password link */}
+                <div className="text-right mb-4">
+                    <Link href="/auth/forgot-password" className="text-blue-600 text-sm hover:underline">
+                        {t("auth.forgotPassword")}
+                    </Link>
                 </div>
 
                 <button
