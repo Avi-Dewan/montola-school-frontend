@@ -58,7 +58,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.setItem("accessToken", accessToken);
         localStorage.setItem("refreshToken", refreshToken);
         
-        const userData: User = { email, fullName, roles };
+        // Store user info from AuthResponse (email, fullName, roles)
+        const userData: User = { 
+            email, 
+            fullName, 
+            roles 
+        };
         localStorage.setItem("user", JSON.stringify(userData));
         
         setAccessToken(accessToken);

@@ -8,14 +8,14 @@ export interface AuthResponse {
 }
 
 export interface User {
-    id: number;
+    id?: number;
     email: string;
     fullName: string;
     phone?: string;
     roles: string[];
     hasProfilePicture?: boolean;
-    createdAt: string;
-    updatedAt: string;
+    createdAt?: string;
+    updatedAt?: string;
 }
 
 // Enums
