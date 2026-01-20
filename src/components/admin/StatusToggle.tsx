@@ -18,11 +18,27 @@ export default function StatusToggle({
 }: StatusToggleProps) {
     const [localLoading, setLocalLoading] = useState(false);
 
-    const statusOptions: { value: ChapterStatus; label: string; color: string }[] = [
-        { value: ChapterStatus.DRAFT, label: "Draft", color: "bg-yellow-100 text-yellow-800" },
-        { value: ChapterStatus.PUBLISHED, label: "Published", color: "bg-green-100 text-green-800" },
-        { value: ChapterStatus.ARCHIVED, label: "Archived", color: "bg-gray-100 text-gray-800" },
-    ];
+    const statusOptions: { value: ChapterStatus; label: string; color: string }[] =
+        [
+            {
+                value: ChapterStatus.DRAFT,
+                label: "Draft",
+                color: "bg-yellow-100 text-yellow-800",
+            },
+            {
+                value: ChapterStatus.PUBLISHED,
+                label: "Published",
+                color: "bg-green-100 text-green-800",
+            },
+            {
+                value: ChapterStatus.ARCHIVED,
+                label: "Archived",
+                color: "bg-gray-100 text-gray-800",
+            },
+        ];
+
+    const current = statusOptions.find((s) => s.value === currentStatus) ?? statusOptions[0];
+    const otherOptions = statusOptions.filter((s) => s.value !== currentStatus);
 
     const handleStatusChange = async (newStatus: ChapterStatus) => {
         if (newStatus === currentStatus) return;
@@ -39,29 +55,35 @@ export default function StatusToggle({
     };
 
     return (
-        <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-                Status
-            </label>
-            <div className="flex space-x-2">
-                {statusOptions.map((option) => {
-                    const isActive = currentStatus === option.value;
-                    return (
+        <div className="space-y-4">
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Current Status
+                </label>
+                <span className={`inline-flex px-3 py-1 rounded-full text-sm font-semibold ${current.color}`}>
+                    {current.label}
+                </span>
+            </div>
+
+            <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Change Status
+                </label>
+                <div className="flex flex-wrap gap-2">
+                    {otherOptions.map((option) => (
                         <button
                             key={option.value}
                             type="button"
                             onClick={() => handleStatusChange(option.value)}
                             disabled={isLoading || localLoading}
-                            className={`px-4 py-2 rounded-lg font-medium transition-colors ${
-                                isActive
-                                    ? option.color + " ring-2 ring-offset-2 ring-primary-500"
-                                    : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-                            } ${isLoading || localLoading ? "opacity-50 cursor-not-allowed" : ""}`}
+                            className={`px-4 py-2 rounded-lg font-medium transition-colors bg-gray-100 text-gray-800 hover:bg-gray-200 ${
+                                isLoading || localLoading ? "opacity-50 cursor-not-allowed" : ""
+                            }`}
                         >
-                            {option.label}
+                            Set {option.label}
                         </button>
-                    );
-                })}
+                    ))}
+                </div>
             </div>
         </div>
     );

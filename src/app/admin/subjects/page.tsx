@@ -14,7 +14,6 @@ import DataTable, { Column } from "@/components/ui/DataTable";
 import Modal from "@/components/ui/Modal";
 import SubjectForm from "@/components/admin/SubjectForm";
 import Button from "@/components/ui/Button";
-import Select from "@/components/ui/Select";
 import { toast } from "react-toastify";
 import { HiPlus, HiPencil, HiTrash, HiEye } from "react-icons/hi";
 
@@ -45,11 +44,13 @@ export default function SubjectsPage() {
     useEffect(() => {
         if (selectedClassId === "") {
             setFilteredSubjects(subjects);
-        } else {
-            setFilteredSubjects(
-                subjects.filter((s) => s.classId === selectedClassId)
-            );
+            return;
         }
+
+        // Defensive: backend might return classId as string/null depending on serialization
+        setFilteredSubjects(
+            subjects.filter((s) => Number((s as any).classId) === selectedClassId)
+        );
     }, [selectedClassId, subjects]);
 
     const fetchSubjects = async () => {
@@ -125,9 +126,12 @@ export default function SubjectsPage() {
         router.replace("/admin/subjects", undefined);
     };
 
-    const getClassName = (classId: number) => {
-        const cls = classes.find((c) => c.id === classId);
-        return cls?.name || `Class ${classId}`;
+    const getClassName = (classId: number | null | undefined) => {
+        const normalized = Number(classId);
+        if (!Number.isFinite(normalized) || normalized <= 0) return "—";
+
+        const cls = classes.find((c) => c.id === normalized);
+        return cls?.name || `Class ${normalized}`;
     };
 
     const columns: Column<SubjectResponseDto>[] = [
@@ -146,7 +150,7 @@ export default function SubjectsPage() {
             header: "Class",
             sortable: true,
             render: (item) => (
-                <span className="text-gray-700">{getClassName(item.classId)}</span>
+                <span className="text-gray-700">{getClassName((item as any).classId)}</span>
             ),
         },
         {
