@@ -114,5 +114,17 @@
   "student": {
     "title": "Students",
     "noStudents": "No students available."
+  },
+
+  "admin": {
+    "dashboard": "Admin Dashboard",
+    "brand": "Montola Admin",
+    "nav": {
+      "dashboardOverview": "Dashboard Overview",
+      "classes": "Classes",
+      "subjects": "Subjects",
+      "chapters": "Chapters",
+      "purchaseVerification": "Purchase Verification"
+    }
   }
 }
