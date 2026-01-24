@@ -14,7 +14,7 @@ export default function AdminLayout({
     children: React.ReactNode;
 }) {
     const { isAdminOrManager, isLoading, user, removeAuthTokens } = useAuth();
-    const { t } = useI18n();
+    const { t, lang, switchLang } = useI18n();
     const router = useRouter();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -80,6 +80,16 @@ export default function AdminLayout({
 
                             {/* Role Toggle - only visible if user has multiple roles */}
                             <RoleToggle />
+
+                            {/* Language Switch */}
+                            <select
+                                value={lang}
+                                onChange={(e) => switchLang(e.target.value as "en" | "bn")}
+                                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                            >
+                                <option value="en">EN</option>
+                                <option value="bn">বাংলা</option>
+                            </select>
 
                             {/* Logout Button */}
                             <button
