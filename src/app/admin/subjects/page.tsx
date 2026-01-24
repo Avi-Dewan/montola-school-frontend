@@ -4,12 +4,11 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
     getAllSubjects,
-    getAllClasses,
     createSubject,
     updateSubject,
     deleteSubject,
 } from "@/lib/admin";
-import { SubjectResponseDto, ClassResponseDto, SubjectRequestDto } from "@/types";
+import { SubjectResponseDto, SubjectRequestDto } from "@/types";
 import DataTable, { Column } from "@/components/ui/DataTable";
 import Modal from "@/components/ui/Modal";
 import SubjectForm from "@/components/admin/SubjectForm";
@@ -22,7 +21,6 @@ export default function SubjectsPage() {
     const searchParams = useSearchParams();
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [filteredSubjects, setFilteredSubjects] = useState<SubjectResponseDto[]>([]);
-    const [classes, setClasses] = useState<ClassResponseDto[]>([]);
     const [selectedClassId, setSelectedClassId] = useState<number | "">("");
     const [loading, setLoading] = useState(true);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -33,7 +31,6 @@ export default function SubjectsPage() {
 
     useEffect(() => {
         fetchSubjects();
-        fetchClasses();
         
         // Check if we need to open modal for create
         if (searchParams.get("action") === "create") {
@@ -66,14 +63,6 @@ export default function SubjectsPage() {
         }
     };
 
-    const fetchClasses = async () => {
-        try {
-            const res = await getAllClasses();
-            setClasses(res.data);
-        } catch (err: any) {
-            console.error(err);
-        }
-    };
 
     const handleCreate = () => {
         setEditingSubject(null);
@@ -126,12 +115,23 @@ export default function SubjectsPage() {
         router.replace("/admin/subjects", undefined);
     };
 
-    const getClassName = (classId: number | null | undefined) => {
-        const normalized = Number(classId);
-        if (!Number.isFinite(normalized) || normalized <= 0) return "—";
+    // Get class name - use className directly from API response
+    const getClassName = (subject: SubjectResponseDto) => {
+        return subject.className || `Class ${subject.classId}`;
+    };
 
-        const cls = classes.find((c) => c.id === normalized);
-        return cls?.name || `Class ${normalized}`;
+    // Get unique classes from subjects data (using enriched className field)
+    const getUniqueClasses = () => {
+        const classMap = new Map<number, { id: number; name: string }>();
+        subjects.forEach((subject) => {
+            if (subject.classId && subject.className) {
+                classMap.set(subject.classId, {
+                    id: subject.classId,
+                    name: subject.className,
+                });
+            }
+        });
+        return Array.from(classMap.values());
     };
 
     const columns: Column<SubjectResponseDto>[] = [
@@ -150,7 +150,7 @@ export default function SubjectsPage() {
             header: "Class",
             sortable: true,
             render: (item) => (
-                <span className="text-gray-700">{getClassName((item as any).classId)}</span>
+                <span className="text-gray-700">{getClassName(item)}</span>
             ),
         },
         {
@@ -238,7 +238,7 @@ export default function SubjectsPage() {
                         className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                     >
                         <option value="">All Classes</option>
-                        {classes.map((cls) => (
+                        {getUniqueClasses().map((cls) => (
                             <option key={cls.id} value={cls.id}>
                                 {cls.name}
                             </option>

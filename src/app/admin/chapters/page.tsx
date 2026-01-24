@@ -5,12 +5,11 @@ import { useRouter, useSearchParams } from "next/navigation";
 import {
     getAllChapters,
     getChaptersByStatus,
-    getAllSubjects,
     createChapter,
     updateChapter,
     deleteChapter,
 } from "@/lib/admin";
-import { ChapterResponseDto, ChapterRequestDto, ChapterStatus, SubjectResponseDto } from "@/types";
+import { ChapterResponseDto, ChapterRequestDto, ChapterStatus } from "@/types";
 import DataTable, { Column } from "@/components/ui/DataTable";
 import Modal from "@/components/ui/Modal";
 import ChapterForm from "@/components/admin/ChapterForm";
@@ -23,7 +22,6 @@ export default function ChaptersPage() {
     const searchParams = useSearchParams();
     const [chapters, setChapters] = useState<ChapterResponseDto[]>([]);
     const [filteredChapters, setFilteredChapters] = useState<ChapterResponseDto[]>([]);
-    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [selectedStatus, setSelectedStatus] = useState<string>("");
     const [selectedSubjectId, setSelectedSubjectId] = useState<number | "">("");
     const [loading, setLoading] = useState(true);
@@ -35,7 +33,6 @@ export default function ChaptersPage() {
 
     useEffect(() => {
         fetchChapters();
-        fetchSubjects();
         
         // Check if we need to open modal for create
         if (searchParams.get("action") === "create") {
@@ -76,14 +73,6 @@ export default function ChaptersPage() {
         }
     };
 
-    const fetchSubjects = async () => {
-        try {
-            const res = await getAllSubjects();
-            setSubjects(res.data);
-        } catch (err: any) {
-            console.error(err);
-        }
-    };
 
     const handleCreate = () => {
         setEditingChapter(null);
@@ -145,9 +134,23 @@ export default function ChaptersPage() {
         return badges[status] || badges[ChapterStatus.DRAFT];
     };
 
-    const getSubjectName = (subjectId: number) => {
-        const subject = subjects.find((s) => s.id === subjectId);
-        return subject?.name || `Subject ${subjectId}`;
+    // Get subject name - use subjectName directly from API response
+    const getSubjectName = (chapter: ChapterResponseDto) => {
+        return chapter.subjectName || `Subject ${chapter.subjectId}`;
+    };
+
+    // Get unique subjects from chapters data (using enriched subjectName field)
+    const getUniqueSubjects = () => {
+        const subjectMap = new Map<number, { id: number; name: string }>();
+        chapters.forEach((chapter) => {
+            if (chapter.subjectId && chapter.subjectName) {
+                subjectMap.set(chapter.subjectId, {
+                    id: chapter.subjectId,
+                    name: chapter.subjectName,
+                });
+            }
+        });
+        return Array.from(subjectMap.values());
     };
 
     const columns: Column<ChapterResponseDto>[] = [
@@ -166,7 +169,7 @@ export default function ChaptersPage() {
             header: "Subject",
             sortable: true,
             render: (item) => (
-                <span className="text-gray-700">{getSubjectName(item.subjectId)}</span>
+                <span className="text-gray-700">{getSubjectName(item)}</span>
             ),
         },
         {
@@ -281,7 +284,7 @@ export default function ChaptersPage() {
                             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                         >
                             <option value="">All Subjects</option>
-                            {subjects.map((subject) => (
+                            {getUniqueSubjects().map((subject) => (
                                 <option key={subject.id} value={subject.id}>
                                     {subject.name}
                                 </option>

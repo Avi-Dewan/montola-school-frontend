@@ -71,6 +71,7 @@ export interface SubjectResponseDto {
     description?: string;
     orderIndex?: number;
     classId: number;
+    className?: string;
 }
 
 export interface SubjectStructureResponseDto {
@@ -99,6 +100,7 @@ export interface ChapterResponseDto {
     status: ChapterStatus;
     orderIndex?: number;
     subjectId: number;
+    subjectName?: string;
     videoId?: string;
     price?: number;
     free?: boolean;
