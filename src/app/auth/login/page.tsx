@@ -4,6 +4,7 @@ import { Alert } from "@/components/Alert";
 import { useAuth } from "@/contexts/AuthContext";
 import { useI18n } from "@/contexts/I18nProvider";
 import { login } from "@/lib/auth";
+import { getHighestPriorityRole, getRouteForRole } from "@/lib/roles";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -55,21 +56,10 @@ export default function LoginPage() {
             // The API returns AuthResponse with accessToken, refreshToken, email, fullName, roles
             setAuthTokens(res.data);
 
-            // Role-based redirect after login
+            // Role-based redirect after login using centralized helpers
             const roles: string[] = Array.isArray(res.data?.roles) ? res.data.roles : [];
-
-            let targetPath = "/dashboard"; // Fallback
-
-            if (roles.includes("ADMIN")) {
-                targetPath = "/admin";
-            } else if (roles.includes("MANAGER")) {
-                // TODO: Later, change this to a dedicated /manager dashboard route
-                targetPath = "/admin";
-            } else if (roles.includes("TEACHER")) {
-                targetPath = "/teacher";
-            } else if (roles.includes("STUDENT")) {
-                targetPath = "/";
-            }
+            const primaryRole = getHighestPriorityRole(roles);
+            const targetPath = getRouteForRole(primaryRole || undefined);
 
             toast.success(t("auth.loginSuccess"));
             router.push(targetPath);
