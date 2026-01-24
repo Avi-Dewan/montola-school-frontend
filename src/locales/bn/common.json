@@ -60,5 +60,24 @@
   "student": {
     "title": "শিক্ষার্থী",
     "noStudents": "কোনও শিক্ষার্থী পাওয়া যায়নি।"
+  },
+
+  "roles": {
+    "student": "শিক্ষার্থী",
+    "teacher": "শিক্ষক",
+    "manager": "ম্যানেজার",
+    "admin": "অ্যাডমিন"
+  },
+
+  "admin": {
+    "dashboard": "অ্যাডমিন ড্যাশবোর্ড",
+    "brand": "মন্টোলা অ্যাডমিন",
+    "nav": {
+      "dashboardOverview": "ড্যাশবোর্ড ওভারভিউ",
+      "classes": "ক্লাস",
+      "subjects": "বিষয়",
+      "chapters": "অধ্যায়",
+      "purchaseVerification": "ক্রয় যাচাইকরণ"
+    }
   }
 }

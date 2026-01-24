@@ -52,10 +52,8 @@ export default function LoginPage() {
         try {
             const res = await login(email, password);
 
-            setAuthTokens({
-                accessToken: res.data.token,
-                refreshToken: res.data.refreshToken || res.data.token // Adjust based on your API response
-            });
+            // The API returns AuthResponse with accessToken, refreshToken, email, fullName, roles
+            setAuthTokens(res.data);
 
             toast.success(t("auth.loginSuccess"));
             router.push("/dashboard");
