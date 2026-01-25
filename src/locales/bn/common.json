@@ -79,5 +79,22 @@
       "chapters": "অধ্যায়",
       "purchaseVerification": "ক্রয় যাচাইকরণ"
     }
+  },
+
+  "teacher": {
+    "dashboard": "শিক্ষক ড্যাশবোর্ড",
+    "assignedChapters": "নির্ধারিত অধ্যায়",
+    "chapterDetails": "অধ্যায়ের বিবরণ",
+    "addTopic": "টপিক যোগ করুন",
+    "editTopic": "টপিক সম্পাদনা করুন",
+    "deleteTopic": "টপিক মুছুন",
+    "addContent": "কন্টেন্ট যোগ করুন",
+    "editContent": "কন্টেন্ট সম্পাদনা করুন",
+    "deleteContent": "কন্টেন্ট মুছুন",
+    "contentType": {
+      "lecture": "লেকচার",
+      "pdf": "পিডিএফ",
+      "quiz": "কুইজ"
+    }
   }
 }

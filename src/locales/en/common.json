@@ -126,5 +126,22 @@
       "chapters": "Chapters",
       "purchaseVerification": "Purchase Verification"
     }
+  },
+
+  "teacher": {
+    "dashboard": "Teacher Dashboard",
+    "assignedChapters": "Assigned Chapters",
+    "chapterDetails": "Chapter Details",
+    "addTopic": "Add Topic",
+    "editTopic": "Edit Topic",
+    "deleteTopic": "Delete Topic",
+    "addContent": "Add Content",
+    "editContent": "Edit Content",
+    "deleteContent": "Delete Content",
+    "contentType": {
+      "lecture": "Lecture",
+      "pdf": "PDF",
+      "quiz": "Quiz"
+    }
   }
 }
