@@ -22,23 +22,25 @@ export default function TopicForm({
     isLoading = false,
 }: TopicFormProps) {
     const [formData, setFormData] = useState<TopicRequestDto>({
-        chapterId: initialData?.chapterId || chapterId,
+        chapterId: (initialData as TopicResponseDto)?.chapterId ?? chapterId,
         title: initialData?.title || "",
         description: initialData?.description || "",
-        orderIndex: initialData?.orderIndex || 0,
+        orderIndex: initialData?.orderIndex ?? 0,
     });
     const [errors, setErrors] = useState<{ title?: string }>({});
 
     useEffect(() => {
         if (initialData) {
             setFormData({
-                chapterId: initialData.chapterId,
+                // Use chapterId from initialData only if present (TopicResponseDto);
+                // when editing from tree, initialData is TopicStructureResponseDto which has no chapterId
+                chapterId: (initialData as TopicResponseDto).chapterId ?? chapterId,
                 title: initialData.title,
-                description: initialData.description || "",
-                orderIndex: initialData.orderIndex || 0,
+                description: (initialData as TopicResponseDto).description || "",
+                orderIndex: initialData.orderIndex ?? 0,
             });
         }
-    }, [initialData]);
+    }, [initialData, chapterId]);
 
     const validate = (): boolean => {
         const newErrors: { title?: string } = {};

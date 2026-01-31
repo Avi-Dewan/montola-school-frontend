@@ -4,9 +4,11 @@ import { useState } from "react";
 import {
     ChapterStructureResponseDto,
     TopicStructureResponseDto,
+    TopicResponseDto,
     ContentItemStructureResponseDto,
     ContentItemType,
 } from "@/types";
+import { getTopicById } from "@/lib/teacher";
 import { HiChevronDown, HiChevronRight, HiPlus, HiPencil, HiTrash } from "react-icons/hi";
 import Modal from "@/components/ui/Modal";
 import Select from "@/components/ui/Select";
@@ -38,7 +40,8 @@ export default function ChapterTreeView({
     const [expandedTopics, setExpandedTopics] = useState<Set<number>>(new Set());
     const [isTopicModalOpen, setIsTopicModalOpen] = useState(false);
     const [isContentModalOpen, setIsContentModalOpen] = useState(false);
-    const [editingTopic, setEditingTopic] = useState<TopicStructureResponseDto | null>(null);
+    const [editingTopic, setEditingTopic] = useState<TopicResponseDto | null>(null);
+    const [isLoadingTopic, setIsLoadingTopic] = useState(false);
     const [selectedTopicId, setSelectedTopicId] = useState<number | null>(null);
     const [selectedContentType, setSelectedContentType] = useState<ContentItemType | null>(null);
     const [editingContent, setEditingContent] = useState<ContentItemStructureResponseDto | null>(null);
@@ -61,9 +64,17 @@ export default function ChapterTreeView({
         setIsTopicModalOpen(true);
     };
 
-    const handleEditTopic = (topic: TopicStructureResponseDto) => {
-        setEditingTopic(topic);
-        setIsTopicModalOpen(true);
+    const handleEditTopic = async (topic: TopicStructureResponseDto) => {
+        setIsLoadingTopic(true);
+        try {
+            const res = await getTopicById(topic.id);
+            setEditingTopic(res.data);
+            setIsTopicModalOpen(true);
+        } catch (err) {
+            console.error("Failed to load topic:", err);
+        } finally {
+            setIsLoadingTopic(false);
+        }
     };
 
     const handleDeleteTopic = async (topicId: number) => {
