@@ -15,8 +15,13 @@ import {
     createPdf,
     createQuiz,
     getContentById,
+    updateLectureByContentItem,
+    updatePdfByContentItem,
     updateQuizByContentItem,
     updateQuizQuestionsByContentItem,
+    deleteLectureByContentItem,
+    deletePdfByContentItem,
+    deleteQuizByContentItem,
 } from "@/lib/teacher";
 import {
     ChapterResponseDto,
@@ -179,16 +184,32 @@ export default function TeacherChapterDetailPage() {
     };
 
 
-    const handleContentUpdate = async (contentId: number, type: ContentItemType, data: any) => {
+    const handleContentUpdate = async (
+        contentId: number,
+        type: ContentItemType,
+        data: any,
+    ) => {
         try {
-            if (type === ContentItemType.QUIZ) {
+            if (type === ContentItemType.LECTURE) {
+                await updateLectureByContentItem(
+                    contentId,
+                    data as LectureRequestDto,
+                );
+            } else if (type === ContentItemType.PDF) {
+                await updatePdfByContentItem(
+                    contentId,
+                    data as GooglePdfContentRequestDto,
+                );
+            } else if (type === ContentItemType.QUIZ) {
                 const quizData = data as QuizRequestDto;
                 await updateQuizByContentItem(contentId, quizData);
                 if (quizData.questions) {
-                    await updateQuizQuestionsByContentItem(contentId, quizData.questions);
+                    await updateQuizQuestionsByContentItem(
+                        contentId,
+                        quizData.questions,
+                    );
                 }
             }
-            // For lecture and PDF, we might need update endpoints if available
             toast.success(`${type} updated successfully`);
             await fetchStructure();
         } catch (err: any) {
@@ -198,10 +219,26 @@ export default function TeacherChapterDetailPage() {
         }
     };
 
-    const handleContentDelete = async (contentId: number) => {
-        // Note: There might not be a delete endpoint for content
-        // This would need to be implemented based on API availability
-        toast.info("Content deletion may require admin access");
+    const handleContentDelete = async (
+        contentId: number,
+        type: ContentItemType,
+    ) => {
+        try {
+            if (type === ContentItemType.LECTURE) {
+                await deleteLectureByContentItem(contentId);
+            } else if (type === ContentItemType.PDF) {
+                await deletePdfByContentItem(contentId);
+            } else if (type === ContentItemType.QUIZ) {
+                await deleteQuizByContentItem(contentId);
+            }
+            toast.success(`${type} deleted successfully`);
+            await fetchStructure();
+        } catch (err: any) {
+            console.error(err);
+            toast.error(
+                err.response?.data?.message || `Failed to delete ${type}`,
+            );
+        }
     };
 
     const getContentData = async (contentId: number) => {

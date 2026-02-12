@@ -23,7 +23,7 @@ interface ChapterTreeViewProps {
     onTopicDelete: (id: number) => Promise<void>;
     onContentCreate: (type: ContentItemType, data: any) => Promise<void>;
     onContentUpdate?: (id: number, type: ContentItemType, data: any) => Promise<void>;
-    onContentDelete: (id: number) => Promise<void>;
+    onContentDelete: (id: number, type: ContentItemType) => Promise<void>;
     getContentData?: (id: number) => Promise<any>;
 }
 
@@ -110,9 +110,9 @@ export default function ChapterTreeView({
         }
     };
 
-    const handleDeleteContent = async (contentId: number) => {
+    const handleDeleteContent = async (content: ContentItemStructureResponseDto) => {
         if (confirm("Are you sure you want to delete this content?")) {
-            await onContentDelete(contentId);
+            await onContentDelete(content.id, content.type);
         }
     };
 
@@ -251,7 +251,7 @@ export default function ChapterTreeView({
                                                     <HiPencil className="w-4 h-4" />
                                                 </button>
                                                 <button
-                                                    onClick={() => handleDeleteContent(content.id)}
+                                                    onClick={() => handleDeleteContent(content)}
                                                     className="p-1 text-red-600 hover:bg-red-50 rounded transition-colors"
                                                     title="Delete Content"
                                                 >

@@ -22,7 +22,13 @@ export const getChapterStatistics = (chapterId: number) =>
     api.get<ChapterStatisticsDto>(`/v1/teachers/chapters/${chapterId}/statistics`);
 
 // Reuse chapter endpoints from admin
-export { getChapterById, updateChapter, getChapterCoverImage, uploadChapterCoverImage, getChapterStructure } from "./admin";
+export {
+    getChapterById,
+    updateChapter,
+    getChapterCoverImage,
+    uploadChapterCoverImage,
+    getChapterStructure,
+} from "./admin";
 
 // ==================== Topic Management ====================
 
@@ -40,6 +46,7 @@ export const deleteTopic = (id: number) =>
 
 // ==================== Content Management ====================
 
+// Create
 export const createLecture = (data: LectureRequestDto) =>
     api.post("/v1/contents/lecture", data);
 
@@ -49,23 +56,51 @@ export const createPdf = (data: GooglePdfContentRequestDto) =>
 export const createQuiz = (data: QuizRequestDto) =>
     api.post("/v1/contents/quiz", data);
 
+// Read
 export const getContentById = (id: number) =>
     api.get(`/v1/contents/${id}`);
 
-// Quiz update endpoints
-export const updateQuiz = (id: number, data: QuizRequestDto) =>
-    api.put(`/v1/contents/quiz/${id}`, data);
+// Update by content item (Lecture / PDF / Quiz)
+export const updateLectureByContentItem = (
+    contentItemId: number,
+    data: LectureRequestDto,
+) =>
+    api.put(`/v1/contents/lecture/content-item/${contentItemId}`, data);
 
-export const updateQuizQuestions = (id: number, questions: QuizQuestionRequestDto[]) =>
-    api.put(`/v1/contents/quiz/${id}/questions`, questions);
+export const updatePdfByContentItem = (
+    contentItemId: number,
+    data: GooglePdfContentRequestDto,
+) =>
+    api.put(`/v1/contents/pdf/content-item/${contentItemId}`, data);
 
-export const updateQuizByContentItem = (contentItemId: number, data: QuizRequestDto) =>
+export const updateQuizByContentItem = (
+    contentItemId: number,
+    data: QuizRequestDto,
+) =>
     api.put(`/v1/contents/quiz/content-item/${contentItemId}`, data);
 
-export const updateQuizQuestionsByContentItem = (contentItemId: number, questions: QuizQuestionRequestDto[]) =>
-    api.put(`/v1/contents/quiz/content-item/${contentItemId}/questions`, questions);
+export const updateQuizQuestionsByContentItem = (
+    contentItemId: number,
+    questions: QuizQuestionRequestDto[],
+) =>
+    api.put(
+        `/v1/contents/quiz/content-item/${contentItemId}/questions`,
+        questions,
+    );
+
+// Delete by content item (soft delete)
+export const deleteLectureByContentItem = (contentItemId: number) =>
+    api.delete(`/v1/contents/lecture/content-item/${contentItemId}`);
+
+export const deletePdfByContentItem = (contentItemId: number) =>
+    api.delete(`/v1/contents/pdf/content-item/${contentItemId}`);
+
+export const deleteQuizByContentItem = (contentItemId: number) =>
+    api.delete(`/v1/contents/quiz/content-item/${contentItemId}`);
 
 // ==================== Student Progress ====================
 
 export const getStudentsProgress = (chapterId: number) =>
-    api.get<StudentChapterProgressDto[]>(`/v1/progress/admin/chapter/${chapterId}/students-progress`);
+    api.get<StudentChapterProgressDto[]>(
+        `/v1/progress/admin/chapter/${chapterId}/students-progress`,
+    );
