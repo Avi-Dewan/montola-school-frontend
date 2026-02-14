@@ -17,8 +17,8 @@ import {
     getContentById,
     updateLectureByContentItem,
     updatePdfByContentItem,
-    updateQuizByContentItem,
-    updateQuizQuestionsByContentItem,
+    updateQuizMetadata,
+    updateQuizQuestions,
     deleteLectureByContentItem,
     deletePdfByContentItem,
     deleteQuizByContentItem,
@@ -202,10 +202,14 @@ export default function TeacherChapterDetailPage() {
                 );
             } else if (type === ContentItemType.QUIZ) {
                 const quizData = data as QuizRequestDto;
-                await updateQuizByContentItem(contentId, quizData);
+                // Fetch the content first to get the Quiz ID
+                const currentContent = await getContentById(contentId);
+                const quizId = currentContent.data.id;
+
+                await updateQuizMetadata(quizId, quizData);
                 if (quizData.questions) {
-                    await updateQuizQuestionsByContentItem(
-                        contentId,
+                    await updateQuizQuestions(
+                        quizId,
                         quizData.questions,
                     );
                 }
@@ -312,11 +316,10 @@ export default function TeacherChapterDetailPage() {
                                 setActiveTab(tab.id as any);
                                 setIsEditing(false);
                             }}
-                            className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                                activeTab === tab.id
+                            className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === tab.id
                                     ? "border-primary-500 text-primary-600"
                                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                            }`}
+                                }`}
                         >
                             {tab.label}
                         </button>

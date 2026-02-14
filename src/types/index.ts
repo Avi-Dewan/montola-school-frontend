@@ -269,7 +269,7 @@ export enum QuizQuestionType {
 
 export interface QuizOptionRequestDto {
     optionText: string;
-    correct: boolean;
+    isCorrect: boolean;
 }
 
 export interface QuizFillBlankRequestDto {

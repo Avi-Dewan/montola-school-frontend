@@ -73,18 +73,19 @@ export const updatePdfByContentItem = (
 ) =>
     api.put(`/v1/contents/pdf/content-item/${contentItemId}`, data);
 
-export const updateQuizByContentItem = (
-    contentItemId: number,
+// New Quiz Endpoints
+export const updateQuizMetadata = (
+    quizId: number,
     data: QuizRequestDto,
 ) =>
-    api.put(`/v1/contents/quiz/content-item/${contentItemId}`, data);
+    api.put(`/v1/contents/quiz/${quizId}`, data);
 
-export const updateQuizQuestionsByContentItem = (
-    contentItemId: number,
+export const updateQuizQuestions = (
+    quizId: number,
     questions: QuizQuestionRequestDto[],
 ) =>
     api.put(
-        `/v1/contents/quiz/content-item/${contentItemId}/questions`,
+        `/v1/contents/quiz/${quizId}/questions`,
         questions,
     );
 

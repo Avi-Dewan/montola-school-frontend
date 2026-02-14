@@ -23,6 +23,17 @@ export default function QuizForm({
     onCancel,
     isLoading = false,
 }: QuizFormProps) {
+    const normalizeQuestions = (questions: any[]): QuizQuestionRequestDto[] => {
+        if (!questions) return [];
+        return questions.map((q) => ({
+            ...q,
+            options: q.options?.map((o: any) => ({
+                ...o,
+                isCorrect: o.isCorrect ?? false // Ensure boolean, default false
+            }))
+        }));
+    };
+
     const [formData, setFormData] = useState<QuizRequestDto>({
         topicId: topicId,
         title: initialData?.title || "",
@@ -32,7 +43,7 @@ export default function QuizForm({
         totalMarks: initialData?.totalMarks || undefined,
         passPercentage: initialData?.passPercentage || undefined,
         orderIndex: initialData?.orderIndex || 0,
-        questions: initialData?.questions || [],
+        questions: initialData?.questions ? normalizeQuestions(initialData.questions) : [],
     });
     const [errors, setErrors] = useState<{ title?: string }>({});
 
@@ -47,7 +58,7 @@ export default function QuizForm({
                 totalMarks: initialData.totalMarks || undefined,
                 passPercentage: initialData.passPercentage || undefined,
                 orderIndex: initialData.orderIndex || 0,
-                questions: initialData.questions || [],
+                questions: initialData.questions ? normalizeQuestions(initialData.questions) : [],
             });
         }
     }, [initialData, topicId]);
@@ -70,8 +81,21 @@ export default function QuizForm({
 
         if (!validate()) return;
 
+        // Sanitize data: remove 'correct' property from options to prevent backend mapping issues
+        const sanitizedData = {
+            ...formData,
+            questions: formData.questions?.map(q => ({
+                ...q,
+                options: q.options?.map(o => ({
+                    ...o,
+                    isCorrect: !!o.isCorrect // Ensure strict boolean
+                })).map(({ correct, ...rest }: any) => rest) // Remove 'correct' property if present
+            }))
+        };
+
+
         try {
-            await onSubmit(formData);
+            await onSubmit(sanitizedData);
         } catch (err: any) {
             console.error(err);
             toast.error(err.response?.data?.message || "Failed to save quiz");
@@ -84,7 +108,7 @@ export default function QuizForm({
             type: QuizQuestionType.MULTIPLE_CHOICE,
             orderIndex: (formData.questions?.length || 0) + 1,
             marks: 1,
-            options: [{ optionText: "", correct: false }],
+            options: [{ optionText: "", isCorrect: false }],
         };
         setFormData({
             ...formData,
@@ -98,36 +122,116 @@ export default function QuizForm({
     };
 
     const updateQuestion = (index: number, field: keyof QuizQuestionRequestDto, value: any) => {
-        const newQuestions = [...(formData.questions || [])];
-        newQuestions[index] = { ...newQuestions[index], [field]: value };
-        setFormData({ ...formData, questions: newQuestions });
+        setFormData((prev) => {
+            const newQuestions = [...(prev.questions || [])];
+            newQuestions[index] = { ...newQuestions[index], [field]: value };
+            return { ...prev, questions: newQuestions };
+        });
     };
 
     const addOption = (questionIndex: number) => {
-        const newQuestions = [...(formData.questions || [])];
-        if (!newQuestions[questionIndex].options) {
-            newQuestions[questionIndex].options = [];
-        }
-        newQuestions[questionIndex].options?.push({ optionText: "", correct: false });
-        setFormData({ ...formData, questions: newQuestions });
+        setFormData((prev) => {
+            const newQuestions = [...(prev.questions || [])];
+            const updatedQuestion = { ...newQuestions[questionIndex] };
+            updatedQuestion.options = [...(updatedQuestion.options || []), { optionText: "", isCorrect: false }];
+            newQuestions[questionIndex] = updatedQuestion;
+            return { ...prev, questions: newQuestions };
+        });
     };
 
     const removeOption = (questionIndex: number, optionIndex: number) => {
-        const newQuestions = [...(formData.questions || [])];
-        newQuestions[questionIndex].options = newQuestions[questionIndex].options?.filter(
-            (_, i) => i !== optionIndex
-        );
-        setFormData({ ...formData, questions: newQuestions });
+        setFormData((prev) => {
+            const newQuestions = [...(prev.questions || [])];
+            const updatedQuestion = { ...newQuestions[questionIndex] };
+            updatedQuestion.options = updatedQuestion.options?.filter((_, i) => i !== optionIndex);
+            newQuestions[questionIndex] = updatedQuestion;
+            return { ...prev, questions: newQuestions };
+        });
     };
 
     const updateOption = (questionIndex: number, optionIndex: number, field: string, value: any) => {
-        const newQuestions = [...(formData.questions || [])];
-        if (newQuestions[questionIndex].options) {
-            newQuestions[questionIndex].options![optionIndex] = {
-                ...newQuestions[questionIndex].options![optionIndex],
-                [field]: value,
+        setFormData((prev) => {
+            const newQuestions = [...(prev.questions || [])];
+            const updatedQuestion = { ...newQuestions[questionIndex] };
+            const updatedOptions = [...(updatedQuestion.options || [])];
+
+            updatedOptions[optionIndex] = {
+                ...updatedOptions[optionIndex],
+                [field]: value
             };
+
+            updatedQuestion.options = updatedOptions;
+            newQuestions[questionIndex] = updatedQuestion;
+
+            return { ...prev, questions: newQuestions };
+        });
+    };
+
+    const addFillBlank = (questionIndex: number) => {
+        const newQuestions = [...(formData.questions || [])];
+        if (!newQuestions[questionIndex].fillBlanks) {
+            newQuestions[questionIndex].fillBlanks = [];
         }
+        const nextPosition = (newQuestions[questionIndex].fillBlanks?.length || 0) + 1;
+        newQuestions[questionIndex].fillBlanks?.push({ blankPosition: nextPosition, correctAnswer: "" });
+        setFormData({ ...formData, questions: newQuestions });
+    };
+
+    const removeFillBlank = (questionIndex: number, blankIndex: number) => {
+        const newQuestions = [...(formData.questions || [])];
+        newQuestions[questionIndex].fillBlanks = newQuestions[questionIndex].fillBlanks?.filter(
+            (_, i) => i !== blankIndex
+        );
+        // Re-index positions
+        newQuestions[questionIndex].fillBlanks?.forEach((blank, i) => {
+            blank.blankPosition = i + 1;
+        });
+        setFormData({ ...formData, questions: newQuestions });
+    };
+
+    const updateFillBlank = (questionIndex: number, blankIndex: number, value: string) => {
+        const newQuestions = [...(formData.questions || [])];
+        if (newQuestions[questionIndex].fillBlanks) {
+            newQuestions[questionIndex].fillBlanks![blankIndex].correctAnswer = value;
+        }
+        setFormData({ ...formData, questions: newQuestions });
+    };
+
+    const addMatchingPair = (questionIndex: number) => {
+        const newQuestions = [...(formData.questions || [])];
+        if (!newQuestions[questionIndex].tableMatchings) {
+            newQuestions[questionIndex].tableMatchings = [];
+        }
+        const nextOrder = (newQuestions[questionIndex].tableMatchings?.length || 0) + 1;
+        newQuestions[questionIndex].tableMatchings?.push({ leftItem: "", rightItem: "", orderIndex: nextOrder });
+        setFormData({ ...formData, questions: newQuestions });
+    };
+
+    const removeMatchingPair = (questionIndex: number, matchIndex: number) => {
+        const newQuestions = [...(formData.questions || [])];
+        newQuestions[questionIndex].tableMatchings = newQuestions[questionIndex].tableMatchings?.filter(
+            (_, i) => i !== matchIndex
+        );
+        newQuestions[questionIndex].tableMatchings?.forEach((match, i) => {
+            match.orderIndex = i + 1;
+        });
+        setFormData({ ...formData, questions: newQuestions });
+    };
+
+    const updateMatchingPair = (questionIndex: number, matchIndex: number, field: "leftItem" | "rightItem", value: string) => {
+        const newQuestions = [...(formData.questions || [])];
+        if (newQuestions[questionIndex].tableMatchings) {
+            newQuestions[questionIndex].tableMatchings![matchIndex][field] = value;
+        }
+        setFormData({ ...formData, questions: newQuestions });
+    };
+
+    const updateWrittenAnswer = (questionIndex: number, value: string) => {
+        const newQuestions = [...(formData.questions || [])];
+        if (!newQuestions[questionIndex].writtenAnswer) {
+            newQuestions[questionIndex].writtenAnswer = { sampleAnswer: "" };
+        }
+        newQuestions[questionIndex].writtenAnswer!.sampleAnswer = value;
         setFormData({ ...formData, questions: newQuestions });
     };
 
@@ -271,15 +375,23 @@ export default function QuizForm({
                                 </div>
 
                                 <div className="space-y-4">
-                                    <Input
-                                        label="Question Text"
-                                        required
-                                        value={question.questionText}
-                                        onChange={(e) =>
-                                            updateQuestion(qIndex, "questionText", e.target.value)
-                                        }
-                                        placeholder="Enter question text"
-                                    />
+                                    <div>
+                                        <label className="block mb-1 text-sm font-semibold text-gray-700">Question Text</label>
+                                        <textarea
+                                            value={question.questionText}
+                                            onChange={(e) => updateQuestion(qIndex, "questionText", e.target.value)}
+                                            className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                            rows={2}
+                                            placeholder={
+                                                question.type === QuizQuestionType.FILL_IN_THE_BLANK
+                                                    ? "Use __BLANK__ for blanks. Ex: The capital of France is __BLANK__."
+                                                    : "Enter question text"
+                                            }
+                                        />
+                                        {question.type === QuizQuestionType.FILL_IN_THE_BLANK && (
+                                            <p className="text-xs text-gray-500 mt-1">Use <b>__BLANK__</b> to denote where the blank should appear.</p>
+                                        )}
+                                    </div>
 
                                     <div className="grid grid-cols-2 gap-4">
                                         <Select
@@ -352,12 +464,12 @@ export default function QuizForm({
                                                             <label className="flex items-center space-x-2">
                                                                 <input
                                                                     type="checkbox"
-                                                                    checked={option.correct}
+                                                                    checked={!!option.isCorrect}
                                                                     onChange={(e) =>
                                                                         updateOption(
                                                                             qIndex,
                                                                             oIndex,
-                                                                            "correct",
+                                                                            "isCorrect",
                                                                             e.target.checked
                                                                         )
                                                                     }
@@ -383,6 +495,94 @@ export default function QuizForm({
                                                     No options added yet
                                                 </p>
                                             )}
+                                        </div>
+                                    )}
+
+                                    {/* Fill in the Blank */}
+                                    {question.type === QuizQuestionType.FILL_IN_THE_BLANK && (
+                                        <div>
+                                            <div className="flex items-center justify-between mb-2">
+                                                <label className="block font-semibold text-gray-700">Blanks</label>
+                                                <Button type="button" variant="outline" size="sm" onClick={() => addFillBlank(qIndex)}>
+                                                    <HiPlus className="w-4 h-4 inline-block mr-1" /> Add Blank Answer
+                                                </Button>
+                                            </div>
+                                            {question.fillBlanks && question.fillBlanks.length > 0 ? (
+                                                <div className="space-y-2">
+                                                    {question.fillBlanks.map((blank, bIndex) => (
+                                                        <div key={bIndex} className="flex items-center space-x-2">
+                                                            <span className="text-sm font-medium w-6">{blank.blankPosition}.</span>
+                                                            <Input
+                                                                value={blank.correctAnswer}
+                                                                onChange={(e) => updateFillBlank(qIndex, bIndex, e.target.value)}
+                                                                placeholder="Correct Answer"
+                                                                className="flex-1"
+                                                            />
+                                                            <Button type="button" variant="outline" size="sm" onClick={() => removeFillBlank(qIndex, bIndex)}>
+                                                                <HiTrash className="w-4 h-4" />
+                                                            </Button>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <p className="text-sm text-gray-500">No blanks defined yet.</p>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* Matching */}
+                                    {question.type === QuizQuestionType.MATCHING && (
+                                        <div>
+                                            <div className="flex items-center justify-between mb-2">
+                                                <label className="block font-semibold text-gray-700">Matching Items</label>
+                                                <Button type="button" variant="outline" size="sm" onClick={() => addMatchingPair(qIndex)}>
+                                                    <HiPlus className="w-4 h-4 inline-block mr-1" /> Add Pair
+                                                </Button>
+                                            </div>
+                                            {question.tableMatchings && question.tableMatchings.length > 0 ? (
+                                                <div className="space-y-2">
+                                                    <div className="flex space-x-2 text-xs font-semibold text-gray-500 px-2">
+                                                        <div className="flex-1">Left Item</div>
+                                                        <div className="flex-1">Right Item</div>
+                                                        <div className="w-8"></div>
+                                                    </div>
+                                                    {question.tableMatchings.map((match, mIndex) => (
+                                                        <div key={mIndex} className="flex items-center space-x-2">
+                                                            <Input
+                                                                value={match.leftItem}
+                                                                onChange={(e) => updateMatchingPair(qIndex, mIndex, "leftItem", e.target.value)}
+                                                                placeholder="Left Item"
+                                                                className="flex-1"
+                                                            />
+                                                            <Input
+                                                                value={match.rightItem}
+                                                                onChange={(e) => updateMatchingPair(qIndex, mIndex, "rightItem", e.target.value)}
+                                                                placeholder="Right Item"
+                                                                className="flex-1"
+                                                            />
+                                                            <Button type="button" variant="outline" size="sm" onClick={() => removeMatchingPair(qIndex, mIndex)}>
+                                                                <HiTrash className="w-4 h-4" />
+                                                            </Button>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                            ) : (
+                                                <p className="text-sm text-gray-500">No pairs added yet.</p>
+                                            )}
+                                        </div>
+                                    )}
+
+                                    {/* Written */}
+                                    {question.type === QuizQuestionType.WRITTEN && (
+                                        <div>
+                                            <label className="block mb-1 font-semibold text-gray-700">Sample Answer (Optional)</label>
+                                            <textarea
+                                                value={question.writtenAnswer?.sampleAnswer || ""}
+                                                onChange={(e) => updateWrittenAnswer(qIndex, e.target.value)}
+                                                className="w-full p-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                                rows={3}
+                                                placeholder="Enter sample answer"
+                                            />
                                         </div>
                                     )}
                                 </div>
