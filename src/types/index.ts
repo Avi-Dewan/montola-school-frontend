@@ -107,6 +107,18 @@ export interface ChapterResponseDto {
     teachers?: TeacherDto[];
 }
 
+export interface FeaturedChapterResponseDto {
+    id: number;
+    chapterId: number;
+    title: string;
+    description: string;
+    subjectName: string;
+    className: string;
+    price: number;
+    isFree: boolean;
+    featuredAt: string;
+}
+
 export interface ChapterStructureResponseDto {
     id: number;
     title: string;
