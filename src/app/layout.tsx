@@ -1,16 +1,10 @@
 // src/app/layout.tsx
 import "./globals.css";
-
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { I18nProvider } from "@/contexts/I18nProvider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-
 import AppChrome from "@/components/AppChrome";
-
-
 
 export const metadata = {
   title: "Montola School",
@@ -27,11 +21,6 @@ export default function RootLayout({
       <body>
           <AuthProvider>
               <I18nProvider>
-
-                  <Navbar />
-                  <main>{children}</main>
-                  <Footer />
-
                   <AppChrome>{children}</AppChrome>
 
                   <ToastContainer

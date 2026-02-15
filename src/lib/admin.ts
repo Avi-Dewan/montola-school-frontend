@@ -9,6 +9,7 @@ import {
     ChapterRequestDto,
     ChapterResponseDto,
     ChapterStructureResponseDto,
+    FeaturedChapterResponseDto,
     TeacherDto,
     PaymentResponseDto,
     AdminStatisticsDto,
@@ -97,7 +98,6 @@ export const toggleChapterFreeStatus = (id: number, isFree: boolean) =>
 export const uploadChapterCoverImage = (id: number, file: File) => {
     const formData = new FormData();
     formData.append("file", file);
-    
     return api.post(`/v1/chapters/${id}/cover-image`, formData, {
         headers: {
             "Content-Type": "multipart/form-data",
@@ -109,6 +109,17 @@ export const getChapterCoverImage = (id: number) =>
     api.get(`/v1/chapters/${id}/cover-image`, {
         responseType: "blob",
     });
+
+// ==================== Featured Chapters Management ====================
+
+export const getFeaturedChapters = () =>
+    api.get<FeaturedChapterResponseDto[]>("/v1/featured-chapters");
+
+export const addFeaturedChapter = (chapterId: number) =>
+    api.post(`/v1/featured-chapters/${chapterId}`);
+
+export const removeFeaturedChapter = (chapterId: number) =>
+    api.delete(`/v1/featured-chapters/${chapterId}`);
 
 // ==================== Teacher Management ====================
 
