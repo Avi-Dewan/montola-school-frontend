@@ -6,7 +6,6 @@
     "pricing": "মূল্য",
     "about": "আমাদের সম্পর্কে"
   },
-
   "auth": {
     "login": "সাইন ইন",
     "register": "রেজিস্টার",
@@ -19,7 +18,6 @@
     "invalidCredentials": "ভুল ব্যবহারকারীর নাম অথবা পাসওয়ার্ড",
     "sessionExpired": "আপনার সেশন শেষ হয়েছে। অনুগ্রহ করে আবার লগ ইন করুন।"
   },
-
   "form": {
     "user": {
       "email": "ইমেইল",
@@ -40,35 +38,29 @@
       "price": "মূল্য"
     }
   },
-
   "messages": {
     "loading": "লোড হচ্ছে...",
     "error": "কিছু ভুল হয়েছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।",
     "success": "অপারেশন সফলভাবে সম্পন্ন হয়েছে।"
   },
-
   "course": {
     "title": "কোর্স",
     "noCourses": "কোনও কোর্স পাওয়া যায়নি।"
   },
-
   "teacher": {
     "title": "শিক্ষক",
     "noTeachers": "কোনও শিক্ষক পাওয়া যায়নি।"
   },
-
   "student": {
     "title": "শিক্ষার্থী",
     "noStudents": "কোনও শিক্ষার্থী পাওয়া যায়নি।"
   },
-
   "roles": {
     "student": "শিক্ষার্থী",
     "teacher": "শিক্ষক",
     "manager": "ম্যানেজার",
     "admin": "অ্যাডমিন"
   },
-
   "admin": {
     "dashboard": "অ্যাডমিন ড্যাশবোর্ড",
     "brand": "মন্টোলা অ্যাডমিন",
@@ -77,7 +69,24 @@
       "classes": "ক্লাস",
       "subjects": "বিষয়",
       "chapters": "অধ্যায়",
+      "featuredChapters": "নির্বাচিত অধ্যায়",
       "purchaseVerification": "ক্রয় যাচাইকরণ"
+    }
+  },
+  "teacher": {
+    "dashboard": "শিক্ষক ড্যাশবোর্ড",
+    "assignedChapters": "নির্ধারিত অধ্যায়",
+    "chapterDetails": "অধ্যায়ের বিবরণ",
+    "addTopic": "টপিক যোগ করুন",
+    "editTopic": "টপিক সম্পাদনা করুন",
+    "deleteTopic": "টপিক মুছুন",
+    "addContent": "কন্টেন্ট যোগ করুন",
+    "editContent": "কন্টেন্ট সম্পাদনা করুন",
+    "deleteContent": "কন্টেন্ট মুছুন",
+    "contentType": {
+      "lecture": "লেকচার",
+      "pdf": "পিডিএফ",
+      "quiz": "কুইজ"
     }
   }
 }

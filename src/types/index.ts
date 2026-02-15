@@ -107,6 +107,18 @@ export interface ChapterResponseDto {
     teachers?: TeacherDto[];
 }
 
+export interface FeaturedChapterResponseDto {
+    id: number;
+    chapterId: number;
+    title: string;
+    description: string;
+    subjectName: string;
+    className: string;
+    price: number;
+    isFree: boolean;
+    featuredAt: string;
+}
+
 export interface ChapterStructureResponseDto {
     id: number;
     title: string;
@@ -218,4 +230,107 @@ export interface ChapterFormState {
     videoId: string;
     price: number;
     free: boolean;
+}
+
+// Topic types
+export interface TopicRequestDto {
+    chapterId: number;
+    title: string;
+    description?: string;
+    orderIndex?: number;
+}
+
+export interface TopicResponseDto {
+    id: number;
+    title: string;
+    description?: string;
+    orderIndex?: number;
+    chapterId: number;
+}
+
+// Content types
+export interface LectureRequestDto {
+    topicId: number;
+    title: string;
+    videoId?: string;
+    content?: string;
+    orderIndex: number;
+}
+
+export interface GooglePdfContentRequestDto {
+    topicId: number;
+    title: string;
+    googleFileId: string;
+    pageCount?: number;
+    orderIndex: number;
+}
+
+export enum QuizType {
+    MCQ = "MCQ",
+    WRITTEN = "WRITTEN",
+    FILL_BLANK = "FILL_BLANK",
+    TABLE_MATCHING = "TABLE_MATCHING"
+}
+
+export enum QuizQuestionType {
+    MULTIPLE_CHOICE = "MULTIPLE_CHOICE",
+    FILL_IN_THE_BLANK = "FILL_IN_THE_BLANK",
+    MATCHING = "MATCHING",
+    WRITTEN = "WRITTEN"
+}
+
+export interface QuizOptionRequestDto {
+    optionText: string;
+    isCorrect: boolean;
+}
+
+export interface QuizFillBlankRequestDto {
+    blankPosition: number;
+    correctAnswer: string;
+}
+
+export interface QuizTableMatchingRequestDto {
+    leftItem: string;
+    rightItem: string;
+    orderIndex: number;
+}
+
+export interface QuizWrittenAnswerRequestDto {
+    sampleAnswer: string;
+}
+
+export interface QuizQuestionRequestDto {
+    questionText: string;
+    type: QuizQuestionType;
+    orderIndex: number;
+    marks: number;
+    options?: QuizOptionRequestDto[];
+    writtenAnswer?: QuizWrittenAnswerRequestDto;
+    fillBlanks?: QuizFillBlankRequestDto[];
+    tableMatchings?: QuizTableMatchingRequestDto[];
+}
+
+export interface QuizRequestDto {
+    topicId: number;
+    title: string;
+    quizType: QuizType;
+    instruction?: string;
+    timeLimit?: number;
+    totalMarks?: number;
+    passPercentage?: number;
+    orderIndex: number;
+    questions?: QuizQuestionRequestDto[];
+}
+
+// Statistics types
+export interface ChapterStatisticsDto {
+    chapterId: number;
+    totalEnrolledStudents: number;
+}
+
+export interface StudentChapterProgressDto {
+    studentId: number;
+    studentName: string;
+    progressPercentage: number;
+    completed: boolean;
 }

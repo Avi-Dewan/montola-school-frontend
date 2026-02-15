@@ -3,14 +3,15 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useI18n } from "@/contexts/I18nProvider";
-import { 
-    HiHome, 
-    HiBookOpen, 
-    HiLibrary, 
-    HiDocumentText, 
+import {
+    HiHome,
+    HiBookOpen,
+    HiLibrary,
+    HiDocumentText,
     HiCash,
     HiMenu,
-    HiX
+    HiX,
+    HiStar
 } from "react-icons/hi";
 
 interface NavItem {
@@ -33,6 +34,7 @@ export default function AdminSidebar({ isMobileOpen, onMobileToggle }: AdminSide
         { href: "/admin/classes", labelKey: "admin.nav.classes", icon: HiBookOpen },
         { href: "/admin/subjects", labelKey: "admin.nav.subjects", icon: HiLibrary },
         { href: "/admin/chapters", labelKey: "admin.nav.chapters", icon: HiDocumentText },
+        { href: "/admin/featured", labelKey: "admin.nav.featuredChapters", icon: HiStar },
         { href: "/admin/payments", labelKey: "admin.nav.purchaseVerification", icon: HiCash },
     ];
 
@@ -48,9 +50,8 @@ export default function AdminSidebar({ isMobileOpen, onMobileToggle }: AdminSide
 
             {/* Sidebar */}
             <aside
-                className={`fixed left-0 top-0 h-full w-64 bg-white shadow-lg border-r border-gray-200 z-50 transform transition-transform duration-300 ease-in-out ${
-                    isMobileOpen ? "translate-x-0" : "-translate-x-full"
-                } md:translate-x-0`}
+                className={`fixed left-0 top-0 h-full w-64 bg-white shadow-lg border-r border-gray-200 z-50 transform transition-transform duration-300 ease-in-out ${isMobileOpen ? "translate-x-0" : "-translate-x-full"
+                    } md:translate-x-0`}
             >
                 <div className="flex flex-col h-full">
                     {/* Logo/Brand with mobile close button */}
@@ -68,9 +69,9 @@ export default function AdminSidebar({ isMobileOpen, onMobileToggle }: AdminSide
                     <nav className="flex-1 p-4 space-y-2 overflow-y-auto">
                         {navItems.map((item) => {
                             const Icon = item.icon;
-                            const isActive = pathname === item.href || 
+                            const isActive = pathname === item.href ||
                                 (item.href !== "/admin" && pathname.startsWith(item.href));
-                            
+
                             return (
                                 <Link
                                     key={item.href}
@@ -81,12 +82,11 @@ export default function AdminSidebar({ isMobileOpen, onMobileToggle }: AdminSide
                                             onMobileToggle();
                                         }
                                     }}
-                                    
-                                    className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
-                                        isActive
-                                            ? "bg-primary-500 text-white"
-                                            : "text-gray-700 hover:bg-gray-100"
-                                    }`}
+
+                                    className={`flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${isActive
+                                        ? "bg-primary-500 text-white"
+                                        : "text-gray-700 hover:bg-gray-100"
+                                        }`}
                                 >
                                     <Icon className="w-5 h-5" />
                                     <span className="font-medium">{t(item.labelKey)}</span>

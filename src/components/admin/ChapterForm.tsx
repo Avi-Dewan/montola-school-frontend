@@ -14,6 +14,7 @@ interface ChapterFormProps {
     onSubmit: (data: ChapterRequestDto) => Promise<void>;
     onCancel: () => void;
     isLoading?: boolean;
+    hideStatus?: boolean;
 }
 
 export default function ChapterForm({
@@ -21,6 +22,7 @@ export default function ChapterForm({
     onSubmit,
     onCancel,
     isLoading = false,
+    hideStatus = false,
 }: ChapterFormProps) {
     const [formData, setFormData] = useState<ChapterRequestDto>({
         subjectId: initialData?.subjectId || 0,
@@ -136,17 +138,19 @@ export default function ChapterForm({
                 />
             </div>
 
-            <Select
-                label="Status"
-                value={formData.status || ChapterStatus.DRAFT}
-                onChange={(e) =>
-                    setFormData({
-                        ...formData,
-                        status: e.target.value as ChapterStatus,
-                    })
-                }
-                options={statusOptions}
-            />
+            {!hideStatus && (
+                <Select
+                    label="Status"
+                    value={formData.status || ChapterStatus.DRAFT}
+                    onChange={(e) =>
+                        setFormData({
+                            ...formData,
+                            status: e.target.value as ChapterStatus,
+                        })
+                    }
+                    options={statusOptions}
+                />
+            )}
 
             <Input
                 label="Order Index"
