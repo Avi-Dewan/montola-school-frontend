@@ -8,6 +8,8 @@ import { getHighestPriorityRole, getRouteForRole } from "@/lib/roles";
 import Hero from "@/components/Hero";
 import ValueProps from "@/components/ValueProps";
 import FeaturedCourses from "@/components/FeaturedCourses";
+import FreeChapterList from "@/components/FreeChapterList";
+import ClassesListSection from "@/components/ClassesListSection";
 import TeacherSpotlight from "@/components/TeacherSpotLight";
 import Testimonials from "@/components/Testimonials";
 import Pricing from "@/components/Pricing";
@@ -26,7 +28,9 @@ export default function HomePage() {
         if (roles.length === 0) return;
 
         // If the user is only a STUDENT, keep them on the homepage
+        // TODO: In future, redirect to /student/dashboard
         if (roles.length === 1 && roles[0] === "STUDENT") {
+            // router.replace("/student/dashboard"); // Planned change
             return;
         }
 
@@ -44,6 +48,7 @@ export default function HomePage() {
             }
         }
 
+        // If generic student or no role catch, stay here (or go to dashboard later)
         if (!targetRole || targetRole === "STUDENT") {
             return;
         }
@@ -61,6 +66,8 @@ export default function HomePage() {
             <Hero />
             <ValueProps />
             <FeaturedCourses />
+            <FreeChapterList />
+            <ClassesListSection />
             <TeacherSpotlight />
             <Testimonials />
             <Pricing />
