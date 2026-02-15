@@ -334,3 +334,16 @@ export interface StudentChapterProgressDto {
     progressPercentage: number;
     completed: boolean;
 }
+
+export interface ChapterProgressResponseDto {
+    chapterId: number;
+    chapterTitle: string;
+    progressPercentage: number;
+    completed: boolean;
+}
+
+export interface ContentProgressResponseDto {
+    contentItemId: number;
+    completed: boolean;
+    score?: number;
+}
