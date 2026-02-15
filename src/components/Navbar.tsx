@@ -4,13 +4,22 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useI18n } from "@/contexts/I18nProvider";
 import { useState } from "react";
 import { HiMenu, HiX } from "react-icons/hi";
+import { getHighestPriorityRole } from "@/lib/roles";
 
 export default function Navbar() {
-    const { isLoggedIn, removeAuthTokens, isLoading } = useAuth(); // Add isLoading
+    const { isLoggedIn, removeAuthTokens, isLoading, user, activeRole } = useAuth();
     const { t, lang, switchLang } = useI18n();
     const [isOpen, setIsOpen] = useState(false);
 
     const toggleMenu = () => setIsOpen(!isOpen);
+
+    const roles = user?.roles || [];
+    const resolvedActiveRole =
+        (activeRole && roles.includes(activeRole) && activeRole) ||
+        getHighestPriorityRole(roles);
+
+    const isStudent = resolvedActiveRole === "STUDENT";
+    const isTeacher = resolvedActiveRole === "TEACHER";
 
     // Function to render auth buttons
     const renderAuthButtons = () => {
@@ -96,6 +105,87 @@ export default function Navbar() {
         );
     };
 
+    // Role-based extra links (for logged-in users)
+    const renderRoleLinksDesktop = () => {
+        if (!isLoggedIn) return null;
+
+        if (isStudent) {
+            return (
+                <>
+                    <Link href="/" className="text-gray-800 hover:text-primary-500">
+                        My Dashboard
+                    </Link>
+                    <Link href="/my-chapters" className="text-gray-800 hover:text-primary-500">
+                        My Chapters
+                    </Link>
+                </>
+            );
+        }
+
+        if (isTeacher) {
+            return (
+                <>
+                    <Link href="/teacher" className="text-gray-800 hover:text-primary-500">
+                        My Dashboard
+                    </Link>
+                    <Link href="/teacher/assigned-chapters" className="text-gray-800 hover:text-primary-500">
+                        Assigned Chapters
+                    </Link>
+                </>
+            );
+        }
+
+        return null;
+    };
+
+    const renderRoleLinksMobile = () => {
+        if (!isLoggedIn) return null;
+
+        if (isStudent) {
+            return (
+                <>
+                    <Link
+                        href="/"
+                        onClick={() => setIsOpen(false)}
+                        className="w-full sm:w-auto block px-2 py-1 text-gray-800 hover:text-primary-500"
+                    >
+                        My Dashboard
+                    </Link>
+                    <Link
+                        href="/my-chapters"
+                        onClick={() => setIsOpen(false)}
+                        className="w-full sm:w-auto block px-2 py-1 text-gray-800 hover:text-primary-500"
+                    >
+                        My Chapters
+                    </Link>
+                </>
+            );
+        }
+
+        if (isTeacher) {
+            return (
+                <>
+                    <Link
+                        href="/teacher"
+                        onClick={() => setIsOpen(false)}
+                        className="w-full sm:w-auto block px-2 py-1 text-gray-800 hover:text-primary-500"
+                    >
+                        My Dashboard
+                    </Link>
+                    <Link
+                        href="/teacher/assigned-chapters"
+                        onClick={() => setIsOpen(false)}
+                        className="w-full sm:w-auto block px-2 py-1 text-gray-800 hover:text-primary-500"
+                    >
+                        Assigned Chapters
+                    </Link>
+                </>
+            );
+        }
+
+        return null;
+    };
+
     return (
         <nav className="sticky top-0 bg-white shadow-md z-50">
             <div className="max-w-7xl mx-auto flex justify-between items-center py-4 px-6">
@@ -103,11 +193,13 @@ export default function Navbar() {
 
                 {/* Desktop links */}
                 <div className="hidden md:flex space-x-6 items-center">
-                    <Link href="/" className="hover:text-primary-500">{t("nav.home")}</Link>
-                    <Link href="/courses" className="hover:text-primary-500">{t("nav.courses")}</Link>
-                    <Link href="/teachers" className="hover:text-primary-500">{t("nav.teachers")}</Link>
-                    <Link href="/pricing" className="hover:text-primary-500">{t("nav.pricing")}</Link>
-                    <Link href="/about" className="hover:text-primary-500">{t("nav.about")}</Link>
+                    <Link href="/" className="text-gray-800 hover:text-primary-500">{t("nav.home")}</Link>
+                    <Link href="/courses" className="text-gray-800 hover:text-primary-500">{t("nav.courses")}</Link>
+                    <Link href="/teachers" className="text-gray-800 hover:text-primary-500">{t("nav.teachers")}</Link>
+                    <Link href="/pricing" className="text-gray-800 hover:text-primary-500">{t("nav.pricing")}</Link>
+                    <Link href="/about" className="text-gray-800 hover:text-primary-500">{t("nav.about")}</Link>
+
+                    {renderRoleLinksDesktop()}
 
                     {renderAuthButtons()}
 
@@ -123,7 +215,7 @@ export default function Navbar() {
 
                 {/* Mobile menu button */}
                 <div className="md:hidden">
-                    <button onClick={toggleMenu}>
+                    <button onClick={toggleMenu} className="text-gray-800">
                         {isOpen ? <HiX size={24} /> : <HiMenu size={24} />}
                     </button>
                 </div>
@@ -132,11 +224,13 @@ export default function Navbar() {
             {/* Mobile menu */}
             {isOpen && (
                 <div className="flex flex-col space-y-2 p-4 bg-white shadow-md sm:flex-row sm:space-x-6 sm:space-y-0 sm:p-0 sm:bg-transparent sm:shadow-none items-start sm:items-center">
-                    <Link href="/" onClick={() => setIsOpen(false)} className="w-full sm:w-auto block px-2 py-1 hover:text-primary-500">{t("nav.home")}</Link>
-                    <Link href="/courses" onClick={() => setIsOpen(false)} className="w-full sm:w-auto block px-2 py-1 hover:text-primary-500">{t("nav.courses")}</Link>
-                    <Link href="/teachers" onClick={() => setIsOpen(false)} className="w-full sm:w-auto block px-2 py-1 hover:text-primary-500">{t("nav.teachers")}</Link>
-                    <Link href="/pricing" onClick={() => setIsOpen(false)} className="w-full sm:w-auto block px-2 py-1 hover:text-primary-500">{t("nav.pricing")}</Link>
-                    <Link href="/about" onClick={() => setIsOpen(false)} className="w-full sm:w-auto block px-2 py-1 hover:text-primary-500">{t("nav.about")}</Link>
+                    <Link href="/" onClick={() => setIsOpen(false)} className="w-full sm:w-auto block px-2 py-1 text-gray-800 hover:text-primary-500">{t("nav.home")}</Link>
+                    <Link href="/courses" onClick={() => setIsOpen(false)} className="w-full sm:w-auto block px-2 py-1 text-gray-800 hover:text-primary-500">{t("nav.courses")}</Link>
+                    <Link href="/teachers" onClick={() => setIsOpen(false)} className="w-full sm:w-auto block px-2 py-1 text-gray-800 hover:text-primary-500">{t("nav.teachers")}</Link>
+                    <Link href="/pricing" onClick={() => setIsOpen(false)} className="w-full sm:w-auto block px-2 py-1 text-gray-800 hover:text-primary-500">{t("nav.pricing")}</Link>
+                    <Link href="/about" onClick={() => setIsOpen(false)} className="w-full sm:w-auto block px-2 py-1 text-gray-800 hover:text-primary-500">{t("nav.about")}</Link>
+
+                        {renderRoleLinksMobile()}
 
                     {renderMobileAuthButtons()}
 
