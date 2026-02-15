@@ -1,13 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { login } from "@/lib/auth";
-import { useI18n } from "@/contexts/I18nProvider";
-import { useAuth } from "@/contexts/AuthContext";
 import { Alert } from "@/components/Alert";
-import { toast } from "react-toastify";
+import { useAuth } from "@/contexts/AuthContext";
+import { useI18n } from "@/contexts/I18nProvider";
+import { login } from "@/lib/auth";
+import { getHighestPriorityRole, getRouteForRole } from "@/lib/roles";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function LoginPage() {
     const [email, setEmail] = useState("");
@@ -55,8 +56,13 @@ export default function LoginPage() {
             // The API returns AuthResponse with accessToken, refreshToken, email, fullName, roles
             setAuthTokens(res.data);
 
+            // Role-based redirect after login using centralized helpers
+            const roles: string[] = Array.isArray(res.data?.roles) ? res.data.roles : [];
+            const primaryRole = getHighestPriorityRole(roles);
+            const targetPath = getRouteForRole(primaryRole || undefined);
+
             toast.success(t("auth.loginSuccess"));
-            router.push("/dashboard");
+            router.push(targetPath);
 
         } catch (err) {
             console.error(err);
