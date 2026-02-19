@@ -1,51 +1,60 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, createContext, useContext, useCallback } from "react";
 import { useParams } from "next/navigation";
-import { getChapterProgress, getChapterDetailedProgress } from "@/lib/student"; // Removed getChapterStructure from student if not there
-import { getChapterStructure } from "@/lib/teacher"; // Re-using, or better: add to student.ts
-// Actually, student.ts didn't have getChapterStructure. Let's use public one or teacher one?
-// Public structure might be different (less detailed?).
-// Let's assume we need a GET /api/v1/chapters/{id}/structure for students.
-// Checking api-docs: /api/v1/chapters/{id}/structure is there.
-// I should add getChapterStructure to student.ts or import from elsewhere.
-// I'll import from teacher.ts as it uses the same endpoint /api/v1/chapter/{id}/structure typically.
-// Wait, teacher.ts has: getChapterStructure from "./admin".
-// Let's just add it to student.ts to be clean or import from where it exists.
-// I'll check if I can import `getChapterStructure` from `lib/public`? No, public has `getClassPublicStructure`.
-// `lib/teacher` re-exports from `admin`.
-// I'll assume I can just fetch it here or utilize a new helper.
-// Ideally, `lib/student.ts` should have it. I'll update `lib/student.ts` in separate step if needed but I can't do it now in this turn.
-// I will fetch it directly here or use `api.get`.
-// Since I can't update student.ts in this turn easily without interrupting flow, I will just call api directly here or assume I can import `getChapterStructure` from `admin` if accessible.
-// Let's try importing from `lib/admin` if it exists, or `lib/teacher`.
-import { ChapterStructureResponseDto } from "@/types";
+import { getChapterProgress, getChapterDetailedProgress } from "@/lib/student";
+import { ChapterStructureResponseDto, ChapterProgressResponseDto } from "@/types";
 import CourseSidebar from "@/components/CourseSidebar";
 import api from "@/lib/api";
+
+type ProgressContextType = {
+    detailedProgress: Record<string, boolean>;
+    overallProgress: ChapterProgressResponseDto | null;
+    refreshProgress: () => Promise<void>;
+};
+
+const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
+
+export const useProgress = () => {
+    const context = useContext(ProgressContext);
+    if (!context) throw new Error("useProgress must be used within a ProgressProvider");
+    return context;
+};
 
 export default function CourseLayout({ children }: { children: React.ReactNode }) {
     const params = useParams();
     const chapterId = params?.id ? Number(params.id) : null;
 
     const [structure, setStructure] = useState<ChapterStructureResponseDto | null>(null);
-    const [progress, setProgress] = useState<Record<string, string>>({});
+    const [detailedProgress, setDetailedProgress] = useState<Record<string, boolean>>({});
+    const [overallProgress, setOverallProgress] = useState<ChapterProgressResponseDto | null>(null);
     const [loading, setLoading] = useState(true);
+
+    const refreshProgress = useCallback(async () => {
+        if (!chapterId) return;
+        try {
+            const [detailed, overall] = await Promise.all([
+                getChapterDetailedProgress(chapterId),
+                getChapterProgress(chapterId)
+            ]);
+            setDetailedProgress(detailed || {});
+            setOverallProgress(overall);
+        } catch (error) {
+            console.error("Failed to refresh progress:", error);
+        }
+    }, [chapterId]);
 
     useEffect(() => {
         if (!chapterId) return;
 
         const fetchData = async () => {
+            setLoading(true);
             try {
-                // Fetch structure and progress in parallel
-                // TODO: Add getChapterStructure to lib/student.ts properly
-                const [structRes, progressRes] = await Promise.all([
+                const [structRes] = await Promise.all([
                     api.get<ChapterStructureResponseDto>(`/v1/chapters/${chapterId}/structure`),
-                    getChapterDetailedProgress(chapterId)
+                    refreshProgress()
                 ]);
-
                 setStructure(structRes.data);
-                setProgress(progressRes || {});
-
             } catch (error) {
                 console.error("Failed to load course data:", error);
             } finally {
@@ -54,31 +63,43 @@ export default function CourseLayout({ children }: { children: React.ReactNode }
         };
 
         fetchData();
-    }, [chapterId]);
+    }, [chapterId, refreshProgress]);
 
     if (!chapterId) return null;
 
     if (loading) {
-        return <div className="min-h-screen flex items-center justify-center">Loading course...</div>;
+        return (
+            <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
+                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+                <p className="mt-4 text-gray-500 font-medium">Loading course material...</p>
+            </div>
+        );
     }
 
     if (!structure) {
-        return <div className="min-h-screen flex items-center justify-center text-red-500">Course content not found</div>;
+        return (
+            <div className="min-h-screen flex items-center justify-center text-red-500 bg-gray-50">
+                Course content not found
+            </div>
+        );
     }
 
     return (
-        <div className="flex min-h-screen bg-gray-50 pt-16">
-            {/* pt-16 to account for fixed navbar if it exists, but layout usually handles navbar. check app/layout.tsx */}
-            {/* If Navbar is in root layout, it's sticky or fixed? Usually fixed. */}
-            {/* Let's assume standard layout. Sidebar handles its own scrolling. */}
+        <ProgressContext.Provider value={{ detailedProgress, overallProgress, refreshProgress }}>
+            <div className="flex min-h-screen bg-gray-50 pt-16">
+                <CourseSidebar
+                    structure={structure}
+                    detailedProgress={detailedProgress}
+                    overallProgress={overallProgress}
+                />
 
-            <CourseSidebar structure={structure} progress={progress} />
-
-            <div className="flex-1 min-w-0 overflow-y-auto">
-                <main className="p-8 max-w-4xl mx-auto">
-                    {children}
-                </main>
+                <div className="flex-1 min-w-0 overflow-y-auto">
+                    <main className="p-4 md:p-8 max-w-5xl mx-auto">
+                        {children}
+                    </main>
+                </div>
             </div>
-        </div>
+        </ProgressContext.Provider>
     );
 }
+

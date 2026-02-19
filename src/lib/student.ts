@@ -21,11 +21,11 @@ export const getChapterProgress = async (chapterId: number) => {
 };
 
 export const getChapterDetailedProgress = async (chapterId: number) => {
-    // Returns map of contentId -> status (e.g. COMPLETED, STARTED)
-    // The previous analysis of api-docs showed: /api/v1/progress/chapter/{chapterId}/detailed
-    const response = await api.get<Record<string, string>>(`/v1/progress/chapter/${chapterId}/detailed`);
+    // Returns map of contentId -> status (e.g. true for completed)
+    const response = await api.get<Record<string, boolean>>(`/v1/progress/chapter/${chapterId}/detailed`);
     return response.data;
 };
+
 
 export const markContentComplete = async (contentItemId: number) => {
     const response = await api.post<ContentProgressResponseDto>(`/v1/progress/content/${contentItemId}/complete`);

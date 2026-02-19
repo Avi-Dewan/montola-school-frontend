@@ -10,7 +10,9 @@ import {
     QuizQuestionResponseDto,
     QuizQuestionType
 } from "@/types";
+import { useProgress } from "../../layout";
 import {
+
     FiCheckCircle,
     FiXCircle,
     FiChevronRight,
@@ -27,6 +29,10 @@ export default function ContentPlayerPage() {
     const router = useRouter();
     const contentId = params?.contentId ? Number(params.contentId) : null;
     const chapterId = params?.id ? Number(params.id) : null;
+
+    const { detailedProgress, refreshProgress } = useProgress();
+    const isCompleted = contentId ? !!detailedProgress[contentId] : false;
+
 
     const [content, setContent] = useState<LectureResponseDto | QuizResponseDto | GooglePdfContentResponseDto | null>(null);
     const [loading, setLoading] = useState(true);
@@ -71,10 +77,12 @@ export default function ContentPlayerPage() {
         try {
             await markContentComplete(contentId);
             toast.success("Marked as complete!");
-        } catch (e) {
+            refreshProgress();
+        } catch (e: any) {
             console.error(e);
-            toast.error("Failed to mark as complete");
+            toast.error(e.response?.data?.message || "Failed to mark as complete");
         }
+
     };
 
     const handleQuizSubmit = async () => {
@@ -115,7 +123,9 @@ export default function ContentPlayerPage() {
         try {
             await submitQuizScore(contentId!, earnedMarks);
             toast.success(`Quiz submitted! Your score: ${earnedMarks}/${totalMarks}`);
+            refreshProgress();
         } catch (e) {
+
             console.error(e);
             toast.error("Failed to save quiz results");
         }
@@ -439,11 +449,16 @@ export default function ContentPlayerPage() {
                             {!isQuiz && (
                                 <button
                                     onClick={handleMarkComplete}
-                                    className="bg-white text-gray-700 border border-gray-200 px-6 py-2.5 rounded-lg hover:bg-gray-50 transition font-medium"
+                                    disabled={isCompleted}
+                                    className={`px-6 py-2.5 rounded-lg transition-all font-bold text-sm flex items-center gap-2 ${isCompleted
+                                            ? "bg-green-100 text-green-700 cursor-default"
+                                            : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-gray-300"
+                                        }`}
                                 >
-                                    Mark as Complete
+                                    {isCompleted ? <><FiCheckCircle /> Completed</> : "Mark as Complete"}
                                 </button>
                             )}
+
                             <button
                                 onClick={() => router.back()}
                                 className="bg-gray-900 text-white px-6 py-2.5 rounded-lg hover:bg-gray-800 transition font-medium flex items-center gap-2"
