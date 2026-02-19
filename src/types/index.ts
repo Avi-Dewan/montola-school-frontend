@@ -265,6 +265,27 @@ export interface GooglePdfContentRequestDto {
     orderIndex: number;
 }
 
+export interface LectureResponseDto {
+    id: number;
+    title: string;
+    videoId?: string;
+    content?: string;
+    topicId: number;
+    topicTitle: string;
+    orderIndex: number;
+}
+
+export interface GooglePdfContentResponseDto {
+    id: number;
+    title: string;
+    googleFileId: string;
+    pageCount: number;
+    topicId: number;
+    topicTitle: string;
+    orderIndex: number;
+}
+
+
 export enum QuizType {
     MCQ = "MCQ",
     WRITTEN = "WRITTEN",
@@ -310,7 +331,58 @@ export interface QuizQuestionRequestDto {
     tableMatchings?: QuizTableMatchingRequestDto[];
 }
 
+export interface QuizOptionResponseDto {
+    id: number;
+    optionText: string;
+    isCorrect: boolean;
+}
+
+export interface QuizFillBlankResponseDto {
+    id: number;
+    blankPosition: number;
+    correctAnswer: string;
+}
+
+export interface QuizTableMatchingResponseDto {
+    id: number;
+    leftItem: string;
+    rightItem: string;
+    orderIndex: number;
+}
+
+export interface QuizWrittenAnswerResponseDto {
+    id: number;
+    sampleAnswer: string;
+}
+
+export interface QuizQuestionResponseDto {
+    id: number;
+    questionText: string;
+    type: QuizQuestionType;
+    orderIndex: number;
+    marks: number;
+    options: QuizOptionResponseDto[];
+    writtenAnswer: QuizWrittenAnswerResponseDto | null;
+    fillBlanks: QuizFillBlankResponseDto[];
+    tableMatchings: QuizTableMatchingResponseDto[];
+}
+
+export interface QuizResponseDto {
+    id: number;
+    title: string;
+    quizType: QuizType;
+    instruction?: string;
+    timeLimit?: number;
+    totalMarks?: number;
+    passPercentage?: number;
+    topicId: number;
+    topicTitle: string;
+    orderIndex: number;
+    questions: QuizQuestionResponseDto[];
+}
+
 export interface QuizRequestDto {
+
     topicId: number;
     title: string;
     quizType: QuizType;

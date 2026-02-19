@@ -1,8 +1,12 @@
 import api from "./api";
 import {
     ChapterProgressResponseDto,
-    ContentProgressResponseDto
+    ContentProgressResponseDto,
+    LectureResponseDto,
+    QuizResponseDto,
+    GooglePdfContentResponseDto
 } from "@/types";
+
 
 // ==================== Student Progress ====================
 
@@ -47,3 +51,9 @@ export const submitQuizScore = async (contentItemId: number, score: number) => {
 // Actually, student might see different structure (e.g. if access control applies)?
 // But typically structure is same.
 // We can import specific student endpoints here.
+// ==================== Content ====================
+
+export const getContentById = async (id: number) => {
+    const response = await api.get<LectureResponseDto | QuizResponseDto | GooglePdfContentResponseDto>(`/v1/contents/${id}`);
+    return response.data;
+};

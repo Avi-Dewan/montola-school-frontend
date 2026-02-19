@@ -1,3426 +1,3351 @@
 {
-    "openapi": "3.0.1",
-    "info": {
+  "openapi": "3.0.1",
+  "info": {
     "title": "Montola School API",
     "description": "API documentation for Montola School project",
     "version": "1.0"
-    },
-    "servers": [
+  },
+  "servers": [
     {
-    "url": "http://localhost:8080",
-    "description": "Generated server url"
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
     }
-    ],
-    "security": [
+  ],
+  "security": [
     {
-    "bearerAuth": []
+      "bearerAuth": []
     }
-    ],
-    "tags": [
+  ],
+  "tags": [
     {
-    "name": "Teacher Management",
-    "description": "Endpoints for teacher operations"
+      "name": "Teacher Management",
+      "description": "Endpoints for teacher operations"
     },
     {
-    "name": "Content Management",
-    "description": "Endpoints to manage content items"
+      "name": "Content Management",
+      "description": "Endpoints to manage content items"
     },
     {
-    "name": "Progress Management",
-    "description": "Endpoints to track and view student progress"
+      "name": "Progress Management",
+      "description": "Endpoints to track and view student progress"
     },
     {
-    "name": "Topic Management",
-    "description": "Endpoints to manage topics"
+      "name": "Topic Management",
+      "description": "Endpoints to manage topics"
     },
     {
-    "name": "Authentication",
-    "description": "Endpoints for login and registration"
+      "name": "Authentication",
+      "description": "Endpoints for login and registration"
     },
     {
-    "name": "Class Management",
-    "description": "Endpoints to manage classes"
+      "name": "Class Management",
+      "description": "Endpoints to manage classes"
     },
     {
-    "name": "Featured Chapters",
-    "description": "Endpoints to manage and view featured chapters"
+      "name": "Featured Chapters",
+      "description": "Endpoints to manage and view featured chapters"
     },
     {
-    "name": "Subject Management",
-    "description": "Endpoints to manage subjects"
+      "name": "Subject Management",
+      "description": "Endpoints to manage subjects"
     },
     {
-    "name": "Chapter Management",
-    "description": "Endpoints to manage chapters"
+      "name": "Chapter Management",
+      "description": "Endpoints to manage chapters"
     },
     {
-    "name": "Admin Dashboard",
-    "description": "Endpoints for admin statistics and overview"
+      "name": "Admin Dashboard",
+      "description": "Endpoints for admin statistics and overview"
     },
     {
-    "name": "User Management",
-    "description": "Endpoints to manage users"
+      "name": "User Management",
+      "description": "Endpoints to manage users"
     }
-    ],
-    "paths": {
+  ],
+  "paths": {
     "/api/v1/topics/{id}": {
-    "get": {
-    "tags": [
-    "Topic Management"
-    ],
-    "summary": "Get topic by id",
-    "operationId": "getTopicById",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/TopicResponseDto"
-    }
-    }
-    }
-    }
-    }
-    },
-    "put": {
-    "tags": [
-    "Topic Management"
-    ],
-    "summary": "Update a topic",
-    "operationId": "updateTopic",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/TopicRequestDto"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/TopicResponseDto"
-    }
-    }
-    }
-    }
-    }
-    },
-    "delete": {
-    "tags": [
-    "Topic Management"
-    ],
-    "summary": "Delete a topic",
-    "operationId": "deleteTopic",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK"
-    }
-    }
-    }
+      "get": {
+        "tags": ["Topic Management"],
+        "summary": "Get topic by id",
+        "operationId": "getTopicById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TopicResponseDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Topic Management"],
+        "summary": "Update a topic",
+        "operationId": "updateTopic",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TopicRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TopicResponseDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Topic Management"],
+        "summary": "Delete a topic",
+        "operationId": "deleteTopic",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     },
     "/api/v1/subjects/{id}": {
-    "get": {
-    "tags": [
-    "Subject Management"
-    ],
-    "summary": "Get subject by id",
-    "operationId": "getSubjectById",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/SubjectResponseDto"
-    }
-    }
-    }
-    }
-    }
-    },
-    "put": {
-    "tags": [
-    "Subject Management"
-    ],
-    "summary": "Update a subject",
-    "operationId": "updateSubject",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/SubjectRequestDto"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/SubjectResponseDto"
-    }
-    }
-    }
-    }
-    }
-    },
-    "delete": {
-    "tags": [
-    "Subject Management"
-    ],
-    "summary": "Delete a subject",
-    "operationId": "deleteSubject",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK"
-    }
-    }
-    }
+      "get": {
+        "tags": ["Subject Management"],
+        "summary": "Get subject by id",
+        "operationId": "getSubjectById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubjectResponseDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Subject Management"],
+        "summary": "Update a subject",
+        "operationId": "updateSubject",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubjectRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubjectResponseDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Subject Management"],
+        "summary": "Delete a subject",
+        "operationId": "deleteSubject",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     },
     "/api/v1/payments/{paymentId}/verify": {
-    "put": {
-    "tags": [
-    "payment-controller"
-    ],
-    "operationId": "verifyPayment",
-    "parameters": [
-    {
-    "name": "paymentId",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/PaymentResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
+      "put": {
+        "tags": ["payment-controller"],
+        "operationId": "verifyPayment",
+        "parameters": [
+          {
+            "name": "paymentId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/contents/quiz/{id}": {
-    "put": {
-    "tags": [
-    "Content Management"
-    ],
-    "summary": "Update an existing quiz",
-    "operationId": "updateQuiz",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/QuizRequestDto"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "object"
-    }
-    }
-    }
-    }
-    }
-    }
+      "put": {
+        "tags": ["Content Management"],
+        "summary": "Update an existing quiz",
+        "operationId": "updateQuiz",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuizRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/contents/quiz/{id}/questions": {
-    "put": {
-    "tags": [
-    "Content Management"
-    ],
-    "summary": "Update quiz questions",
-    "operationId": "updateQuizQuestions",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/QuizQuestionRequestDto"
-    }
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "object"
-    }
-    }
-    }
-    }
-    }
-    }
+      "put": {
+        "tags": ["Content Management"],
+        "summary": "Update quiz questions",
+        "operationId": "updateQuizQuestions",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/QuizQuestionRequestDto"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/contents/quiz/content-item/{contentItemId}": {
-    "put": {
-    "tags": [
-    "Content Management"
-    ],
-    "summary": "Update an existing quiz by content item ID",
-    "operationId": "updateQuizByContentItem",
-    "parameters": [
-    {
-    "name": "contentItemId",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/QuizRequestDto"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "object"
-    }
-    }
-    }
-    }
-    }
-    }
+      "put": {
+        "tags": ["Content Management"],
+        "summary": "Update an existing quiz by content item ID",
+        "operationId": "updateQuizByContentItem",
+        "parameters": [
+          {
+            "name": "contentItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuizRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Content Management"],
+        "summary": "Delete a quiz by content item ID",
+        "operationId": "deleteQuizByContentItem",
+        "parameters": [
+          {
+            "name": "contentItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/contents/quiz/content-item/{contentItemId}/questions": {
-    "put": {
-    "tags": [
-    "Content Management"
-    ],
-    "summary": "Update quiz questions by content item ID",
-    "operationId": "updateQuizQuestionsByContentItem",
-    "parameters": [
-    {
-    "name": "contentItemId",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/QuizQuestionRequestDto"
-    }
-    }
-    }
+      "put": {
+        "tags": ["Content Management"],
+        "summary": "Update quiz questions by content item ID",
+        "operationId": "updateQuizQuestionsByContentItem",
+        "parameters": [
+          {
+            "name": "contentItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/QuizQuestionRequestDto"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
     },
-    "required": true
+    "/api/v1/contents/pdf/content-item/{contentItemId}": {
+      "put": {
+        "tags": ["Content Management"],
+        "summary": "Update an existing Google PDF content by content item ID",
+        "operationId": "updateGooglePdfContentByContentItem",
+        "parameters": [
+          {
+            "name": "contentItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GooglePdfContentRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Content Management"],
+        "summary": "Delete a Google PDF content by content item ID",
+        "operationId": "deleteGooglePdfContentByContentItem",
+        "parameters": [
+          {
+            "name": "contentItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
     },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "object"
-    }
-    }
-    }
-    }
-    }
-    }
+    "/api/v1/contents/lecture/content-item/{contentItemId}": {
+      "put": {
+        "tags": ["Content Management"],
+        "summary": "Update an existing lecture by content item ID",
+        "operationId": "updateLectureByContentItem",
+        "parameters": [
+          {
+            "name": "contentItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LectureRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Content Management"],
+        "summary": "Delete a lecture by content item ID",
+        "operationId": "deleteLectureByContentItem",
+        "parameters": [
+          {
+            "name": "contentItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/classes/{id}": {
-    "get": {
-    "tags": [
-    "Class Management"
-    ],
-    "summary": "Get class by id",
-    "operationId": "getClassById",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/ClassResponseDto"
-    }
-    }
-    }
-    }
-    }
-    },
-    "put": {
-    "tags": [
-    "Class Management"
-    ],
-    "summary": "Update a class",
-    "operationId": "updateClass",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/ClassRequestDto"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/ClassResponseDto"
-    }
-    }
-    }
-    }
-    }
-    },
-    "delete": {
-    "tags": [
-    "Class Management"
-    ],
-    "summary": "Delete a class",
-    "operationId": "deleteClass",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK"
-    }
-    }
-    }
+      "get": {
+        "tags": ["Class Management"],
+        "summary": "Get class by id",
+        "operationId": "getClassById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassResponseDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Class Management"],
+        "summary": "Update a class",
+        "operationId": "updateClass",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClassRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassResponseDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Class Management"],
+        "summary": "Delete a class",
+        "operationId": "deleteClass",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     },
     "/api/v1/chapters/{id}": {
-    "get": {
-    "tags": [
-    "Chapter Management"
-    ],
-    "summary": "Get chapter by id",
-    "operationId": "getChapterById",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/ChapterResponseDto"
-    }
-    }
-    }
-    }
-    }
-    },
-    "put": {
-    "tags": [
-    "Chapter Management"
-    ],
-    "summary": "Update a chapter",
-    "operationId": "updateChapter",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/ChapterRequestDto"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/ChapterResponseDto"
-    }
-    }
-    }
-    }
-    }
-    },
-    "delete": {
-    "tags": [
-    "Chapter Management"
-    ],
-    "summary": "Delete a chapter",
-    "operationId": "deleteChapter",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK"
-    }
-    }
-    }
+      "get": {
+        "tags": ["Chapter Management"],
+        "summary": "Get chapter by id",
+        "operationId": "getChapterById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChapterResponseDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": ["Chapter Management"],
+        "summary": "Update a chapter",
+        "operationId": "updateChapter",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChapterRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChapterResponseDto"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Chapter Management"],
+        "summary": "Delete a chapter",
+        "operationId": "deleteChapter",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     },
     "/api/v1/topics": {
-    "get": {
-    "tags": [
-    "Topic Management"
-    ],
-    "summary": "Get all topics",
-    "operationId": "getAllTopics",
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/TopicResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
-    },
-    "post": {
-    "tags": [
-    "Topic Management"
-    ],
-    "summary": "Create a new topic",
-    "operationId": "createTopic",
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/TopicRequestDto"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/TopicResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Topic Management"],
+        "summary": "Get all topics",
+        "operationId": "getAllTopics",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TopicResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Topic Management"],
+        "summary": "Create a new topic",
+        "operationId": "createTopic",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TopicRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TopicResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/subjects": {
-    "get": {
-    "tags": [
-    "Subject Management"
-    ],
-    "summary": "Get all subjects",
-    "operationId": "getAllSubjects",
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/SubjectResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
-    },
-    "post": {
-    "tags": [
-    "Subject Management"
-    ],
-    "summary": "Create a new subject",
-    "operationId": "createSubject",
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/SubjectRequestDto"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/SubjectResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Subject Management"],
+        "summary": "Get all subjects",
+        "operationId": "getAllSubjects",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubjectResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Subject Management"],
+        "summary": "Create a new subject",
+        "operationId": "createSubject",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubjectRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubjectResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/progress/content/{contentItemId}/quiz": {
-    "post": {
-    "tags": [
-    "Progress Management"
-    ],
-    "summary": "Submit quiz score and mark as complete",
-    "operationId": "submitQuizScore",
-    "parameters": [
-    {
-    "name": "contentItemId",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "type": "object",
-    "additionalProperties": {
-    "type": "number",
-    "format": "double"
-    }
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/ContentProgressResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
+      "post": {
+        "tags": ["Progress Management"],
+        "summary": "Submit quiz score and mark as complete",
+        "operationId": "submitQuizScore",
+        "parameters": [
+          {
+            "name": "contentItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "number",
+                  "format": "double"
+                }
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContentProgressResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/progress/content/{contentItemId}/complete": {
-    "post": {
-    "tags": [
-    "Progress Management"
-    ],
-    "summary": "Mark a content item as complete",
-    "operationId": "markComplete",
-    "parameters": [
-    {
-    "name": "contentItemId",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/ContentProgressResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
+      "post": {
+        "tags": ["Progress Management"],
+        "summary": "Mark a content item as complete",
+        "operationId": "markComplete",
+        "parameters": [
+          {
+            "name": "contentItemId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ContentProgressResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/payments/submit": {
-    "post": {
-    "tags": [
-    "payment-controller"
-    ],
-    "operationId": "submitPayment",
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/PaymentRequestDto"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/PaymentResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
+      "post": {
+        "tags": ["payment-controller"],
+        "operationId": "submitPayment",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PaymentRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaymentResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/featured-chapters/{chapterId}": {
-    "post": {
-    "tags": [
-    "Featured Chapters"
-    ],
-    "summary": "Add a chapter to featured list (Admin/Manager)",
-    "operationId": "addFeaturedChapter",
-    "parameters": [
-    {
-    "name": "chapterId",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK"
-    }
-    }
-    },
-    "delete": {
-    "tags": [
-    "Featured Chapters"
-    ],
-    "summary": "Remove a chapter from featured list (Admin/Manager)",
-    "operationId": "removeFeaturedChapter",
-    "parameters": [
-    {
-    "name": "chapterId",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK"
-    }
-    }
-    }
+      "post": {
+        "tags": ["Featured Chapters"],
+        "summary": "Add a chapter to featured list (Admin/Manager)",
+        "operationId": "addFeaturedChapter",
+        "parameters": [
+          {
+            "name": "chapterId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      },
+      "delete": {
+        "tags": ["Featured Chapters"],
+        "summary": "Remove a chapter from featured list (Admin/Manager)",
+        "operationId": "removeFeaturedChapter",
+        "parameters": [
+          {
+            "name": "chapterId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     },
     "/api/v1/contents/quiz": {
-    "post": {
-    "tags": [
-    "Content Management"
-    ],
-    "summary": "Create a new quiz",
-    "operationId": "createQuiz",
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/QuizRequestDto"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "object"
-    }
-    }
-    }
-    }
-    }
-    }
+      "post": {
+        "tags": ["Content Management"],
+        "summary": "Create a new quiz",
+        "operationId": "createQuiz",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QuizRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/contents/pdf": {
-    "post": {
-    "tags": [
-    "Content Management"
-    ],
-    "summary": "Create a new Google PDF content",
-    "operationId": "createGooglePdfContent",
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/GooglePdfContentRequestDto"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "object"
-    }
-    }
-    }
-    }
-    }
-    }
+      "post": {
+        "tags": ["Content Management"],
+        "summary": "Create a new Google PDF content",
+        "operationId": "createGooglePdfContent",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GooglePdfContentRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/contents/lecture": {
-    "post": {
-    "tags": [
-    "Content Management"
-    ],
-    "summary": "Create a new lecture",
-    "operationId": "createLecture",
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/LectureRequestDto"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "object"
-    }
-    }
-    }
-    }
-    }
-    }
+      "post": {
+        "tags": ["Content Management"],
+        "summary": "Create a new lecture",
+        "operationId": "createLecture",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LectureRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/classes": {
-    "get": {
-    "tags": [
-    "Class Management"
-    ],
-    "summary": "Get all classes",
-    "operationId": "getAllClasses",
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/ClassResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
-    },
-    "post": {
-    "tags": [
-    "Class Management"
-    ],
-    "summary": "Create a new class",
-    "operationId": "createClass",
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/ClassRequestDto"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/ClassResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Class Management"],
+        "summary": "Get all classes",
+        "operationId": "getAllClasses",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ClassResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Class Management"],
+        "summary": "Create a new class",
+        "operationId": "createClass",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClassRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/chapters": {
-    "get": {
-    "tags": [
-    "Chapter Management"
-    ],
-    "summary": "Get all chapters",
-    "operationId": "getAllChapters",
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/ChapterResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
-    },
-    "post": {
-    "tags": [
-    "Chapter Management"
-    ],
-    "summary": "Create a new chapter",
-    "operationId": "createChapter",
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/ChapterRequestDto"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/ChapterResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Chapter Management"],
+        "summary": "Get all chapters",
+        "operationId": "getAllChapters",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChapterResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Chapter Management"],
+        "summary": "Create a new chapter",
+        "operationId": "createChapter",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChapterRequestDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChapterResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/chapters/{id}/cover-image": {
-    "get": {
-    "tags": [
-    "Chapter Management"
-    ],
-    "summary": "Get chapter cover image",
-    "operationId": "getCoverImage",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "string",
-    "format": "byte"
-    }
-    }
-    }
-    }
-    }
-    },
-    "post": {
-    "tags": [
-    "Chapter Management"
-    ],
-    "summary": "Upload chapter cover image",
-    "operationId": "uploadCoverImage",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "requestBody": {
-    "content": {
-    "multipart/form-data": {
-    "schema": {
-    "required": [
-    "file"
-    ],
-    "type": "object",
-    "properties": {
-    "file": {
-    "type": "string",
-    "format": "binary"
-    }
-    }
-    }
-    }
-    }
-    },
-    "responses": {
-    "200": {
-    "description": "OK"
-    }
-    }
-    }
+      "get": {
+        "tags": ["Chapter Management"],
+        "summary": "Get chapter cover image",
+        "operationId": "getCoverImage",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["Chapter Management"],
+        "summary": "Upload chapter cover image",
+        "operationId": "uploadCoverImage",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": ["file"],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     },
     "/api/v1/chapters/{chapterId}/assign-teacher": {
-    "post": {
-    "tags": [
-    "Chapter Management"
-    ],
-    "summary": "Assign a teacher to a chapter",
-    "operationId": "assignTeacher",
-    "parameters": [
-    {
-    "name": "chapterId",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    },
-    {
-    "name": "teacherId",
-    "in": "query",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK"
-    }
-    }
-    }
+      "post": {
+        "tags": ["Chapter Management"],
+        "summary": "Assign a teacher to a chapter",
+        "operationId": "assignTeacher",
+        "parameters": [
+          {
+            "name": "chapterId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "teacherId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     },
     "/api/users/{id}/profile-picture": {
-    "get": {
-    "tags": [
-    "User Management"
-    ],
-    "summary": "Get profile picture",
-    "operationId": "getProfilePicture",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "string",
-    "format": "byte"
-    }
-    }
-    }
-    }
-    }
-    },
-    "post": {
-    "tags": [
-    "User Management"
-    ],
-    "summary": "Upload profile picture",
-    "operationId": "uploadProfilePicture",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "requestBody": {
-    "content": {
-    "multipart/form-data": {
-    "schema": {
-    "required": [
-    "file"
-    ],
-    "type": "object",
-    "properties": {
-    "file": {
-    "type": "string",
-    "format": "binary"
-    }
-    }
-    }
-    }
-    }
-    },
-    "responses": {
-    "200": {
-    "description": "OK"
-    }
-    }
-    }
+      "get": {
+        "tags": ["User Management"],
+        "summary": "Get profile picture",
+        "operationId": "getProfilePicture",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string",
+                  "format": "byte"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": ["User Management"],
+        "summary": "Upload profile picture",
+        "operationId": "uploadProfilePicture",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": ["file"],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     },
     "/api/auth/reset-password": {
-    "post": {
-    "tags": [
-    "Authentication"
-    ],
-    "summary": "Reset password  with token",
-    "operationId": "resetPassword",
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/ResetPasswordRequest"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "object"
-    }
-    }
-    }
-    }
-    }
-    }
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Reset password  with token",
+        "operationId": "resetPassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResetPasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/auth/resend-activation": {
-    "post": {
-    "tags": [
-    "Authentication"
-    ],
-    "summary": "Resend activation token",
-    "operationId": "resendActivation",
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/EmailRequest"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "string"
-    }
-    }
-    }
-    }
-    }
-    }
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Resend activation token",
+        "operationId": "resendActivation",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/auth/register": {
-    "post": {
-    "tags": [
-    "Authentication"
-    ],
-    "summary": "Register a new user",
-    "operationId": "registerUser",
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/UserRegisterRequest"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/UserResponse"
-    }
-    }
-    }
-    }
-    }
-    }
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Register a new user",
+        "operationId": "registerUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserRegisterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/auth/refresh-token": {
-    "post": {
-    "tags": [
-    "Authentication"
-    ],
-    "summary": "Refresh Access Token",
-    "operationId": "refreshToken",
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/RefreshTokenRequest"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/RefreshTokenResponse"
-    }
-    }
-    }
-    }
-    }
-    }
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Refresh Access Token",
+        "operationId": "refreshToken",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RefreshTokenResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/auth/logout": {
-    "post": {
-    "tags": [
-    "Authentication"
-    ],
-    "summary": "Logout user",
-    "operationId": "logout",
-    "responses": {
-    "200": {
-    "description": "OK"
-    }
-    }
-    }
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Logout user",
+        "operationId": "logout",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     },
     "/api/auth/login": {
-    "post": {
-    "tags": [
-    "Authentication"
-    ],
-    "summary": "Login and receive a JWT",
-    "operationId": "login",
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/LoginRequest"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/AuthResponse"
-    }
-    }
-    }
-    }
-    }
-    }
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Login and receive a JWT",
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/auth/forgot-password": {
-    "post": {
-    "tags": [
-    "Authentication"
-    ],
-    "summary": "Request to reset password",
-    "operationId": "forgotPassword",
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/EmailRequest"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "object"
-    }
-    }
-    }
-    }
-    }
-    }
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Request to reset password",
+        "operationId": "forgotPassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EmailRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/auth/change-password": {
-    "post": {
-    "tags": [
-    "Authentication"
-    ],
-    "summary": "Change password for logged-in user",
-    "operationId": "changePassword",
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/ChangePasswordRequest"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "object"
-    }
-    }
-    }
-    }
-    }
-    }
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Change password for logged-in user",
+        "operationId": "changePassword",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/auth/activate": {
-    "post": {
-    "tags": [
-    "Authentication"
-    ],
-    "summary": "Activate a registered user",
-    "operationId": "activateUser",
-    "requestBody": {
-    "content": {
-    "application/json": {
-    "schema": {
-    "$ref": "#/components/schemas/ActivationRequest"
-    }
-    }
-    },
-    "required": true
-    },
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "string"
-    }
-    }
-    }
-    }
-    }
-    }
+      "post": {
+        "tags": ["Authentication"],
+        "summary": "Activate a registered user",
+        "operationId": "activateUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ActivationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/chapters/{id}/status": {
-    "patch": {
-    "tags": [
-    "Chapter Management"
-    ],
-    "summary": "Update chapter status",
-    "operationId": "updateStatus",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    },
-    {
-    "name": "status",
-    "in": "query",
-    "required": true,
-    "schema": {
-    "type": "string",
-    "enum": [
-    "DRAFT",
-    "PUBLISHED",
-    "ARCHIVED"
-    ]
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/ChapterResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
+      "patch": {
+        "tags": ["Chapter Management"],
+        "summary": "Update chapter status",
+        "operationId": "updateStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["DRAFT", "PUBLISHED", "ARCHIVED"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChapterResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/chapters/{id}/free-status": {
-    "patch": {
-    "tags": [
-    "Chapter Management"
-    ],
-    "summary": "Toggle chapter free status",
-    "operationId": "toggleFreeStatus",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    },
-    {
-    "name": "isFree",
-    "in": "query",
-    "required": true,
-    "schema": {
-    "type": "boolean"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/ChapterResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
+      "patch": {
+        "tags": ["Chapter Management"],
+        "summary": "Toggle chapter free status",
+        "operationId": "toggleFreeStatus",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "isFree",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChapterResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/teachers/chapters/{chapterId}/statistics": {
-    "get": {
-    "tags": [
-    "Teacher Management"
-    ],
-    "summary": "Get statistics for a chapter",
-    "operationId": "getChapterStatistics",
-    "parameters": [
-    {
-    "name": "chapterId",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/ChapterStatisticsDto"
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Teacher Management"],
+        "summary": "Get statistics for a chapter",
+        "operationId": "getChapterStatistics",
+        "parameters": [
+          {
+            "name": "chapterId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChapterStatisticsDto"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/teachers/assigned-chapters": {
-    "get": {
-    "tags": [
-    "Teacher Management"
-    ],
-    "summary": "Get chapters assigned to the current teacher",
-    "operationId": "getAssignedChapters",
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/ChapterResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Teacher Management"],
+        "summary": "Get chapters assigned to the current teacher",
+        "operationId": "getAssignedChapters",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChapterResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/subjects/{id}/structure": {
-    "get": {
-    "tags": [
-    "Subject Management"
-    ],
-    "summary": "Get full course structure for a subject (Tree View)",
-    "operationId": "getSubjectStructure",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/SubjectStructureResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Subject Management"],
+        "summary": "Get full course structure for a subject (Tree View)",
+        "operationId": "getSubjectStructure",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubjectStructureResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/progress/my-chapters": {
-    "get": {
-    "tags": [
-    "Progress Management"
-    ],
-    "summary": "Get summary of progress for all enrolled chapters",
-    "operationId": "getMyChaptersProgress",
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/ChapterProgressResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Progress Management"],
+        "summary": "Get summary of progress for all enrolled chapters",
+        "operationId": "getMyChaptersProgress",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChapterProgressResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/progress/chapter/{chapterId}": {
-    "get": {
-    "tags": [
-    "Progress Management"
-    ],
-    "summary": "Get progress summary for a specific chapter",
-    "operationId": "getChapterProgress",
-    "parameters": [
-    {
-    "name": "chapterId",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/ChapterProgressResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Progress Management"],
+        "summary": "Get progress summary for a specific chapter",
+        "operationId": "getChapterProgress",
+        "parameters": [
+          {
+            "name": "chapterId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChapterProgressResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/progress/chapter/{chapterId}/detailed": {
-    "get": {
-    "tags": [
-    "Progress Management"
-    ],
-    "summary": "Get detailed progress for a specific chapter (map of contentId to completion status)",
-    "operationId": "getChapterDetailedProgress",
-    "parameters": [
-    {
-    "name": "chapterId",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "object",
-    "additionalProperties": {
-    "type": "boolean"
-    }
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Progress Management"],
+        "summary": "Get detailed progress for a specific chapter (map of contentId to completion status)",
+        "operationId": "getChapterDetailedProgress",
+        "parameters": [
+          {
+            "name": "chapterId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "boolean"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/progress/admin/chapter/{chapterId}/students-progress": {
-    "get": {
-    "tags": [
-    "Progress Management"
-    ],
-    "summary": "Get progress for all students enrolled in a chapter (Admin/Manager/Teacher only)",
-    "operationId": "getChapterStudentsProgress",
-    "parameters": [
-    {
-    "name": "chapterId",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/StudentChapterProgressDto"
-    }
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Progress Management"],
+        "summary": "Get progress for all students enrolled in a chapter (Admin/Manager/Teacher only)",
+        "operationId": "getChapterStudentsProgress",
+        "parameters": [
+          {
+            "name": "chapterId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/StudentChapterProgressDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/payments": {
-    "get": {
-    "tags": [
-    "payment-controller"
-    ],
-    "operationId": "getAllPayments",
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/PaymentResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["payment-controller"],
+        "operationId": "getAllPayments",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/payments/unverified": {
-    "get": {
-    "tags": [
-    "payment-controller"
-    ],
-    "operationId": "getUnverifiedPayments",
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/PaymentResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["payment-controller"],
+        "operationId": "getUnverifiedPayments",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/payments/my-payments": {
-    "get": {
-    "tags": [
-    "payment-controller"
-    ],
-    "operationId": "getMyPayments",
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/PaymentResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["payment-controller"],
+        "operationId": "getMyPayments",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PaymentResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/featured-chapters": {
-    "get": {
-    "tags": [
-    "Featured Chapters"
-    ],
-    "summary": "Get all featured chapters (Public)",
-    "operationId": "getFeaturedChapters",
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/FeaturedChapterResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Featured Chapters"],
+        "summary": "Get all featured chapters (Public)",
+        "operationId": "getFeaturedChapters",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FeaturedChapterResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/contents/{id}": {
-    "get": {
-    "tags": [
-    "Content Management"
-    ],
-    "summary": "Get content by ID (with enrollment check)",
-    "operationId": "getContentById",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "object"
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Content Management"],
+        "summary": "Get content by ID (with enrollment check)",
+        "operationId": "getContentById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/classes/{id}/structure": {
-    "get": {
-    "tags": [
-    "Class Management"
-    ],
-    "summary": "Get full course structure for a class (Tree View)",
-    "operationId": "getClassStructure",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/ClassStructureResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Class Management"],
+        "summary": "Get full course structure for a class (Tree View)",
+        "operationId": "getClassStructure",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassStructureResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/classes/{id}/public-structure": {
-    "get": {
-    "tags": [
-    "Class Management"
-    ],
-    "summary": "Get partial course structure (Class -> Subject -> Chapter) for public catalog",
-    "operationId": "getPublicClassStructure",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/ClassStructureResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Class Management"],
+        "summary": "Get partial course structure (Class -> Subject -> Chapter) for public catalog",
+        "operationId": "getPublicClassStructure",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassStructureResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/chapters/{id}/structure": {
-    "get": {
-    "tags": [
-    "Chapter Management"
-    ],
-    "summary": "Get full course structure for a chapter (Tree View)",
-    "operationId": "getChapterStructure",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/ChapterStructureResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Chapter Management"],
+        "summary": "Get full course structure for a chapter (Tree View)",
+        "operationId": "getChapterStructure",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChapterStructureResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/chapters/{id}/public": {
-    "get": {
-    "tags": [
-    "Chapter Management"
-    ],
-    "summary": "Get public chapter by id",
-    "operationId": "getPublicChapterById",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/ChapterResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Chapter Management"],
+        "summary": "Get public chapter by id",
+        "operationId": "getPublicChapterById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChapterResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/chapters/status/{status}": {
-    "get": {
-    "tags": [
-    "Chapter Management"
-    ],
-    "summary": "Get chapters by status (Admin/Manager)",
-    "operationId": "getChaptersByStatus",
-    "parameters": [
-    {
-    "name": "status",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "string",
-    "enum": [
-    "DRAFT",
-    "PUBLISHED",
-    "ARCHIVED"
-    ]
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/ChapterResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Chapter Management"],
+        "summary": "Get chapters by status (Admin/Manager)",
+        "operationId": "getChaptersByStatus",
+        "parameters": [
+          {
+            "name": "status",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["DRAFT", "PUBLISHED", "ARCHIVED"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChapterResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/chapters/public/free": {
-    "get": {
-    "tags": [
-    "Chapter Management"
-    ],
-    "summary": "Get all free published chapters (Public)",
-    "operationId": "getFreeChapters",
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/ChapterResponseDto"
-    }
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Chapter Management"],
+        "summary": "Get all free published chapters (Public)",
+        "operationId": "getFreeChapters",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ChapterResponseDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/admin/statistics": {
-    "get": {
-    "tags": [
-    "Admin Dashboard"
-    ],
-    "summary": "Get admin dashboard statistics",
-    "operationId": "getStatistics",
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/AdminStatisticsDto"
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["Admin Dashboard"],
+        "summary": "Get admin dashboard statistics",
+        "operationId": "getStatistics",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminStatisticsDto"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/users": {
-    "get": {
-    "tags": [
-    "User Management"
-    ],
-    "summary": "Get all users",
-    "operationId": "getAllUsers",
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/UserResponse"
-    }
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["User Management"],
+        "summary": "Get all users",
+        "operationId": "getAllUsers",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/users/{id}": {
-    "get": {
-    "tags": [
-    "User Management"
-    ],
-    "summary": "Get user info by id",
-    "operationId": "getUser",
-    "parameters": [
-    {
-    "name": "id",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/UserResponse"
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["User Management"],
+        "summary": "Get user info by id",
+        "operationId": "getUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/users/role/{role}": {
-    "get": {
-    "tags": [
-    "User Management"
-    ],
-    "summary": "Get all users with a specific role",
-    "operationId": "getUsersByRole",
-    "parameters": [
-    {
-    "name": "role",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "string",
-    "enum": [
-    "ADMIN",
-    "MANAGER",
-    "TEACHER",
-    "STUDENT"
-    ]
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/UserResponse"
-    }
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["User Management"],
+        "summary": "Get all users with a specific role",
+        "operationId": "getUsersByRole",
+        "parameters": [
+          {
+            "name": "role",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["ADMIN", "MANAGER", "TEACHER", "STUDENT"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/users/exists": {
-    "get": {
-    "tags": [
-    "User Management"
-    ],
-    "summary": "Check if email exists",
-    "operationId": "emailExists",
-    "parameters": [
-    {
-    "name": "email",
-    "in": "query",
-    "required": true,
-    "schema": {
-    "type": "string"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "type": "boolean"
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["User Management"],
+        "summary": "Check if email exists",
+        "operationId": "emailExists",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/users/email": {
-    "get": {
-    "tags": [
-    "User Management"
-    ],
-    "summary": "Get user info by email",
-    "operationId": "getUser_1",
-    "parameters": [
-    {
-    "name": "email",
-    "in": "query",
-    "required": true,
-    "schema": {
-    "type": "string"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK",
-    "content": {
-    "*/*": {
-    "schema": {
-    "$ref": "#/components/schemas/UserResponse"
-    }
-    }
-    }
-    }
-    }
-    }
+      "get": {
+        "tags": ["User Management"],
+        "summary": "Get user info by email",
+        "operationId": "getUser_1",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     },
     "/api/v1/chapters/{chapterId}/teachers/{teacherId}": {
-    "delete": {
-    "tags": [
-    "Chapter Management"
-    ],
-    "summary": "Unassign a teacher from a chapter",
-    "operationId": "unassignTeacher",
-    "parameters": [
-    {
-    "name": "chapterId",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
+      "delete": {
+        "tags": ["Chapter Management"],
+        "summary": "Unassign a teacher from a chapter",
+        "operationId": "unassignTeacher",
+        "parameters": [
+          {
+            "name": "chapterId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "teacherId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
-    },
-    {
-    "name": "teacherId",
-    "in": "path",
-    "required": true,
-    "schema": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    ],
-    "responses": {
-    "200": {
-    "description": "OK"
-    }
-    }
-    }
-    }
-    },
-    "components": {
+  },
+  "components": {
     "schemas": {
-    "TopicRequestDto": {
-    "required": [
-    "chapterId",
-    "title"
-    ],
-    "type": "object",
-    "properties": {
-    "chapterId": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "title": {
-    "maxLength": 200,
-    "minLength": 0,
-    "type": "string"
-    },
-    "description": {
-    "type": "string"
-    },
-    "orderIndex": {
-    "type": "integer",
-    "format": "int32"
-    }
-    }
-    },
-    "TopicResponseDto": {
-    "type": "object",
-    "properties": {
-    "id": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "title": {
-    "type": "string"
-    },
-    "description": {
-    "type": "string"
-    },
-    "orderIndex": {
-    "type": "integer",
-    "format": "int32"
-    },
-    "chapterId": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    },
-    "SubjectRequestDto": {
-    "required": [
-    "classId",
-    "name"
-    ],
-    "type": "object",
-    "properties": {
-    "classId": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "name": {
-    "maxLength": 100,
-    "minLength": 0,
-    "type": "string"
-    },
-    "description": {
-    "type": "string"
-    },
-    "orderIndex": {
-    "type": "integer",
-    "format": "int32"
-    }
-    }
-    },
-    "SubjectResponseDto": {
-    "type": "object",
-    "properties": {
-    "id": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "name": {
-    "type": "string"
-    },
-    "description": {
-    "type": "string"
-    },
-    "orderIndex": {
-    "type": "integer",
-    "format": "int32"
-    },
-    "classId": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    },
-    "PaymentResponseDto": {
-    "type": "object",
-    "properties": {
-    "id": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "userId": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "userName": {
-    "type": "string"
-    },
-    "chapterId": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "chapterTitle": {
-    "type": "string"
-    },
-    "senderNumber": {
-    "type": "string"
-    },
-    "transactionId": {
-    "type": "string"
-    },
-    "amount": {
-    "type": "number",
-    "format": "double"
-    },
-    "paymentMethod": {
-    "type": "string"
-    },
-    "status": {
-    "type": "string",
-    "enum": [
-    "PENDING",
-    "VERIFIED",
-    "REJECTED"
-    ]
-    },
-    "verifiedAt": {
-    "type": "string",
-    "format": "date-time"
-    },
-    "verifiedByUserId": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "verifiedByName": {
-    "type": "string"
-    }
-    }
-    },
-    "QuizFillBlankRequestDto": {
-    "type": "object",
-    "properties": {
-    "blankPosition": {
-    "type": "integer",
-    "format": "int32"
-    },
-    "correctAnswer": {
-    "type": "string"
-    }
-    }
-    },
-    "QuizOptionRequestDto": {
-    "type": "object",
-    "properties": {
-    "optionText": {
-    "type": "string"
-    },
-    "correct": {
-    "type": "boolean"
-    }
-    }
-    },
-    "QuizQuestionRequestDto": {
-    "type": "object",
-    "properties": {
-    "questionText": {
-    "type": "string"
-    },
-    "type": {
-    "type": "string",
-    "enum": [
-    "MULTIPLE_CHOICE",
-    "FILL_IN_THE_BLANK",
-    "MATCHING",
-    "WRITTEN"
-    ]
-    },
-    "orderIndex": {
-    "type": "integer",
-    "format": "int32"
-    },
-    "marks": {
-    "type": "integer",
-    "format": "int32"
-    },
-    "options": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/QuizOptionRequestDto"
-    }
-    },
-    "writtenAnswer": {
-    "$ref": "#/components/schemas/QuizWrittenAnswerRequestDto"
-    },
-    "fillBlanks": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/QuizFillBlankRequestDto"
-    }
-    },
-    "tableMatchings": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/QuizTableMatchingRequestDto"
-    }
-    }
-    }
-    },
-    "QuizRequestDto": {
-    "required": [
-    "orderIndex",
-    "quizType",
-    "title",
-    "topicId"
-    ],
-    "type": "object",
-    "properties": {
-    "topicId": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "quizType": {
-    "type": "string",
-    "enum": [
-    "MCQ",
-    "WRITTEN",
-    "FILL_BLANK",
-    "TABLE_MATCHING"
-    ]
-    },
-    "title": {
-    "maxLength": 200,
-    "minLength": 0,
-    "type": "string"
-    },
-    "instruction": {
-    "type": "string"
-    },
-    "timeLimit": {
-    "type": "integer",
-    "format": "int32"
-    },
-    "totalMarks": {
-    "type": "integer",
-    "format": "int32"
-    },
-    "passPercentage": {
-    "type": "number",
-    "format": "double"
-    },
-    "orderIndex": {
-    "type": "integer",
-    "format": "int32"
-    },
-    "questions": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/QuizQuestionRequestDto"
-    }
-    }
-    }
-    },
-    "QuizTableMatchingRequestDto": {
-    "type": "object",
-    "properties": {
-    "leftItem": {
-    "type": "string"
-    },
-    "rightItem": {
-    "type": "string"
-    },
-    "orderIndex": {
-    "type": "integer",
-    "format": "int32"
-    }
-    }
-    },
-    "QuizWrittenAnswerRequestDto": {
-    "type": "object",
-    "properties": {
-    "sampleAnswer": {
-    "type": "string"
-    }
-    }
-    },
-    "ClassRequestDto": {
-    "required": [
-    "name"
-    ],
-    "type": "object",
-    "properties": {
-    "name": {
-    "maxLength": 100,
-    "minLength": 0,
-    "type": "string"
-    },
-    "description": {
-    "type": "string"
-    }
-    }
-    },
-    "ClassResponseDto": {
-    "type": "object",
-    "properties": {
-    "id": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "name": {
-    "type": "string"
-    },
-    "description": {
-    "type": "string"
-    }
-    }
-    },
-    "ChapterRequestDto": {
-    "required": [
-    "subjectId",
-    "title"
-    ],
-    "type": "object",
-    "properties": {
-    "subjectId": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "title": {
-    "maxLength": 200,
-    "minLength": 0,
-    "type": "string"
-    },
-    "description": {
-    "type": "string"
-    },
-    "status": {
-    "type": "string",
-    "enum": [
-    "DRAFT",
-    "PUBLISHED",
-    "ARCHIVED"
-    ]
-    },
-    "orderIndex": {
-    "type": "integer",
-    "format": "int32"
-    },
-    "videoId": {
-    "type": "string"
-    },
-    "price": {
-    "type": "number",
-    "format": "double"
-    },
-    "free": {
-    "type": "boolean"
-    }
-    }
-    },
-    "ChapterResponseDto": {
-    "type": "object",
-    "properties": {
-    "id": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "title": {
-    "type": "string"
-    },
-    "description": {
-    "type": "string"
-    },
-    "status": {
-    "type": "string",
-    "enum": [
-    "DRAFT",
-    "PUBLISHED",
-    "ARCHIVED"
-    ]
-    },
-    "orderIndex": {
-    "type": "integer",
-    "format": "int32"
-    },
-    "subjectId": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "videoId": {
-    "type": "string"
-    },
-    "price": {
-    "type": "number",
-    "format": "double"
-    },
-    "teachers": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/TeacherDto"
-    }
-    },
-    "free": {
-    "type": "boolean"
-    }
-    }
-    },
-    "TeacherDto": {
-    "type": "object",
-    "properties": {
-    "id": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "fullName": {
-    "type": "string"
-    },
-    "email": {
-    "type": "string"
-    }
-    }
-    },
-    "ContentProgressResponseDto": {
-    "type": "object",
-    "properties": {
-    "userId": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "fullName": {
-    "type": "string"
-    },
-    "contentItemId": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "contentTitle": {
-    "type": "string"
-    },
-    "contentType": {
-    "type": "string",
-    "enum": [
-    "LECTURE",
-    "QUIZ",
-    "PDF",
-    "ASSIGNMENT"
-    ]
-    },
-    "quizScore": {
-    "type": "number",
-    "format": "double"
-    },
-    "completed": {
-    "type": "boolean"
-    }
-    }
-    },
-    "PaymentRequestDto": {
-    "type": "object",
-    "properties": {
-    "chapterId": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "transactionId": {
-    "type": "string"
-    },
-    "senderNumber": {
-    "type": "string"
-    },
-    "amount": {
-    "type": "number",
-    "format": "double"
-    },
-    "paymentMethod": {
-    "type": "string"
-    }
-    }
-    },
-    "GooglePdfContentRequestDto": {
-    "required": [
-    "googleFileId",
-    "orderIndex",
-    "title",
-    "topicId"
-    ],
-    "type": "object",
-    "properties": {
-    "topicId": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "title": {
-    "maxLength": 255,
-    "minLength": 0,
-    "type": "string"
-    },
-    "googleFileId": {
-    "maxLength": 200,
-    "minLength": 0,
-    "type": "string"
-    },
-    "pageCount": {
-    "type": "integer",
-    "format": "int32"
-    },
-    "orderIndex": {
-    "type": "integer",
-    "format": "int32"
-    }
-    }
-    },
-    "LectureRequestDto": {
-    "required": [
-    "orderIndex",
-    "title",
-    "topicId"
-    ],
-    "type": "object",
-    "properties": {
-    "topicId": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "title": {
-    "maxLength": 200,
-    "minLength": 0,
-    "type": "string"
-    },
-    "videoId": {
-    "maxLength": 50,
-    "minLength": 0,
-    "type": "string"
-    },
-    "content": {
-    "type": "string"
-    },
-    "orderIndex": {
-    "type": "integer",
-    "format": "int32"
-    }
-    }
-    },
-    "ResetPasswordRequest": {
-    "type": "object",
-    "properties": {
-    "email": {
-    "type": "string"
-    },
-    "token": {
-    "type": "string"
-    },
-    "newPassword": {
-    "type": "string"
-    }
-    }
-    },
-    "EmailRequest": {
-    "required": [
-    "email"
-    ],
-    "type": "object",
-    "properties": {
-    "email": {
-    "type": "string"
-    }
-    }
-    },
-    "UserRegisterRequest": {
-    "required": [
-    "email",
-    "fullName",
-    "password",
-    "roles"
-    ],
-    "type": "object",
-    "properties": {
-    "email": {
-    "type": "string"
-    },
-    "fullName": {
-    "type": "string"
-    },
-    "phone": {
-    "type": "string"
-    },
-    "password": {
-    "pattern": "^(?=.*[A-Za-z])(?=.*\\d).{5,}$",
-    "type": "string"
-    },
-    "roles": {
-    "uniqueItems": true,
-    "type": "array",
-    "items": {
-    "type": "string",
-    "enum": [
-    "ADMIN",
-    "MANAGER",
-    "TEACHER",
-    "STUDENT"
-    ]
-    }
-    }
-    }
-    },
-    "UserResponse": {
-    "type": "object",
-    "properties": {
-    "id": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "email": {
-    "type": "string"
-    },
-    "fullName": {
-    "type": "string"
-    },
-    "phone": {
-    "type": "string"
-    },
-    "roles": {
-    "uniqueItems": true,
-    "type": "array",
-    "items": {
-    "type": "string",
-    "enum": [
-    "ADMIN",
-    "MANAGER",
-    "TEACHER",
-    "STUDENT"
-    ]
-    }
-    },
-    "hasProfilePicture": {
-    "type": "boolean"
-    },
-    "createdAt": {
-    "type": "string",
-    "format": "date-time"
-    },
-    "updatedAt": {
-    "type": "string",
-    "format": "date-time"
-    }
-    }
-    },
-    "RefreshTokenRequest": {
-    "required": [
-    "refreshToken"
-    ],
-    "type": "object",
-    "properties": {
-    "refreshToken": {
-    "type": "string"
-    }
-    }
-    },
-    "RefreshTokenResponse": {
-    "type": "object",
-    "properties": {
-    "accessToken": {
-    "type": "string"
-    },
-    "refreshToken": {
-    "type": "string"
-    }
-    }
-    },
-    "LoginRequest": {
-    "required": [
-    "email",
-    "password"
-    ],
-    "type": "object",
-    "properties": {
-    "email": {
-    "type": "string"
-    },
-    "password": {
-    "pattern": "^(?=.*[A-Za-z])(?=.*\\d).{5,}$",
-    "type": "string"
-    }
-    }
-    },
-    "AuthResponse": {
-    "type": "object",
-    "properties": {
-    "accessToken": {
-    "type": "string"
-    },
-    "refreshToken": {
-    "type": "string"
-    },
-    "email": {
-    "type": "string"
-    },
-    "fullName": {
-    "type": "string"
-    },
-    "roles": {
-    "uniqueItems": true,
-    "type": "array",
-    "items": {
-    "type": "string"
-    }
-    }
-    }
-    },
-    "ChangePasswordRequest": {
-    "type": "object",
-    "properties": {
-    "oldPassword": {
-    "type": "string"
-    },
-    "newPassword": {
-    "type": "string"
-    }
-    }
-    },
-    "ActivationRequest": {
-    "required": [
-    "token"
-    ],
-    "type": "object",
-    "properties": {
-    "email": {
-    "type": "string"
-    },
-    "token": {
-    "type": "string"
-    }
-    }
-    },
-    "ChapterStatisticsDto": {
-    "type": "object",
-    "properties": {
-    "chapterId": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "totalEnrolledStudents": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    },
-    "ChapterStructureResponseDto": {
-    "type": "object",
-    "properties": {
-    "id": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "title": {
-    "type": "string"
-    },
-    "status": {
-    "type": "string",
-    "enum": [
-    "DRAFT",
-    "PUBLISHED",
-    "ARCHIVED"
-    ]
-    },
-    "orderIndex": {
-    "type": "integer",
-    "format": "int32"
-    },
-    "topics": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/TopicStructureResponseDto"
-    }
-    }
-    }
-    },
-    "ContentItemStructureResponseDto": {
-    "type": "object",
-    "properties": {
-    "id": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "title": {
-    "type": "string"
-    },
-    "type": {
-    "type": "string",
-    "enum": [
-    "LECTURE",
-    "QUIZ",
-    "PDF",
-    "ASSIGNMENT"
-    ]
-    },
-    "orderIndex": {
-    "type": "integer",
-    "format": "int32"
-    }
-    }
-    },
-    "SubjectStructureResponseDto": {
-    "type": "object",
-    "properties": {
-    "id": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "name": {
-    "type": "string"
-    },
-    "orderIndex": {
-    "type": "integer",
-    "format": "int32"
-    },
-    "chapters": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/ChapterStructureResponseDto"
-    }
-    }
-    }
-    },
-    "TopicStructureResponseDto": {
-    "type": "object",
-    "properties": {
-    "id": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "title": {
-    "type": "string"
-    },
-    "orderIndex": {
-    "type": "integer",
-    "format": "int32"
-    },
-    "contentItems": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/ContentItemStructureResponseDto"
-    }
-    }
-    }
-    },
-    "ChapterProgressResponseDto": {
-    "type": "object",
-    "properties": {
-    "chapterId": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "chapterTitle": {
-    "type": "string"
-    },
-    "progressPercentage": {
-    "type": "number",
-    "format": "double"
-    },
-    "completed": {
-    "type": "boolean"
-    }
-    }
-    },
-    "StudentChapterProgressDto": {
-    "type": "object",
-    "properties": {
-    "studentId": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "studentName": {
-    "type": "string"
-    },
-    "progressPercentage": {
-    "type": "number",
-    "format": "double"
-    },
-    "completed": {
-    "type": "boolean"
-    }
-    }
-    },
-    "FeaturedChapterResponseDto": {
-    "type": "object",
-    "properties": {
-    "id": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "chapterId": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "title": {
-    "type": "string"
-    },
-    "description": {
-    "type": "string"
-    },
-    "subjectName": {
-    "type": "string"
-    },
-    "className": {
-    "type": "string"
-    },
-    "price": {
-    "type": "number",
-    "format": "double"
-    },
-    "featuredAt": {
-    "type": "string",
-    "format": "date-time"
-    },
-    "free": {
-    "type": "boolean"
-    }
-    }
-    },
-    "ClassStructureResponseDto": {
-    "type": "object",
-    "properties": {
-    "id": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "name": {
-    "type": "string"
-    },
-    "description": {
-    "type": "string"
-    },
-    "subjects": {
-    "type": "array",
-    "items": {
-    "$ref": "#/components/schemas/SubjectStructureResponseDto"
-    }
-    }
-    }
-    },
-    "AdminStatisticsDto": {
-    "type": "object",
-    "properties": {
-    "userStats": {
-    "$ref": "#/components/schemas/UserStats"
-    },
-    "courseStats": {
-    "$ref": "#/components/schemas/CourseStats"
-    },
-    "chapterStats": {
-    "$ref": "#/components/schemas/ChapterStats"
-    }
-    }
-    },
-    "ChapterStats": {
-    "type": "object",
-    "properties": {
-    "totalDraft": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "totalPublished": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "totalFree": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    },
-    "CourseStats": {
-    "type": "object",
-    "properties": {
-    "totalClasses": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "totalSubjects": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "totalChapters": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    },
-    "UserStats": {
-    "type": "object",
-    "properties": {
-    "totalUsers": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "activeUsers": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "admins": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "managers": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "teachers": {
-    "type": "integer",
-    "format": "int64"
-    },
-    "students": {
-    "type": "integer",
-    "format": "int64"
-    }
-    }
-    }
+      "TopicRequestDto": {
+        "required": ["chapterId", "title"],
+        "type": "object",
+        "properties": {
+          "chapterId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "orderIndex": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TopicResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "orderIndex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "chapterId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "SubjectRequestDto": {
+        "required": ["classId", "name"],
+        "type": "object",
+        "properties": {
+          "classId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "orderIndex": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SubjectResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "orderIndex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "classId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "className": {
+            "type": "string"
+          }
+        }
+      },
+      "PaymentResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "userName": {
+            "type": "string"
+          },
+          "chapterId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "chapterTitle": {
+            "type": "string"
+          },
+          "senderNumber": {
+            "type": "string"
+          },
+          "transactionId": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "paymentMethod": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["PENDING", "VERIFIED", "REJECTED"]
+          },
+          "verifiedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "verifiedByUserId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "verifiedByName": {
+            "type": "string"
+          }
+        }
+      },
+      "QuizFillBlankRequestDto": {
+        "type": "object",
+        "properties": {
+          "blankPosition": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "correctAnswer": {
+            "type": "string"
+          }
+        }
+      },
+      "QuizOptionRequestDto": {
+        "type": "object",
+        "properties": {
+          "optionText": {
+            "type": "string"
+          },
+          "isCorrect": {
+            "type": "boolean"
+          }
+        }
+      },
+      "QuizQuestionRequestDto": {
+        "type": "object",
+        "properties": {
+          "questionText": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "MULTIPLE_CHOICE",
+              "FILL_IN_THE_BLANK",
+              "MATCHING",
+              "WRITTEN"
+            ]
+          },
+          "orderIndex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "marks": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "options": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuizOptionRequestDto"
+            }
+          },
+          "writtenAnswer": {
+            "$ref": "#/components/schemas/QuizWrittenAnswerRequestDto"
+          },
+          "fillBlanks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuizFillBlankRequestDto"
+            }
+          },
+          "tableMatchings": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuizTableMatchingRequestDto"
+            }
+          }
+        }
+      },
+      "QuizRequestDto": {
+        "required": ["orderIndex", "quizType", "title", "topicId"],
+        "type": "object",
+        "properties": {
+          "topicId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "quizType": {
+            "type": "string",
+            "enum": ["MCQ", "WRITTEN", "FILL_BLANK", "TABLE_MATCHING"]
+          },
+          "title": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string"
+          },
+          "instruction": {
+            "type": "string"
+          },
+          "timeLimit": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalMarks": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "passPercentage": {
+            "type": "number",
+            "format": "double"
+          },
+          "orderIndex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "questions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/QuizQuestionRequestDto"
+            }
+          }
+        }
+      },
+      "QuizTableMatchingRequestDto": {
+        "type": "object",
+        "properties": {
+          "leftItem": {
+            "type": "string"
+          },
+          "rightItem": {
+            "type": "string"
+          },
+          "orderIndex": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "QuizWrittenAnswerRequestDto": {
+        "type": "object",
+        "properties": {
+          "sampleAnswer": {
+            "type": "string"
+          }
+        }
+      },
+      "GooglePdfContentRequestDto": {
+        "required": ["googleFileId", "orderIndex", "title", "topicId"],
+        "type": "object",
+        "properties": {
+          "topicId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "maxLength": 255,
+            "minLength": 0,
+            "type": "string"
+          },
+          "googleFileId": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string"
+          },
+          "pageCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "orderIndex": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "LectureRequestDto": {
+        "required": ["orderIndex", "title", "topicId"],
+        "type": "object",
+        "properties": {
+          "topicId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string"
+          },
+          "videoId": {
+            "maxLength": 50,
+            "minLength": 0,
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          },
+          "orderIndex": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ClassRequestDto": {
+        "required": ["name"],
+        "type": "object",
+        "properties": {
+          "name": {
+            "maxLength": 100,
+            "minLength": 0,
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "ClassResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "ChapterRequestDto": {
+        "required": ["subjectId", "title"],
+        "type": "object",
+        "properties": {
+          "subjectId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "maxLength": 200,
+            "minLength": 0,
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["DRAFT", "PUBLISHED", "ARCHIVED"]
+          },
+          "orderIndex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "videoId": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "format": "double"
+          },
+          "free": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ChapterResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["DRAFT", "PUBLISHED", "ARCHIVED"]
+          },
+          "orderIndex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "subjectId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "subjectName": {
+            "type": "string"
+          },
+          "videoId": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "format": "double"
+          },
+          "teachers": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TeacherDto"
+            }
+          },
+          "free": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TeacherDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "ContentProgressResponseDto": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "contentItemId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "contentTitle": {
+            "type": "string"
+          },
+          "contentType": {
+            "type": "string",
+            "enum": ["LECTURE", "QUIZ", "PDF", "ASSIGNMENT"]
+          },
+          "quizScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "completed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "PaymentRequestDto": {
+        "type": "object",
+        "properties": {
+          "chapterId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "transactionId": {
+            "type": "string"
+          },
+          "senderNumber": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "paymentMethod": {
+            "type": "string"
+          }
+        }
+      },
+      "ResetPasswordRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          },
+          "newPassword": {
+            "type": "string"
+          }
+        }
+      },
+      "EmailRequest": {
+        "required": ["email"],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          }
+        }
+      },
+      "UserRegisterRequest": {
+        "required": ["email", "fullName", "password", "roles"],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "password": {
+            "pattern": "^(?=.*[A-Za-z])(?=.*\\d).{5,}$",
+            "type": "string"
+          },
+          "roles": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["ADMIN", "MANAGER", "TEACHER", "STUDENT"]
+            }
+          }
+        }
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "email": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          },
+          "roles": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["ADMIN", "MANAGER", "TEACHER", "STUDENT"]
+            }
+          },
+          "hasProfilePicture": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "RefreshTokenRequest": {
+        "required": ["refreshToken"],
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string"
+          }
+        }
+      },
+      "RefreshTokenResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "refreshToken": {
+            "type": "string"
+          }
+        }
+      },
+      "LoginRequest": {
+        "required": ["email", "password"],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "password": {
+            "pattern": "^(?=.*[A-Za-z])(?=.*\\d).{5,}$",
+            "type": "string"
+          }
+        }
+      },
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "refreshToken": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "roles": {
+            "uniqueItems": true,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "ChangePasswordRequest": {
+        "type": "object",
+        "properties": {
+          "oldPassword": {
+            "type": "string"
+          },
+          "newPassword": {
+            "type": "string"
+          }
+        }
+      },
+      "ActivationRequest": {
+        "required": ["token"],
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string"
+          },
+          "token": {
+            "type": "string"
+          }
+        }
+      },
+      "ChapterStatisticsDto": {
+        "type": "object",
+        "properties": {
+          "chapterId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalEnrolledStudents": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ChapterStructureResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["DRAFT", "PUBLISHED", "ARCHIVED"]
+          },
+          "orderIndex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "topics": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TopicStructureResponseDto"
+            }
+          }
+        }
+      },
+      "ContentItemStructureResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["LECTURE", "QUIZ", "PDF", "ASSIGNMENT"]
+          },
+          "orderIndex": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SubjectStructureResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "orderIndex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "chapters": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ChapterStructureResponseDto"
+            }
+          }
+        }
+      },
+      "TopicStructureResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "orderIndex": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "contentItems": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ContentItemStructureResponseDto"
+            }
+          }
+        }
+      },
+      "ChapterProgressResponseDto": {
+        "type": "object",
+        "properties": {
+          "chapterId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "chapterTitle": {
+            "type": "string"
+          },
+          "progressPercentage": {
+            "type": "number",
+            "format": "double"
+          },
+          "completed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "StudentChapterProgressDto": {
+        "type": "object",
+        "properties": {
+          "studentId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "studentName": {
+            "type": "string"
+          },
+          "progressPercentage": {
+            "type": "number",
+            "format": "double"
+          },
+          "completed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "FeaturedChapterResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "chapterId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "subjectName": {
+            "type": "string"
+          },
+          "className": {
+            "type": "string"
+          },
+          "price": {
+            "type": "number",
+            "format": "double"
+          },
+          "featuredAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "free": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ClassStructureResponseDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "subjects": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SubjectStructureResponseDto"
+            }
+          }
+        }
+      },
+      "AdminStatisticsDto": {
+        "type": "object",
+        "properties": {
+          "userStats": {
+            "$ref": "#/components/schemas/UserStats"
+          },
+          "courseStats": {
+            "$ref": "#/components/schemas/CourseStats"
+          },
+          "chapterStats": {
+            "$ref": "#/components/schemas/ChapterStats"
+          }
+        }
+      },
+      "ChapterStats": {
+        "type": "object",
+        "properties": {
+          "totalDraft": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPublished": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalFree": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "CourseStats": {
+        "type": "object",
+        "properties": {
+          "totalClasses": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalSubjects": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalChapters": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "UserStats": {
+        "type": "object",
+        "properties": {
+          "totalUsers": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "activeUsers": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "admins": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "managers": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "teachers": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "students": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      }
     },
     "securitySchemes": {
-    "bearerAuth": {
-    "type": "http",
-    "name": "bearerAuth",
-    "scheme": "bearer",
-    "bearerFormat": "JWT"
+      "bearerAuth": {
+        "type": "http",
+        "name": "bearerAuth",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
     }
-    }
-    }
-    }
+  }
+}
