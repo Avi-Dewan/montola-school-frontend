@@ -97,37 +97,52 @@ export default function ContentPlayerPage() {
 
             if (q.type === QuizQuestionType.MULTIPLE_CHOICE) {
                 const correctOptionIds = q.options.filter(o => o.isCorrect).map(o => o.id);
-                const selectedOptionIds = Array.isArray(answer) ? answer : [answer];
+                const selectedOptionIds = Array.isArray(answer) ? answer : (answer ? [answer] : []);
 
                 const isCorrect = correctOptionIds.length === selectedOptionIds.length &&
                     correctOptionIds.every(id => selectedOptionIds.includes(id));
 
                 if (isCorrect) earnedMarks += q.marks;
             } else if (q.type === QuizQuestionType.FILL_IN_THE_BLANK) {
-                const isCorrect = q.fillBlanks.every(fb =>
-                    answer?.[fb.blankPosition]?.trim().toLowerCase() === fb.correctAnswer.trim().toLowerCase()
-                );
-                if (isCorrect) earnedMarks += q.marks;
+                const totalBlanks = q.fillBlanks.length;
+                if (totalBlanks > 0) {
+                    const correctCount = q.fillBlanks.filter(fb =>
+                        answer?.[fb.blankPosition]?.trim().toLowerCase() === fb.correctAnswer.trim().toLowerCase()
+                    ).length;
+                    earnedMarks += (correctCount / totalBlanks) * q.marks;
+                }
             } else if (q.type === QuizQuestionType.MATCHING) {
-                const isCorrect = q.tableMatchings.every(tm =>
-                    answer?.[tm.id] === tm.rightItem
-                );
-                if (isCorrect) earnedMarks += q.marks;
+                const totalMatches = q.tableMatchings.length;
+                if (totalMatches > 0) {
+                    const correctCount = q.tableMatchings.filter(tm =>
+                        answer?.[tm.id] === tm.rightItem
+                    ).length;
+                    earnedMarks += (correctCount / totalMatches) * q.marks;
+                }
+            } else if (q.type === QuizQuestionType.WRITTEN) {
+                // Written questions are auto-graded for full marks as requested
+                earnedMarks += q.marks;
             }
-            // Written questions are not auto-graded for now
         });
+
+        const scorePercentage = (earnedMarks / totalMarks) * 100;
+        const passPercentage = (content as QuizResponseDto).passPercentage || 0;
+        const isPassed = scorePercentage >= passPercentage;
 
         setQuizScore(earnedMarks);
         setQuizSubmitted(true);
 
-        try {
-            await submitQuizScore(contentId!, earnedMarks);
-            toast.success(`Quiz submitted! Your score: ${earnedMarks}/${totalMarks}`);
-            refreshProgress();
-        } catch (e) {
-
-            console.error(e);
-            toast.error("Failed to save quiz results");
+        if (isPassed) {
+            try {
+                await submitQuizScore(contentId!, earnedMarks);
+                toast.success(`Success! You passed with ${earnedMarks}/${totalMarks} (${scorePercentage.toFixed(1)}%)`);
+                refreshProgress();
+            } catch (e) {
+                console.error(e);
+                toast.error("Failed to save passing results");
+            }
+        } else {
+            toast.warning(`You did not pass. Score: ${earnedMarks}/${totalMarks} (${scorePercentage.toFixed(1)}%). Required: ${passPercentage}%`);
         }
     };
 
@@ -233,242 +248,339 @@ export default function ContentPlayerPage() {
 
                     {isQuiz && (
                         <div className="p-6 md:p-0 space-y-8">
-                            {content.instruction && (
-                                <div className="bg-purple-50 p-4 rounded-lg border border-purple-100">
-                                    <h3 className="text-sm font-bold text-purple-900 uppercase tracking-tight mb-1">Instructions</h3>
-                                    <p className="text-purple-800 text-sm">{content.instruction}</p>
-                                </div>
-                            )}
+                            {(() => {
+                                const quiz = content as QuizResponseDto;
+                                const totalMarks = quiz.totalMarks || 0;
+                                const passPercentage = quiz.passPercentage || 0;
+                                const percentage = totalMarks > 0 ? (quizScore / totalMarks) * 100 : 0;
+                                const isPassed = percentage >= passPercentage;
 
-                            <div className="space-y-12">
-                                {content.questions.map((q, idx) => (
-                                    <div key={q.id} className="space-y-6">
-                                        <div className="flex items-start gap-4">
-                                            <span className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-900 text-white flex items-center justify-center font-bold text-sm">
-                                                {idx + 1}
-                                            </span>
-                                            <div className="flex-grow">
-                                                <h3 className="text-lg font-medium text-gray-900 mb-1">{q.questionText}</h3>
-                                                <p className="text-xs font-bold text-gray-400 uppercase">{q.marks} Marks • {q.type.replace(/_/g, ' ')}</p>
-                                            </div>
-                                        </div>
-
-                                        {/* Multiple Choice Rendering */}
-                                        {q.type === QuizQuestionType.MULTIPLE_CHOICE && (
-                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pl-12">
-                                                {q.options.map((opt) => {
-                                                    const isSelected = Array.isArray(quizAnswers[q.id])
-                                                        ? quizAnswers[q.id].includes(opt.id)
-                                                        : quizAnswers[q.id] === opt.id;
-
-                                                    return (
-                                                        <button
-                                                            key={opt.id}
-                                                            disabled={quizSubmitted}
-                                                            onClick={() => {
-                                                                const current = quizAnswers[q.id];
-                                                                const isMultiple = q.options.filter(o => o.isCorrect).length > 1;
-
-                                                                if (isMultiple) {
-                                                                    const arr = Array.isArray(current) ? [...current] : [];
-                                                                    if (arr.includes(opt.id)) {
-                                                                        setQuizAnswers({ ...quizAnswers, [q.id]: arr.filter(id => id !== opt.id) });
-                                                                    } else {
-                                                                        setQuizAnswers({ ...quizAnswers, [q.id]: [...arr, opt.id] });
-                                                                    }
-                                                                } else {
-                                                                    setQuizAnswers({ ...quizAnswers, [q.id]: opt.id });
-                                                                }
-                                                            }}
-                                                            className={`text-left p-4 rounded-xl border-2 transition-all ${quizSubmitted
-                                                                ? opt.isCorrect
-                                                                    ? "border-green-500 bg-green-50 text-green-900"
-                                                                    : isSelected
-                                                                        ? "border-red-500 bg-red-50 text-red-900"
-                                                                        : "border-gray-100 bg-white opacity-50"
-                                                                : isSelected
-                                                                    ? "border-primary-600 bg-primary-50 text-primary-900"
-                                                                    : "border-gray-100 bg-white hover:border-gray-300"
-                                                                }`}
-                                                        >
-                                                            <div className="flex items-center gap-3">
-                                                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${isSelected ? "border-primary-600 bg-primary-600" : "border-gray-300"
-                                                                    }`}>
-                                                                    {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
-                                                                </div>
-                                                                <span className="font-medium">{opt.optionText}</span>
-                                                                {quizSubmitted && opt.isCorrect && <FiCheckCircle size={16} className="ml-auto text-green-600" />}
-                                                                {quizSubmitted && isSelected && !opt.isCorrect && <FiXCircle size={16} className="ml-auto text-red-600" />}
-                                                            </div>
-
-                                                        </button>
-                                                    );
-                                                })}
-                                            </div>
-                                        )}
-
-                                        {/* Table Matching Rendering */}
-                                        {q.type === QuizQuestionType.MATCHING && (
-                                            <div className="pl-12 space-y-3">
-                                                {q.tableMatchings.map((tm) => (
-                                                    <div key={tm.id} className="flex flex-col md:flex-row md:items-center gap-4">
-                                                        <div className="flex-1 p-3 bg-gray-50 rounded-lg border border-gray-200 font-medium">
-                                                            {tm.leftItem}
-                                                        </div>
-                                                        <div className="hidden md:block text-gray-300">
-                                                            <FiChevronRight />
-                                                        </div>
-
-                                                        <select
-                                                            disabled={quizSubmitted}
-                                                            value={quizAnswers[q.id]?.[tm.id] || ""}
-                                                            onChange={(e) => setQuizAnswers({
-                                                                ...quizAnswers,
-                                                                [q.id]: { ...(quizAnswers[q.id] || {}), [tm.id]: e.target.value }
-                                                            })}
-                                                            className={`flex-1 p-3 rounded-lg border-2 bg-white appearance-none transition-all ${quizSubmitted
-                                                                ? quizAnswers[q.id]?.[tm.id] === tm.rightItem
-                                                                    ? "border-green-500 bg-green-50 text-green-900"
-                                                                    : "border-red-500 bg-red-50 text-red-900"
-                                                                : "border-gray-100 focus:border-primary-500 outline-none"
-                                                                }`}
-                                                        >
-                                                            <option value="">Select match</option>
-                                                            {/* We collect all right items and shuffle/present them */}
-                                                            {q.tableMatchings.map(item => (
-                                                                <option key={item.id} value={item.rightItem}>{item.rightItem}</option>
-                                                            ))}
-                                                        </select>
-                                                        {quizSubmitted && (
-                                                            <div className="text-xs font-bold whitespace-nowrap">
-                                                                {quizAnswers[q.id]?.[tm.id] === tm.rightItem
-                                                                    ? <span className="text-green-600">Correct</span>
-                                                                    : <span className="text-red-600">Ans: {tm.rightItem}</span>
-                                                                }
-                                                            </div>
-                                                        )}
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
-
-                                        {/* Fill in the Blanks Rendering */}
-                                        {q.type === QuizQuestionType.FILL_IN_THE_BLANK && (
-                                            <div className="pl-12">
-                                                <div className="leading-loose text-lg text-gray-800 p-6 bg-gray-50 rounded-xl border border-gray-100">
-                                                    {q.questionText.split('______').map((part, i, arr) => (
-                                                        <span key={i}>
-                                                            {part}
-                                                            {i < arr.length - 1 && (
-                                                                <div className="inline-block mx-2 relative group">
-                                                                    <input
-                                                                        type="text"
-                                                                        disabled={quizSubmitted}
-                                                                        placeholder="...."
-                                                                        value={quizAnswers[q.id]?.[i + 1] || ""}
-                                                                        onChange={(e) => setQuizAnswers({
-                                                                            ...quizAnswers,
-                                                                            [q.id]: { ...(quizAnswers[q.id] || {}), [i + 1]: e.target.value }
-                                                                        })}
-                                                                        className={`w-32 md:w-48 px-2 py-0 border-b-2 text-center bg-transparent focus:outline-none transition-all ${quizSubmitted
-                                                                            ? quizAnswers[q.id]?.[i + 1]?.trim().toLowerCase() === q.fillBlanks.find(fb => fb.blankPosition === i + 1)?.correctAnswer.trim().toLowerCase()
-                                                                                ? "border-green-500 text-green-700"
-                                                                                : "border-red-500 text-red-700"
-                                                                            : "border-gray-400 focus:border-primary-500"
-                                                                            }`}
-                                                                    />
-                                                                    {quizSubmitted && (
-                                                                        <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-white px-2 py-1 rounded shadow-sm text-xs font-bold text-green-600 border border-green-100 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-                                                                            Ans: {q.fillBlanks.find(fb => fb.blankPosition === i + 1)?.correctAnswer}
-                                                                        </div>
-                                                                    )}
-                                                                </div>
-                                                            )}
-                                                        </span>
-                                                    ))}
+                                return (
+                                    <>
+                                        {quiz.instruction && (
+                                            <div className="bg-purple-50 p-6 rounded-xl border border-purple-100 flex items-start gap-4">
+                                                <div className="p-2 bg-purple-100 text-purple-600 rounded-lg">
+                                                    <FiHelpCircle size={20} />
+                                                </div>
+                                                <div>
+                                                    <h3 className="text-sm font-bold text-purple-900 uppercase tracking-tight mb-1">Instructions</h3>
+                                                    <p className="text-purple-800 text-sm">{quiz.instruction}</p>
                                                 </div>
                                             </div>
                                         )}
 
-                                        {/* Written Question Rendering */}
-                                        {q.type === QuizQuestionType.WRITTEN && (
-                                            <div className="pl-12 space-y-4">
-                                                <textarea
-                                                    disabled={quizSubmitted}
-                                                    rows={4}
-                                                    placeholder="Type your answer here..."
-                                                    value={quizAnswers[q.id] || ""}
-                                                    onChange={(e) => setQuizAnswers({ ...quizAnswers, [q.id]: e.target.value })}
-                                                    className="w-full p-4 rounded-xl border-2 border-gray-100 focus:border-primary-500 outline-none transition-all resize-none"
-                                                />
-                                                {quizSubmitted && q.writtenAnswer && (
-                                                    <div className="p-6 bg-blue-50 rounded-xl border border-blue-100">
-                                                        <h4 className="text-sm font-bold text-blue-900 uppercase tracking-tight mb-2">Sample Answer</h4>
-                                                        <p className="text-blue-800 text-sm italic">{q.writtenAnswer.sampleAnswer}</p>
-                                                    </div>
+                                        {quizSubmitted && (
+                                            <div id="quiz-result" className={`p-6 rounded-xl border flex items-center gap-6 ${isPassed
+                                                ? "bg-green-50 border-green-100 text-green-900"
+                                                : "bg-red-50 border-red-100 text-red-900"
+                                                }`}>
+                                                <div className={`p-4 rounded-full ${isPassed
+                                                    ? "bg-green-100 text-green-600"
+                                                    : "bg-red-100 text-red-600"
+                                                    }`}>
+                                                    {isPassed
+                                                        ? <FiCheckCircle size={32} />
+                                                        : <FiXCircle size={32} />
+                                                    }
+                                                </div>
+                                                <div>
+                                                    <h2 className="text-2xl font-bold mb-1">
+                                                        {isPassed ? "Assessment Passed!" : "Assessment Failed"}
+                                                    </h2>
+                                                    <p className="text-sm font-medium opacity-90">
+                                                        Total Score: {Number.isInteger(quizScore) ? quizScore : quizScore.toFixed(1)} / {totalMarks} ({percentage.toFixed(1)}%)
+                                                        {!isPassed && ` • Required: ${passPercentage}%`}
+                                                    </p>
+                                                </div>
+                                                {!isPassed && (
+                                                    <button
+                                                        onClick={() => {
+                                                            setQuizSubmitted(false);
+                                                            setQuizAnswers({});
+                                                            setQuizScore(0);
+                                                        }}
+                                                        className="ml-auto px-6 py-2 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition"
+                                                    >
+                                                        Try Again
+                                                    </button>
                                                 )}
                                             </div>
                                         )}
-                                    </div>
-                                ))}
-                            </div>
 
-                            {!quizSubmitted && (
-                                <div className="pt-8 border-t border-gray-100 flex justify-center">
-                                    <button
-                                        onClick={handleQuizSubmit}
-                                        className="bg-gray-900 text-white px-10 py-4 rounded-xl font-bold hover:bg-gray-800 transition shadow-lg shadow-gray-200 active:transform active:scale-95"
-                                    >
-                                        Submit Assessment
-                                    </button>
-                                </div>
-                            )}
+                                        <div className="space-y-12">
+                                            {quiz.questions.map((q, idx) => {
+                                                const isQuestionCorrect = (() => {
+                                                    const answer = quizAnswers[q.id];
+                                                    if (q.type === QuizQuestionType.MULTIPLE_CHOICE) {
+                                                        const correctOptionIds = q.options.filter(o => o.isCorrect).map(o => o.id);
+                                                        const selectedOptionIds = Array.isArray(answer) ? answer : (answer ? [answer] : []);
+                                                        return correctOptionIds.length === selectedOptionIds.length &&
+                                                            correctOptionIds.every(id => selectedOptionIds.includes(id));
+                                                    }
+                                                    if (q.type === QuizQuestionType.FILL_IN_THE_BLANK) {
+                                                        return q.fillBlanks.every(fb =>
+                                                            answer?.[fb.blankPosition]?.trim().toLowerCase() === fb.correctAnswer.trim().toLowerCase()
+                                                        );
+                                                    }
+                                                    if (q.type === QuizQuestionType.MATCHING) {
+                                                        return q.tableMatchings.every(tm =>
+                                                            answer?.[tm.id] === tm.rightItem
+                                                        );
+                                                    }
+                                                    return true; // Written questions are auto-passed
+                                                })();
 
-                            {quizSubmitted && (
-                                <div className="bg-gray-900 text-white p-8 rounded-2xl flex flex-col md:flex-row items-center justify-between gap-6">
-                                    <div className="text-center md:text-left">
-                                        <h3 className="text-2xl font-bold mb-1">Results Calculated</h3>
-                                        <p className="text-gray-400">Your score has been recorded and the lesson marked as complete.</p>
-                                    </div>
-                                    <div className="text-4xl md:text-5xl font-black text-primary-400">
-                                        {quizScore} <span className="text-xl text-gray-500">/ {content.totalMarks}</span>
-                                    </div>
-                                </div>
-                            )}
+                                                return (
+                                                    <div key={q.id} className="space-y-6">
+                                                        <div className="flex items-start gap-4">
+                                                            <div className="relative">
+                                                                <span className="flex-shrink-0 w-8 h-8 rounded-full bg-gray-900 text-white flex items-center justify-center font-bold text-sm">
+                                                                    {idx + 1}
+                                                                </span>
+                                                                {quizSubmitted && isQuestionCorrect && (
+                                                                    <div className="absolute -right-1 -bottom-1 bg-green-500 text-white rounded-full p-0.5 border-2 border-white shadow-sm">
+                                                                        <FiCheckCircle size={12} />
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                            <div className="flex-grow">
+                                                                <h3 className="text-lg font-medium text-gray-900 mb-1">{q.questionText}</h3>
+                                                                <p className="text-xs font-bold text-gray-400 uppercase">{q.marks} Marks • {q.type.replace(/_/g, ' ')}</p>
+                                                            </div>
+                                                        </div>
+
+                                                        {/* Multiple Choice Rendering */}
+                                                        {q.type === QuizQuestionType.MULTIPLE_CHOICE && (
+                                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pl-12">
+                                                                {q.options.map((opt) => {
+                                                                    const isSelected = Array.isArray(quizAnswers[q.id])
+                                                                        ? quizAnswers[q.id].includes(opt.id)
+                                                                        : quizAnswers[q.id] === opt.id;
+
+                                                                    const isCorrect = opt.isCorrect;
+
+                                                                    let buttonStyles = "border-gray-100 bg-white hover:border-gray-300";
+                                                                    if (quizSubmitted) {
+                                                                        if (isSelected) {
+                                                                            buttonStyles = isCorrect
+                                                                                ? "border-green-500 bg-green-50 text-green-900"
+                                                                                : "border-red-500 bg-red-50 text-red-900";
+                                                                        } else if (isPassed && isCorrect) {
+                                                                            // Highlight correct unselected answer only if passed
+                                                                            buttonStyles = "border-green-500 bg-green-50 text-green-900 opacity-50";
+                                                                        } else {
+                                                                            buttonStyles = "border-gray-100 bg-white opacity-50";
+                                                                        }
+                                                                    } else if (isSelected) {
+                                                                        buttonStyles = "border-primary-600 bg-primary-50 text-primary-900";
+                                                                    }
+
+                                                                    return (
+                                                                        <button
+                                                                            key={opt.id}
+                                                                            disabled={quizSubmitted}
+                                                                            onClick={() => {
+                                                                                const current = quizAnswers[q.id];
+                                                                                const isMultiple = q.options.filter(o => o.isCorrect).length > 1;
+
+                                                                                if (isMultiple) {
+                                                                                    const arr = Array.isArray(current) ? [...current] : [];
+                                                                                    if (arr.includes(opt.id)) {
+                                                                                        setQuizAnswers({ ...quizAnswers, [q.id]: arr.filter(id => id !== opt.id) });
+                                                                                    } else {
+                                                                                        setQuizAnswers({ ...quizAnswers, [q.id]: [...arr, opt.id] });
+                                                                                    }
+                                                                                } else {
+                                                                                    setQuizAnswers({ ...quizAnswers, [q.id]: opt.id });
+                                                                                }
+                                                                            }}
+                                                                            className={`text-left p-4 rounded-xl border-2 transition-all ${buttonStyles}`}
+                                                                        >
+                                                                            <div className="flex items-center gap-3">
+                                                                                <div className={`w-5 h-5 rounded-full border-2 flex items-center justify-center ${isSelected ? "border-primary-600 bg-primary-600" : "border-gray-300"
+                                                                                    }`}>
+                                                                                    {isSelected && <div className="w-2 h-2 rounded-full bg-white" />}
+                                                                                </div>
+                                                                                <span className="font-medium">{opt.optionText}</span>
+                                                                                {quizSubmitted && isSelected && isCorrect && (
+                                                                                    <FiCheckCircle size={16} className="ml-auto text-green-600" />
+                                                                                )}
+                                                                                {quizSubmitted && isSelected && !isCorrect && (
+                                                                                    <FiXCircle size={16} className="ml-auto text-red-600" />
+                                                                                )}
+                                                                                {quizSubmitted && isPassed && !isSelected && isCorrect && (
+                                                                                    <FiCheckCircle size={16} className="ml-auto text-green-600 opacity-50" />
+                                                                                )}
+                                                                            </div>
+                                                                        </button>
+                                                                    );
+                                                                })}
+                                                            </div>
+                                                        )}
+
+                                                        {/* Table Matching Rendering */}
+                                                        {q.type === QuizQuestionType.MATCHING && (
+                                                            <div className="pl-12 space-y-3">
+                                                                {q.tableMatchings.map((tm) => (
+                                                                    <div key={tm.id} className="flex flex-col md:flex-row md:items-center gap-4">
+                                                                        <div className="flex-1 p-3 bg-gray-50 rounded-lg border border-gray-200 font-medium">
+                                                                            {tm.leftItem}
+                                                                        </div>
+                                                                        <div className="hidden md:block text-gray-300">
+                                                                            <FiChevronRight />
+                                                                        </div>
+
+                                                                        <select
+                                                                            disabled={quizSubmitted}
+                                                                            value={quizAnswers[q.id]?.[tm.id] || ""}
+                                                                            onChange={(e) => setQuizAnswers({
+                                                                                ...quizAnswers,
+                                                                                [q.id]: { ...(quizAnswers[q.id] || {}), [tm.id]: e.target.value }
+                                                                            })}
+                                                                            className={`flex-1 p-3 rounded-lg border-2 bg-white appearance-none transition-all ${quizSubmitted
+                                                                                ? quizAnswers[q.id]?.[tm.id] === tm.rightItem
+                                                                                    ? "border-green-500 bg-green-50 text-green-900"
+                                                                                    : "border-red-500 bg-red-50 text-red-900"
+                                                                                : "border-gray-100 focus:border-primary-500 outline-none"
+                                                                                }`}
+                                                                        >
+                                                                            <option value="">Select match</option>
+                                                                            {q.tableMatchings.map(item => (
+                                                                                <option key={item.id} value={item.rightItem}>{item.rightItem}</option>
+                                                                            ))}
+                                                                        </select>
+                                                                        {quizSubmitted && (
+                                                                            <div className="text-xs font-bold whitespace-nowrap">
+                                                                                {quizAnswers[q.id]?.[tm.id] === tm.rightItem
+                                                                                    ? <span className="text-green-600">Correct</span>
+                                                                                    : isPassed
+                                                                                        ? <span className="text-red-600 font-bold bg-red-50 px-2 py-1 rounded">Correct Ans: {tm.rightItem}</span>
+                                                                                        : <span className="text-red-600 font-bold">Incorrect</span>
+                                                                                }
+                                                                            </div>
+                                                                        )}
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        )}
+
+                                                        {/* Fill in the Blanks Rendering */}
+                                                        {q.type === QuizQuestionType.FILL_IN_THE_BLANK && (
+                                                            <div className="pl-12">
+                                                                <div className="leading-loose text-lg text-gray-800 p-6 bg-gray-50 rounded-xl border border-gray-100 flex flex-wrap items-center">
+                                                                    {q.questionText.split('__BLANK__').map((part, i, arr) => (
+                                                                        <span key={i} className="inline-flex items-center">
+                                                                            {part}
+                                                                            {i < arr.length - 1 && (
+                                                                                <span className="inline-block mx-2 relative group min-w-[120px]">
+                                                                                    <input
+                                                                                        type="text"
+                                                                                        disabled={quizSubmitted}
+                                                                                        placeholder="type answer..."
+                                                                                        value={quizAnswers[q.id]?.[i + 1] || ""}
+                                                                                        onChange={(e) => setQuizAnswers({
+                                                                                            ...quizAnswers,
+                                                                                            [q.id]: { ...(quizAnswers[q.id] || {}), [i + 1]: e.target.value }
+                                                                                        })}
+                                                                                        className={`w-full px-2 py-1 border-b-2 text-center bg-white rounded-t transition-all ${quizSubmitted
+                                                                                            ? quizAnswers[q.id]?.[i + 1]?.trim().toLowerCase() === q.fillBlanks.find(fb => fb.blankPosition === i + 1)?.correctAnswer.trim().toLowerCase()
+                                                                                                ? "border-green-500 text-green-700 bg-green-50/30"
+                                                                                                : "border-red-500 text-red-700 bg-red-50/30"
+                                                                                            : "border-gray-300 focus:border-primary-500 focus:bg-white"
+                                                                                            }`}
+                                                                                    />
+                                                                                    {quizSubmitted && isPassed &&
+                                                                                        quizAnswers[q.id]?.[i + 1]?.trim().toLowerCase() !== q.fillBlanks.find(fb => fb.blankPosition === i + 1)?.correctAnswer.trim().toLowerCase() && (
+                                                                                            <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded shadow-lg text-xs font-bold whitespace-nowrap z-10">
+                                                                                                Correct: {q.fillBlanks.find(fb => fb.blankPosition === i + 1)?.correctAnswer}
+                                                                                            </div>
+                                                                                        )}
+                                                                                </span>
+                                                                            )}
+                                                                        </span>
+                                                                    ))}
+                                                                </div>
+                                                            </div>
+                                                        )}
+
+                                                        {/* Written Question Rendering */}
+                                                        {q.type === QuizQuestionType.WRITTEN && (
+                                                            <div className="pl-12 space-y-4">
+                                                                <textarea
+                                                                    disabled={quizSubmitted}
+                                                                    rows={4}
+                                                                    placeholder="Type your answer here..."
+                                                                    value={quizAnswers[q.id] || ""}
+                                                                    onChange={(e) => setQuizAnswers({ ...quizAnswers, [q.id]: e.target.value })}
+                                                                    className="w-full p-4 rounded-xl border-2 border-gray-100 focus:border-primary-500 outline-none transition-all resize-none"
+                                                                />
+                                                                {quizSubmitted && q.writtenAnswer && isPassed && (
+                                                                    <div className="p-6 bg-blue-50 rounded-xl border border-blue-100">
+                                                                        <h4 className="text-sm font-bold text-blue-900 uppercase tracking-tight mb-2">Sample Answer</h4>
+                                                                        <p className="text-blue-800 text-sm italic">{q.writtenAnswer.sampleAnswer}</p>
+                                                                    </div>
+                                                                )}
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+
+                                        {!quizSubmitted && (
+                                            <div className="pt-8 border-t border-gray-100 flex justify-center">
+                                                <button
+                                                    onClick={handleQuizSubmit}
+                                                    className="bg-gray-900 text-white px-10 py-4 rounded-xl font-bold hover:bg-gray-800 transition shadow-lg shadow-gray-200 active:transform active:scale-95"
+                                                >
+                                                    Submit Assessment
+                                                </button>
+                                            </div>
+                                        )}
+                                    </>
+                                );
+                            })()}
                         </div>
                     )}
                 </div>
 
-                {/* Footer Actions for non-quizzes or after submission */}
-                {(!isQuiz || quizSubmitted) && (
-                    <div className="bg-gray-50 px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-gray-100">
-                        <div className="text-sm text-gray-500">
-                            {isQuiz ? "Quiz results submitted." : "Finished this lesson?"}
-                        </div>
-                        <div className="flex gap-3">
-                            {!isQuiz && (
-                                <button
-                                    onClick={handleMarkComplete}
-                                    disabled={isCompleted}
-                                    className={`px-6 py-2.5 rounded-lg transition-all font-bold text-sm flex items-center gap-2 ${isCompleted
+                {/* Footer Actions for non-quizzes or after passing submission */}
+                {(() => {
+                    if (!isQuiz) return true;
+                    if (!quizSubmitted) return false;
+                    const quiz = content as QuizResponseDto;
+                    const totalMarks = quiz.totalMarks || 0;
+                    const passPercentage = quiz.passPercentage || 0;
+                    const percentage = totalMarks > 0 ? (quizScore / totalMarks) * 100 : 0;
+                    return percentage >= passPercentage;
+                })() && (
+                        <div className="bg-gray-50 px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-gray-100">
+                            <div className="text-sm text-gray-500">
+                                {isQuiz ? "Quiz results submitted." : "Finished this lesson?"}
+                            </div>
+                            <div className="flex gap-3">
+                                {!isQuiz && (
+                                    <button
+                                        onClick={handleMarkComplete}
+                                        disabled={isCompleted}
+                                        className={`px-6 py-2.5 rounded-lg transition-all font-bold text-sm flex items-center gap-2 ${isCompleted
                                             ? "bg-green-100 text-green-700 cursor-default"
                                             : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-gray-300"
-                                        }`}
+                                            }`}
+                                    >
+                                        {isCompleted ? <><FiCheckCircle /> Completed</> : "Mark as Complete"}
+                                    </button>
+                                )}
+
+                                <button
+                                    onClick={() => router.back()}
+                                    className="bg-gray-900 text-white px-6 py-2.5 rounded-lg hover:bg-gray-800 transition font-medium flex items-center gap-2"
                                 >
-                                    {isCompleted ? <><FiCheckCircle /> Completed</> : "Mark as Complete"}
+                                    Next Lesson <FiChevronRight size={18} />
                                 </button>
-                            )}
-
-                            <button
-                                onClick={() => router.back()}
-                                className="bg-gray-900 text-white px-6 py-2.5 rounded-lg hover:bg-gray-800 transition font-medium flex items-center gap-2"
-                            >
-                                Next Lesson <FiChevronRight size={18} />
-                            </button>
-
+                            </div>
                         </div>
-                    </div>
-                )}
+                    )}
             </div>
         </div>
     );
