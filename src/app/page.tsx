@@ -10,9 +10,7 @@ import ValueProps from "@/components/ValueProps";
 import FeaturedCourses from "@/components/FeaturedCourses";
 import FreeChapterList from "@/components/FreeChapterList";
 import ClassesListSection from "@/components/ClassesListSection";
-import TeacherSpotlight from "@/components/TeacherSpotLight";
 import Testimonials from "@/components/Testimonials";
-import Pricing from "@/components/Pricing";
 
 export default function HomePage() {
     const router = useRouter();
@@ -62,15 +60,17 @@ export default function HomePage() {
     }, [isLoading, isLoggedIn, user, activeRole, router]);
 
     return (
-        <main>
+        <main className="overflow-x-hidden">
             <Hero />
             <ValueProps />
-            <FeaturedCourses />
-            <FreeChapterList />
+            <div id="featured">
+                <FeaturedCourses />
+            </div>
+            <div id="free">
+                <FreeChapterList />
+            </div>
             <ClassesListSection />
-            <TeacherSpotlight />
             <Testimonials />
-            <Pricing />
         </main>
     );
 }

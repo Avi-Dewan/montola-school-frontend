@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useI18n } from "@/contexts/I18nProvider";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 import { HiMenu, HiX } from "react-icons/hi";
 import { getHighestPriorityRole } from "@/lib/roles";
 
@@ -10,6 +11,7 @@ export default function Navbar() {
     const { isLoggedIn, removeAuthTokens, isLoading, user, activeRole } = useAuth();
     const { t, lang, switchLang } = useI18n();
     const [isOpen, setIsOpen] = useState(false);
+    const pathname = usePathname();
 
     const toggleMenu = () => setIsOpen(!isOpen);
 
@@ -20,6 +22,17 @@ export default function Navbar() {
 
     const isStudent = resolvedActiveRole === "STUDENT";
     const isTeacher = resolvedActiveRole === "TEACHER";
+
+    const isActive = (href: string) => {
+        if (href === "/") return pathname === "/";
+        return pathname.startsWith(href);
+    };
+
+    const getLinkClass = (href: string, baseClass: string = "") => {
+        const activeClass = "text-primary-600 font-extrabold";
+        const inactiveClass = "text-gray-800";
+        return `${baseClass} ${isActive(href) ? activeClass : inactiveClass} hover:text-primary-500 transition-colors`;
+    };
 
     // Function to render auth buttons
     const renderAuthButtons = () => {
@@ -105,108 +118,51 @@ export default function Navbar() {
         );
     };
 
-    // Role-based extra links (for logged-in users)
-    const renderRoleLinksDesktop = () => {
-        if (!isLoggedIn) return null;
-
-        if (isStudent) {
-            return (
-                <>
-                    <Link href="/" className="text-gray-800 hover:text-primary-500">
-                        My Dashboard
-                    </Link>
-                    <Link href="/my-chapters" className="text-gray-800 hover:text-primary-500">
-                        My Chapters
-                    </Link>
-                </>
-            );
-        }
-
-        if (isTeacher) {
-            return (
-                <>
-                    <Link href="/teacher" className="text-gray-800 hover:text-primary-500">
-                        My Dashboard
-                    </Link>
-                    <Link href="/teacher/assigned-chapters" className="text-gray-800 hover:text-primary-500">
-                        Assigned Chapters
-                    </Link>
-                </>
-            );
-        }
-
-        return null;
-    };
-
-    const renderRoleLinksMobile = () => {
-        if (!isLoggedIn) return null;
-
-        if (isStudent) {
-            return (
-                <>
-                    <Link
-                        href="/"
-                        onClick={() => setIsOpen(false)}
-                        className="w-full sm:w-auto block px-2 py-1 text-gray-800 hover:text-primary-500"
-                    >
-                        My Dashboard
-                    </Link>
-                    <Link
-                        href="/my-chapters"
-                        onClick={() => setIsOpen(false)}
-                        className="w-full sm:w-auto block px-2 py-1 text-gray-800 hover:text-primary-500"
-                    >
-                        My Chapters
-                    </Link>
-                </>
-            );
-        }
-
-        if (isTeacher) {
-            return (
-                <>
-                    <Link
-                        href="/teacher"
-                        onClick={() => setIsOpen(false)}
-                        className="w-full sm:w-auto block px-2 py-1 text-gray-800 hover:text-primary-500"
-                    >
-                        My Dashboard
-                    </Link>
-                    <Link
-                        href="/teacher/assigned-chapters"
-                        onClick={() => setIsOpen(false)}
-                        className="w-full sm:w-auto block px-2 py-1 text-gray-800 hover:text-primary-500"
-                    >
-                        Assigned Chapters
-                    </Link>
-                </>
-            );
-        }
-
-        return null;
-    };
-
     return (
         <nav className="sticky top-0 bg-white shadow-md z-50">
             <div className="max-w-7xl mx-auto flex justify-between items-center py-4 px-6">
-                <div className="text-2xl font-bold text-primary-500">Montola School</div>
+                <Link href="/" className="text-2xl font-bold text-primary-500 hover:text-primary-600 transition-colors">
+                    Montola School
+                </Link>
 
                 {/* Desktop links */}
                 <div className="hidden md:flex space-x-6 items-center">
-                    <Link href="/" className="text-gray-800 hover:text-primary-500">{t("nav.home")}</Link>
-                    <Link href="/courses" className="text-gray-800 hover:text-primary-500">{t("nav.courses")}</Link>
-                    <Link href="/teachers" className="text-gray-800 hover:text-primary-500">{t("nav.teachers")}</Link>
-                    <Link href="/pricing" className="text-gray-800 hover:text-primary-500">{t("nav.pricing")}</Link>
-                    <Link href="/about" className="text-gray-800 hover:text-primary-500">{t("nav.about")}</Link>
+                    {/* Common Public Links or Student Links */}
+                    {(!isLoggedIn || isStudent) && (
+                        <>
+                            <Link href="/" className={getLinkClass("/")}>{t("nav.home")}</Link>
+                            <Link href="/classes" className={getLinkClass("/classes")}>Classes</Link>
+                            <Link href="/featured-chapters" className={getLinkClass("/featured-chapters")}>Featured Chapters</Link>
+                            <Link href="/free-chapters" className={getLinkClass("/free-chapters")}>Free Chapters</Link>
+                        </>
+                    )}
 
-                    {renderRoleLinksDesktop()}
+                    {/* Role-specific Links */}
+                    {isLoggedIn && isStudent && (
+                        <>
+                            <Link href="/student/dashboard" className={getLinkClass("/student/dashboard", "font-medium")}>
+                                My Dashboard
+                            </Link>
+                        </>
+                    )}
+
+                    {isLoggedIn && isTeacher && (
+                        <>
+                            <Link href="/teacher" className={getLinkClass("/teacher", "font-medium")}>
+                                My Dashboard
+                            </Link>
+                            <Link href="/teacher/assigned-chapters" className={getLinkClass("/teacher/assigned-chapters", "font-medium")}>
+                                Assigned Chapters
+                            </Link>
+                        </>
+                    )}
 
                     {renderAuthButtons()}
 
                     <select
                         value={lang}
                         onChange={(e) => switchLang(e.target.value as "en" | "bn")}
-                        className="border p-1 rounded ml-4"
+                        className="border p-1 rounded ml-4 text-xs font-bold"
                     >
                         <option value="en">EN</option>
                         <option value="bn">বাংলা</option>
@@ -215,7 +171,7 @@ export default function Navbar() {
 
                 {/* Mobile menu button */}
                 <div className="md:hidden">
-                    <button onClick={toggleMenu} className="text-gray-800">
+                    <button onClick={toggleMenu} className="text-gray-800 p-2 hover:bg-gray-100 rounded-lg transition-colors">
                         {isOpen ? <HiX size={24} /> : <HiMenu size={24} />}
                     </button>
                 </div>
@@ -223,25 +179,67 @@ export default function Navbar() {
 
             {/* Mobile menu */}
             {isOpen && (
-                <div className="flex flex-col space-y-2 p-4 bg-white shadow-md sm:flex-row sm:space-x-6 sm:space-y-0 sm:p-0 sm:bg-transparent sm:shadow-none items-start sm:items-center">
-                    <Link href="/" onClick={() => setIsOpen(false)} className="w-full sm:w-auto block px-2 py-1 text-gray-800 hover:text-primary-500">{t("nav.home")}</Link>
-                    <Link href="/courses" onClick={() => setIsOpen(false)} className="w-full sm:w-auto block px-2 py-1 text-gray-800 hover:text-primary-500">{t("nav.courses")}</Link>
-                    <Link href="/teachers" onClick={() => setIsOpen(false)} className="w-full sm:w-auto block px-2 py-1 text-gray-800 hover:text-primary-500">{t("nav.teachers")}</Link>
-                    <Link href="/pricing" onClick={() => setIsOpen(false)} className="w-full sm:w-auto block px-2 py-1 text-gray-800 hover:text-primary-500">{t("nav.pricing")}</Link>
-                    <Link href="/about" onClick={() => setIsOpen(false)} className="w-full sm:w-auto block px-2 py-1 text-gray-800 hover:text-primary-500">{t("nav.about")}</Link>
+                <div className="md:hidden bg-white border-t border-gray-100 p-4 space-y-4 shadow-xl">
+                    <div className="flex flex-col space-y-3">
+                        {(!isLoggedIn || isStudent) && (
+                            <>
+                                <Link href="/" onClick={() => setIsOpen(false)} className={getLinkClass("/", "py-1")}>{t("nav.home")}</Link>
+                                <Link href="/classes" onClick={() => setIsOpen(false)} className={getLinkClass("/classes", "py-1")}>Classes</Link>
+                                <Link href="/featured-chapters" onClick={() => setIsOpen(false)} className={getLinkClass("/featured-chapters", "py-1")}>Featured Chapters</Link>
+                                <Link href="/free-chapters" onClick={() => setIsOpen(false)} className={getLinkClass("/free-chapters", "py-1")}>Free Chapters</Link>
+                            </>
+                        )}
 
-                        {renderRoleLinksMobile()}
+                        {isLoggedIn && isStudent && (
+                            <>
+                                <Link
+                                    href="/student/dashboard"
+                                    onClick={() => setIsOpen(false)}
+                                    className={getLinkClass("/student/dashboard", "py-1 font-medium")}
+                                >
+                                    My Dashboard
+                                </Link>
+                                <Link
+                                    href="/student/dashboard"
+                                    onClick={() => setIsOpen(false)}
+                                    className={getLinkClass("/student/dashboard", "py-1 font-medium")}
+                                >
+                                    My Chapters
+                                </Link>
+                            </>
+                        )}
 
-                    {renderMobileAuthButtons()}
+                        {isLoggedIn && isTeacher && (
+                            <>
+                                <Link
+                                    href="/teacher"
+                                    onClick={() => setIsOpen(false)}
+                                    className={getLinkClass("/teacher", "py-1 font-medium")}
+                                >
+                                    My Dashboard
+                                </Link>
+                                <Link
+                                    href="/teacher/assigned-chapters"
+                                    onClick={() => setIsOpen(false)}
+                                    className={getLinkClass("/teacher/assigned-chapters", "py-1 font-medium")}
+                                >
+                                    Assigned Chapters
+                                </Link>
+                            </>
+                        )}
+                    </div>
 
-                    <select
-                        value={lang}
-                        onChange={(e) => switchLang(e.target.value as "en" | "bn")}
-                        className="w-full sm:w-auto border p-2 rounded mt-2 sm:mt-0"
-                    >
-                        <option value="en">EN</option>
-                        <option value="bn">বাংলা</option>
-                    </select>
+                    <div className="pt-4 border-t border-gray-100 flex flex-col gap-4">
+                        <select
+                            value={lang}
+                            onChange={(e) => switchLang(e.target.value as "en" | "bn")}
+                            className="w-full border p-2 rounded text-sm font-bold"
+                        >
+                            <option value="en">EN</option>
+                            <option value="bn">বাংলা</option>
+                        </select>
+                        {renderMobileAuthButtons()}
+                    </div>
                 </div>
             )}
         </nav>
