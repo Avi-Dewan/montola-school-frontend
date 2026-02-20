@@ -29,6 +29,8 @@ export default function CourseLayout({ children }: { children: React.ReactNode }
     const [detailedProgress, setDetailedProgress] = useState<Record<string, boolean>>({});
     const [overallProgress, setOverallProgress] = useState<ChapterProgressResponseDto | null>(null);
     const [loading, setLoading] = useState(true);
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+    const [isCollapsed, setIsCollapsed] = useState(false);
 
     const refreshProgress = useCallback(async () => {
         if (!chapterId) return;
@@ -65,6 +67,11 @@ export default function CourseLayout({ children }: { children: React.ReactNode }
         fetchData();
     }, [chapterId, refreshProgress]);
 
+    // Close sidebar on small screens when content changes
+    useEffect(() => {
+        setIsSidebarOpen(false);
+    }, [params?.contentId]);
+
     if (!chapterId) return null;
 
     if (loading) {
@@ -86,14 +93,26 @@ export default function CourseLayout({ children }: { children: React.ReactNode }
 
     return (
         <ProgressContext.Provider value={{ detailedProgress, overallProgress, refreshProgress }}>
-            <div className="flex min-h-screen bg-gray-50 pt-16">
+            <div className="flex min-h-screen bg-gray-50 pt-16 relative overflow-x-hidden">
+                {/* Mobile Overlay */}
+                {isSidebarOpen && (
+                    <div
+                        className="fixed inset-0 bg-gray-900/50 backdrop-blur-sm z-40 md:hidden"
+                        onClick={() => setIsSidebarOpen(false)}
+                    />
+                )}
+
                 <CourseSidebar
                     structure={structure}
                     detailedProgress={detailedProgress}
                     overallProgress={overallProgress}
+                    isCollapsed={isCollapsed}
+                    setIsCollapsed={setIsCollapsed}
+                    isSidebarOpen={isSidebarOpen}
+                    setIsSidebarOpen={setIsSidebarOpen}
                 />
 
-                <div className="flex-1 min-w-0 overflow-y-auto">
+                <div className="flex-1 min-w-0">
                     <main className="p-4 md:p-8 max-w-5xl mx-auto">
                         {children}
                     </main>

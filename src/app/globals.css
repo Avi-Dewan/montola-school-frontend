@@ -6,3 +6,20 @@
 body {
     @apply bg-gray-50 text-gray-900 font-sans;
 }
+
+/* Custom Scrollbar for Sidebar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    @apply bg-transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-gray-200 rounded-full;
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+    @apply bg-gray-300;
+}
