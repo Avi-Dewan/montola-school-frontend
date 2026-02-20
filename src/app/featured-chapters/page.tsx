@@ -64,10 +64,7 @@ export default function FeaturedChaptersPage() {
                                 <div className="p-8 flex flex-col flex-grow">
                                     <div className="flex justify-between items-start mb-4">
                                         <span className="text-xs font-bold text-primary-600 uppercase tracking-wider bg-primary-50 px-2 py-1 rounded">
-                                            {c.subjectName}
-                                        </span>
-                                        <span className="text-xs font-medium text-gray-400">
-                                            {c.className}
+                                            {c.subjectName} {c.className && `[${c.className}]`}
                                         </span>
                                     </div>
                                     <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors">{c.title}</h3>

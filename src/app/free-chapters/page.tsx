@@ -67,7 +67,7 @@ export default function FreeChaptersPage() {
                                             Free Access
                                         </span>
                                         <span className="text-xs font-medium text-gray-400">
-                                            {c.subjectName}
+                                            {c.subjectName} {c.className && `[${c.className}]`}
                                         </span>
                                     </div>
                                     <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors uppercase">{c.title}</h3>

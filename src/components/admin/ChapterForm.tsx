@@ -104,7 +104,7 @@ export default function ChapterForm({
                 }
                 options={subjects.map((subject) => ({
                     value: subject.id,
-                    label: subject.name,
+                    label: `${subject.name} ${subject.className ? `(${subject.className})` : ""}`,
                 }))}
                 error={errors.subjectId}
                 placeholder="Select a subject"
@@ -182,9 +182,9 @@ export default function ChapterForm({
                     <input
                         type="checkbox"
                         id="free"
-                        checked={formData.free || false}
+                        checked={formData.isFree || false}
                         onChange={(e) =>
-                            setFormData({ ...formData, free: e.target.checked })
+                            setFormData({ ...formData, isFree: e.target.checked })
                         }
                         className="w-4 h-4 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
                     />

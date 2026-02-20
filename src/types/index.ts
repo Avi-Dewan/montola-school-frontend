@@ -90,7 +90,7 @@ export interface ChapterRequestDto {
     orderIndex?: number;
     videoId?: string;
     price?: number;
-    free?: boolean;
+    isFree?: boolean;
 }
 
 export interface ChapterResponseDto {
@@ -101,9 +101,11 @@ export interface ChapterResponseDto {
     orderIndex?: number;
     subjectId: number;
     subjectName?: string;
+    classId?: number;
+    className?: string;
     videoId?: string;
     price?: number;
-    free?: boolean;
+    isFree?: boolean;
     teachers?: TeacherDto[];
 }
 
