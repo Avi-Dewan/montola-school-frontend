@@ -42,7 +42,7 @@ export default function FeaturedCourses() {
                         <p className="text-gray-700 mb-4 line-clamp-2">{c.description}</p>
                         <div className="mt-auto">
                             <p className="text-green-600 font-semibold mb-4">
-                                {c.isFree ? "Free" : `৳${c.price}`}
+                                {c.free ? "Free" : `৳${c.price}`}
                             </p>
                             <Link
                                 href={`/chapters/${c.chapterId}`}

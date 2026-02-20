@@ -72,7 +72,7 @@ export default function FeaturedChaptersPage() {
 
                                     <div className="mt-auto pt-6 border-t border-gray-50 flex items-center justify-between">
                                         <p className="text-xl font-extrabold text-green-600">
-                                            {c.isFree ? "FREE" : `৳${c.price}`}
+                                            {c.free ? "FREE" : `৳${c.price}`}
                                         </p>
                                         <Link
                                             href={`/chapters/${c.chapterId}`}

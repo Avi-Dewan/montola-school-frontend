@@ -57,3 +57,8 @@ export const getContentById = async (id: number) => {
     const response = await api.get<LectureResponseDto | QuizResponseDto | GooglePdfContentResponseDto>(`/v1/contents/${id}`);
     return response.data;
 };
+
+export const enrollInFreeChapter = async (chapterId: number) => {
+    const response = await api.post(`/v1/enrollments/free/${chapterId}`);
+    return response.data;
+};

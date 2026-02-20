@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { getChapterPublicDetails, enrollInChapter } from "@/lib/public";
-import { getMyChaptersProgress } from "@/lib/student";
+import { getChapterPublicDetails } from "@/lib/public";
+import { getChapterProgress, enrollInFreeChapter } from "@/lib/student";
 import { ChapterResponseDto, ChapterProgressResponseDto } from "@/types";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "react-toastify";
@@ -36,10 +36,9 @@ export default function ChapterPublicPage() {
                 // If logged in as student, check enrollment/progress
                 if (isLoggedIn && isStudent) {
                     try {
-                        const allProgress = await getMyChaptersProgress();
-                        const myChapterProgress = allProgress.find(p => p.chapterId === id);
-                        if (myChapterProgress) {
-                            setProgress(myChapterProgress);
+                        const progressData = await getChapterProgress(id);
+                        if (progressData) {
+                            setProgress(progressData);
                         }
                     } catch (err) {
                         console.error("Failed to fetch student progress:", err);
@@ -65,13 +64,15 @@ export default function ChapterPublicPage() {
             return;
         }
 
-        if (chapter.isFree) {
+        if (chapter.free) {
             setEnrolling(true);
             try {
-                await enrollInChapter(chapter.id);
+                await enrollInFreeChapter(chapter.id);
                 toast.success("Enrolled successfully!");
                 // Re-fetch progress to show "Continue" button
-                window.location.reload();
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000);
             } catch (error) {
                 console.error("Enrollment failed:", error);
                 toast.error("Failed to enroll. Please try again.");
@@ -185,9 +186,11 @@ export default function ChapterPublicPage() {
                                 </div>
                             </div>
                             <div>
-                                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1 font-sans">Price</p>
+                                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1 font-sans">
+                                    {chapter.free ? "Status" : "Price"}
+                                </p>
                                 <p className="text-2xl font-black text-primary-600">
-                                    {chapter.isFree ? (
+                                    {chapter.free ? (
                                         <span className="text-green-600">FREE</span>
                                     ) : (
                                         `৳${chapter.price || 0}`
@@ -200,18 +203,15 @@ export default function ChapterPublicPage() {
                             <div className="space-y-4">
                                 <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
                                     <div className="flex justify-between items-center mb-2">
-                                        <span className="text-sm font-bold text-gray-700">Course Progress</span>
-                                        <span className="text-sm font-black text-primary-600">{Math.round((progress.completedCount / progress.totalCount) * 100) || 0}%</span>
+                                        <span className="text-sm font-bold text-gray-700">Progress</span>
+                                        <span className="text-sm font-black text-primary-600">{Math.round(progress.progressPercentage)}%</span>
                                     </div>
                                     <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
                                         <div
                                             className="bg-primary-600 h-full transition-all duration-1000"
-                                            style={{ width: `${(progress.completedCount / progress.totalCount) * 100}%` }}
+                                            style={{ width: `${progress.progressPercentage}%` }}
                                         ></div>
                                     </div>
-                                    <p className="mt-3 text-xs text-gray-500 font-medium">
-                                        {progress.completedCount} of {progress.totalCount} lessons completed
-                                    </p>
                                 </div>
                                 <Link
                                     href={`/student/chapters/${chapter.id}`}
@@ -225,7 +225,7 @@ export default function ChapterPublicPage() {
                                 <button
                                     onClick={handleEnroll}
                                     disabled={enrolling}
-                                    className={`w-full py-5 rounded-2xl font-black text-xl shadow-2xl transition transform hover:-translate-y-1 flex items-center justify-center gap-3 ${chapter.isFree
+                                    className={`w-full py-5 rounded-2xl font-black text-xl shadow-2xl transition transform hover:-translate-y-1 flex items-center justify-center gap-3 ${chapter.free
                                         ? "bg-green-600 text-white hover:bg-green-700 shadow-green-100"
                                         : "bg-primary-600 text-white hover:bg-primary-700 shadow-primary-100"
                                         } ${enrolling ? "opacity-70 cursor-not-allowed" : ""}`}
@@ -234,12 +234,12 @@ export default function ChapterPublicPage() {
                                         "PROCESSING..."
                                     ) : (
                                         <>
-                                            {chapter.isFree ? <FaPlayCircle /> : <FaCheckCircle />}
-                                            {chapter.isFree ? "ENROLL FOR FREE" : "BUY THIS CHAPTER"}
+                                            {chapter.free ? <FaPlayCircle /> : <FaCheckCircle />}
+                                            {chapter.free ? "ENROLL NOW" : "BUY THIS CHAPTER"}
                                         </>
                                     )}
                                 </button>
-                                {chapter.isFree && !isLoggedIn && (
+                                {chapter.free && !isLoggedIn && (
                                     <div className="flex items-center justify-center gap-2 text-gray-400 bg-gray-50 py-2 rounded-xl">
                                         <FaLock size={12} />
                                         <p className="text-xs font-bold uppercase tracking-widest">Login required to access</p>

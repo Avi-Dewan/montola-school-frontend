@@ -105,7 +105,7 @@ export interface ChapterResponseDto {
     className?: string;
     videoId?: string;
     price?: number;
-    isFree?: boolean;
+    free?: boolean;
     teachers?: TeacherDto[];
 }
 
@@ -117,7 +117,7 @@ export interface FeaturedChapterResponseDto {
     subjectName: string;
     className: string;
     price: number;
-    isFree: boolean;
+    free: boolean;
     featuredAt: string;
 }
 
