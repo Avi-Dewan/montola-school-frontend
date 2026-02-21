@@ -59,8 +59,7 @@ export default function PaymentModal({
                 amount,
                 ...formData,
             });
-            toast.success("Payment submitted successfully! Please wait for verification.");
-            onClose();
+            // Success state handling is left to the parent's onSubmit implementation
         } catch (err: any) {
             console.error("Payment submission failed:", err);
             toast.error(err.response?.data?.message || "Failed to submit payment.");

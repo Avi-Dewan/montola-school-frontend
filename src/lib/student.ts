@@ -4,7 +4,9 @@ import {
     ContentProgressResponseDto,
     LectureResponseDto,
     QuizResponseDto,
-    GooglePdfContentResponseDto
+    GooglePdfContentResponseDto,
+    PaymentRequestDto,
+    PaymentResponseDto
 } from "@/types";
 
 
@@ -58,7 +60,19 @@ export const getContentById = async (id: number) => {
     return response.data;
 };
 
+
 export const enrollInFreeChapter = async (chapterId: number) => {
     const response = await api.post(`/v1/enrollments/free/${chapterId}`);
+    return response.data;
+};
+
+export const submitPayment = async (data: PaymentRequestDto) => {
+    const response = await api.post<PaymentResponseDto>("/v1/payments/submit", data);
+    return response.data;
+};
+
+export const getPaymentStatusForChapter = async (chapterId: number) => {
+    // Backend returns empty string or 204 if no payment exists
+    const response = await api.get<PaymentResponseDto | "">(`/v1/payments/my-payments/chapter/${chapterId}`);
     return response.data;
 };

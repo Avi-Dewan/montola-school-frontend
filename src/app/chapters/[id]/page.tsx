@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import { getChapterPublicDetails } from "@/lib/public";
-import { getChapterProgress, enrollInFreeChapter } from "@/lib/student";
-import { ChapterResponseDto, ChapterProgressResponseDto } from "@/types";
+import { getChapterProgress, enrollInFreeChapter, getPaymentStatusForChapter, submitPayment as submitPaymentApi } from "@/lib/student";
+import { ChapterResponseDto, ChapterProgressResponseDto, PaymentResponseDto, PaymentStatus, PaymentRequestDto } from "@/types";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
-import { FaPlayCircle, FaCheckCircle, FaLock, FaUsers } from "react-icons/fa";
+import { FaPlayCircle, FaCheckCircle, FaLock, FaUsers, FaHourglassHalf, FaExclamationTriangle } from "react-icons/fa";
+import PaymentModal from "@/components/student/PaymentModal";
 
 export default function ChapterPublicPage() {
     const params = useParams();
@@ -19,8 +20,10 @@ export default function ChapterPublicPage() {
 
     const [chapter, setChapter] = useState<ChapterResponseDto | null>(null);
     const [progress, setProgress] = useState<ChapterProgressResponseDto | null>(null);
+    const [payment, setPayment] = useState<PaymentResponseDto | null>(null);
     const [loading, setLoading] = useState(true);
     const [enrolling, setEnrolling] = useState(false);
+    const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
     const isStudent = user?.roles?.includes("STUDENT");
 
@@ -33,15 +36,18 @@ export default function ChapterPublicPage() {
                 const chapterData = await getChapterPublicDetails(id);
                 setChapter(chapterData);
 
-                // If logged in as student, check enrollment/progress
+                // If logged in as student, check enrollment/progress and payment status
                 if (isLoggedIn && isStudent) {
                     try {
-                        const progressData = await getChapterProgress(id);
-                        if (progressData) {
-                            setProgress(progressData);
-                        }
+                        const [progressData, paymentData] = await Promise.all([
+                            getChapterProgress(id).catch(() => null),
+                            getPaymentStatusForChapter(id).catch(() => null)
+                        ]);
+
+                        if (progressData) setProgress(progressData);
+                        if (paymentData) setPayment(paymentData as PaymentResponseDto);
                     } catch (err) {
-                        console.error("Failed to fetch student progress:", err);
+                        console.error("Failed to fetch student progress/payment:", err);
                     }
                 }
             } catch (err) {
@@ -86,19 +92,22 @@ export default function ChapterPublicPage() {
                 router.push(`/auth/login?returnUrl=/chapters/${chapter.id}`);
                 return;
             }
-            // Redirect to purchase flow
-            // Note: Since payment flow is not fully implemented in frontend yet (mocked backend?), 
-            // the plan says redirect to /api/v1/payments/submit or just handle as "Buy Now" flow.
-            // For now, I'll redirect to a hypothetical checkout page or show a toast if no page exists.
-            // Or use the student dashboard as "Buy" destination if that's where purchase happens?
-            // Plan said: "Action (Logged In): Redirect to payment/checkout flow (/api/v1/payments/submit)" - that's an API, not a page.
-            // I'll show a toast for now as per plan/instruction "if it is paid, then give Buy button... redirect to purchange".
-            // I'll assume a purchase page exists or just show "Purchase flow coming soon".
+            // Open payment modal
+            setIsPaymentModalOpen(true);
+        }
+    };
 
-            // Actually user said: "if logged in already redirect to purchange".
-            // I'll redirect to `/purchase/${chapter.id}` (even if I haven't built it yet, implies it's next step)
-            // Or since I don't want to build purchase page now, I'll just toast.
-            toast.info("Redirecting to payment gateway... (Mock)");
+    const handlePaymentSubmit = async (data: PaymentRequestDto) => {
+        try {
+            await submitPaymentApi(data);
+            toast.success("Payment submitted successfully! Waiting for verification.");
+            // Refresh payment status
+            const status = await getPaymentStatusForChapter(chapter!.id);
+            if (status) setPayment(status as PaymentResponseDto);
+            setIsPaymentModalOpen(false);
+        } catch (error) {
+            console.error("Payment submission failed:", error);
+            toast.error("Failed to submit payment details.");
         }
     };
 
@@ -220,8 +229,24 @@ export default function ChapterPublicPage() {
                                     CONTINUE LEARNING
                                 </Link>
                             </div>
+                        ) : payment && payment.status === PaymentStatus.PENDING ? (
+                            <div className="bg-blue-50 border border-blue-100 rounded-2xl p-6 text-center space-y-4">
+                                <FaHourglassHalf className="mx-auto text-blue-500 text-3xl" />
+                                <div>
+                                    <p className="text-lg font-bold text-blue-900 leading-tight">Verification Pending</p>
+                                    <p className="text-sm text-blue-700 mt-1">Please wait for admin to verify your payment. This usually takes less than 24 hours.</p>
+                                </div>
+                            </div>
                         ) : (
                             <div className="space-y-4">
+                                {payment && payment.status === PaymentStatus.REJECTED && (
+                                    <div className="bg-red-50 border border-red-100 rounded-xl p-4 flex items-center gap-3 mb-2">
+                                        <FaExclamationTriangle className="text-red-500 flex-shrink-0" />
+                                        <p className="text-xs font-medium text-red-700">
+                                            Your previous payment was rejected. Please resubmit the payment info.
+                                        </p>
+                                    </div>
+                                )}
                                 <button
                                     onClick={handleEnroll}
                                     disabled={enrolling}
@@ -235,7 +260,7 @@ export default function ChapterPublicPage() {
                                     ) : (
                                         <>
                                             {chapter.free ? <FaPlayCircle /> : <FaCheckCircle />}
-                                            {chapter.free ? "ENROLL NOW" : "BUY THIS CHAPTER"}
+                                            {chapter.free ? "ENROLL NOW" : (payment && payment.status === PaymentStatus.REJECTED ? "RESUBMIT PAYMENT INFO" : "BUY THIS CHAPTER")}
                                         </>
                                     )}
                                 </button>
@@ -250,6 +275,18 @@ export default function ChapterPublicPage() {
                     </div>
                 </div>
             </div>
+
+            {/* Payment Modal */}
+            {chapter && (
+                <PaymentModal
+                    isOpen={isPaymentModalOpen}
+                    onClose={() => setIsPaymentModalOpen(false)}
+                    chapterId={chapter.id}
+                    chapterTitle={chapter.title}
+                    amount={chapter.price || 0}
+                    onSubmit={handlePaymentSubmit}
+                />
+            )}
 
             {/* Additional Details Section could go here */}
             <div className="max-w-5xl mx-auto mt-12 bg-white rounded-xl shadow-sm border border-gray-100 p-8">
