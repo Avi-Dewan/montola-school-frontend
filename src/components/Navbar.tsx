@@ -2,19 +2,63 @@
 import Link from "next/link";
 import { useAuth } from "@/contexts/AuthContext";
 import { useI18n } from "@/contexts/I18nProvider";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { HiMenu, HiX } from "react-icons/hi";
+import { HiMenu, HiX, HiChevronDown, HiUser, HiLogout, HiCreditCard } from "react-icons/hi";
 import { getHighestPriorityRole } from "@/lib/roles";
 import LoadingSpinner from "./LoadingSpinner";
+import { useRouter } from "next/navigation";
+import { getProfilePicture } from "@/lib/user";
 
 export default function Navbar() {
     const { isLoggedIn, removeAuthTokens, isLoading, user, activeRole } = useAuth();
     const { t, lang, switchLang } = useI18n();
     const [isOpen, setIsOpen] = useState(false);
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
     const pathname = usePathname();
+    const router = useRouter();
+
+    const fetchAvatar = async () => {
+        if (!user?.id || !user.hasProfilePicture) {
+            setAvatarUrl(null);
+            return;
+        }
+        try {
+            const res = await getProfilePicture(user.id);
+            const blob = res.data as Blob;
+            if (blob && blob.size > 0) {
+                if (avatarUrl) URL.revokeObjectURL(avatarUrl);
+                setAvatarUrl(URL.createObjectURL(blob));
+            }
+        } catch (error) {
+            console.error("Navbar: Failed to fetch avatar:", error);
+            setAvatarUrl(null);
+        }
+    };
+
+    useEffect(() => {
+        if (isLoggedIn && user?.hasProfilePicture) {
+            fetchAvatar();
+        } else {
+            setAvatarUrl(null);
+        }
+        return () => {
+            if (avatarUrl) URL.revokeObjectURL(avatarUrl);
+        };
+    }, [isLoggedIn, user?.id, user?.hasProfilePicture]);
 
     const toggleMenu = () => setIsOpen(!isOpen);
+    const toggleProfile = () => setIsProfileOpen(!isProfileOpen);
+
+    const getInitials = (name: string) => {
+        return name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2);
+    };
 
     const roles = user?.roles || [];
     const resolvedActiveRole =
@@ -47,14 +91,71 @@ export default function Navbar() {
             );
         }
 
-        if (isLoggedIn) {
+        if (isLoggedIn && user) {
             return (
-                <button
-                    onClick={removeAuthTokens}
-                    className="ml-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
-                >
-                    {t("auth.logout")}
-                </button>
+                <div className="relative">
+                    <button
+                        onClick={toggleProfile}
+                        className="flex items-center gap-2 p-1 rounded-full hover:bg-gray-100 transition-colors border border-gray-100 pr-3"
+                    >
+                        <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white overflow-hidden relative">
+                            {user.hasProfilePicture && avatarUrl ? (
+                                <img
+                                    src={avatarUrl}
+                                    alt={user.fullName}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                <div className="w-full h-full flex items-center justify-center font-black">
+                                    {getInitials(user.fullName)}
+                                </div>
+                            )}
+                        </div>
+                        <span className="text-sm font-bold text-gray-700 hidden lg:block">{user.fullName.split(" ")[0]}</span>
+                        <HiChevronDown className={`text-gray-400 transition-transform ${isProfileOpen ? 'rotate-180' : ''}`} />
+                    </button>
+
+                    {isProfileOpen && (
+                        <>
+                            {/* Backdrop to close dropdown */}
+                            <div className="fixed inset-0 z-40" onClick={() => setIsProfileOpen(false)} />
+
+                            <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                                <div className="px-4 py-2 border-bottom border-gray-100 mb-1">
+                                    <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Signed in as</p>
+                                    <p className="text-sm font-bold text-gray-900 truncate">{user.email}</p>
+                                </div>
+                                <Link
+                                    href="/student/profile"
+                                    onClick={() => setIsProfileOpen(false)}
+                                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
+                                >
+                                    <HiUser size={18} />
+                                    My Profile
+                                </Link>
+                                <Link
+                                    href="/student/dashboard"
+                                    onClick={() => setIsProfileOpen(false)}
+                                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
+                                >
+                                    <HiCreditCard size={18} />
+                                    Payments
+                                </Link>
+                                <div className="h-px bg-gray-100 my-1" />
+                                <button
+                                    onClick={() => {
+                                        removeAuthTokens();
+                                        setIsProfileOpen(false);
+                                    }}
+                                    className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                                >
+                                    <HiLogout size={18} />
+                                    {t("auth.logout")}
+                                </button>
+                            </div>
+                        </>
+                    )}
+                </div>
             );
         }
 
@@ -87,17 +188,45 @@ export default function Navbar() {
             );
         }
 
-        if (isLoggedIn) {
+        if (isLoggedIn && user) {
             return (
-                <button
-                    onClick={() => {
-                        removeAuthTokens();
-                        setIsOpen(false);
-                    }}
-                    className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition"
-                >
-                    {t("auth.logout")}
-                </button>
+                <div className="space-y-3">
+                    <div className="flex items-center gap-3 px-2 py-3 bg-gray-50 rounded-xl mb-3">
+                        <div className="w-12 h-12 rounded-full bg-primary-600 flex items-center justify-center text-white text-lg font-black shrink-0 relative overflow-hidden">
+                            {user.hasProfilePicture && avatarUrl ? (
+                                <img
+                                    src={avatarUrl}
+                                    alt={user.fullName}
+                                    className="w-full h-full object-cover"
+                                />
+                            ) : (
+                                getInitials(user.fullName)
+                            )}
+                        </div>
+                        <div className="min-w-0">
+                            <p className="font-bold text-gray-900 truncate">{user.fullName}</p>
+                            <p className="text-xs text-gray-500 truncate">{user.email}</p>
+                        </div>
+                    </div>
+                    <Link
+                        href="/student/profile"
+                        onClick={() => setIsOpen(false)}
+                        className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                    >
+                        <HiUser size={20} className="text-gray-400" />
+                        <span className="font-medium">My Profile</span>
+                    </Link>
+                    <button
+                        onClick={() => {
+                            removeAuthTokens();
+                            setIsOpen(false);
+                        }}
+                        className="flex items-center gap-3 w-full px-4 py-2.5 text-red-600 hover:bg-red-50 rounded-lg transition-colors mt-2"
+                    >
+                        <HiLogout size={20} />
+                        <span className="font-medium">{t("auth.logout")}</span>
+                    </button>
+                </div>
             );
         }
 

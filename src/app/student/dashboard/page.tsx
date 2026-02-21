@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getMyChaptersProgress } from "@/lib/student";
-import { ChapterProgressResponseDto } from "@/types";
+import { getMyChaptersProgress, getMyPayments } from "@/lib/student";
+import { ChapterProgressResponseDto, PaymentResponseDto, PaymentStatus } from "@/types";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import Image from "next/image";
-import { FaBookOpen, FaAward, FaClock } from "react-icons/fa";
+import { FaBookOpen, FaAward, FaClock, FaCreditCard, FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import ChapterPlaceholder from "@/components/ChapterPlaceholder";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
@@ -19,20 +19,53 @@ function CourseIcon({ className }: { className?: string }) {
     )
 }
 
-function ChapterImage({ item }: { item: ChapterProgressResponseDto }) {
-    const [imageError, setImageError] = useState(false);
+import { getChapterCoverImage } from "@/lib/admin";
 
-    if (imageError) {
+function ChapterImage({ item }: { item: ChapterProgressResponseDto }) {
+    const [imageUrl, setImageUrl] = useState<string | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchImage = async () => {
+            try {
+                const res = await getChapterCoverImage(item.chapterId);
+                const blob = res.data as Blob;
+                if (blob && blob.size > 0) {
+                    const url = URL.createObjectURL(blob);
+                    setImageUrl(url);
+                }
+            } catch (error) {
+                console.error("Failed to fetch chapter image:", error);
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        fetchImage();
+
+        return () => {
+            if (imageUrl) URL.revokeObjectURL(imageUrl);
+        };
+    }, [item.chapterId]);
+
+    if (loading) {
+        return (
+            <div className="w-full h-full bg-gray-100 flex items-center justify-center">
+                <LoadingSpinner size="sm" />
+            </div>
+        );
+    }
+
+    if (!imageUrl) {
         return <ChapterPlaceholder title={item.chapterTitle} />;
     }
 
     return (
         <Image
-            src={`http://localhost:8080/api/v1/chapters/${item.chapterId}/cover-image`}
+            src={imageUrl}
             alt={item.chapterTitle}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-110"
-            onError={() => setImageError(true)}
             unoptimized
         />
     );
@@ -41,22 +74,27 @@ function ChapterImage({ item }: { item: ChapterProgressResponseDto }) {
 export default function StudentDashboard() {
     const { user, isLoading: isAuthLoading } = useAuth();
     const [progressData, setProgressData] = useState<ChapterProgressResponseDto[]>([]);
+    const [paymentsData, setPaymentsData] = useState<PaymentResponseDto[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        const fetchProgress = async () => {
+        const fetchDashboardData = async () => {
             try {
-                const data = await getMyChaptersProgress();
-                setProgressData(data);
+                const [progress, payments] = await Promise.all([
+                    getMyChaptersProgress(),
+                    getMyPayments()
+                ]);
+                setProgressData(progress);
+                setPaymentsData(payments);
             } catch (error) {
-                console.error("Failed to fetch progress:", error);
+                console.error("Failed to fetch dashboard data:", error);
             } finally {
                 setLoading(false);
             }
         };
 
         if (user) {
-            fetchProgress();
+            fetchDashboardData();
         } else if (!isAuthLoading) {
             setLoading(false);
         }
@@ -151,6 +189,59 @@ export default function StudentDashboard() {
                         ))}
                     </div>
                 )}
+
+                {/* Payments Section */}
+                <section className="mt-16">
+                    <header className="flex items-center justify-between mb-8">
+                        <div>
+                            <h2 className="text-2xl font-bold text-gray-900">Recent Payments</h2>
+                            <p className="text-gray-500 mt-1">Status of your course enrollments</p>
+                        </div>
+                        <Link href="/student/profile" className="text-primary-600 font-bold hover:underline flex items-center gap-1">
+                            Manage Account <FaCreditCard />
+                        </Link>
+                    </header>
+
+                    {paymentsData.length === 0 ? (
+                        <div className="bg-white rounded-xl p-8 text-center border border-gray-100 italic text-gray-400">
+                            No payment history found.
+                        </div>
+                    ) : (
+                        <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr className="bg-gray-50 border-b border-gray-100">
+                                            <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Chapter</th>
+                                            <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Amount</th>
+                                            <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Transaction ID</th>
+                                            <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-gray-50">
+                                        {paymentsData.slice(0, 5).map((payment) => (
+                                            <tr key={payment.id} className="hover:bg-gray-50/50 transition-colors">
+                                                <td className="px-6 py-4 font-bold text-gray-900">{payment.chapterTitle}</td>
+                                                <td className="px-6 py-4 font-black text-primary-600">৳{payment.amount}</td>
+                                                <td className="px-6 py-4 font-mono text-xs text-gray-500">{payment.transactionId}</td>
+                                                <td className="px-6 py-4 text-sm font-bold">
+                                                    <span className={`flex items-center gap-1.5 ${payment.status === PaymentStatus.VERIFIED ? 'text-green-600' :
+                                                        payment.status === PaymentStatus.REJECTED ? 'text-red-600' : 'text-orange-500'
+                                                        }`}>
+                                                        {payment.status === PaymentStatus.VERIFIED && <FaCheckCircle />}
+                                                        {payment.status === PaymentStatus.REJECTED && <FaExclamationCircle />}
+                                                        {payment.status === PaymentStatus.PENDING && <FaClock />}
+                                                        {payment.status}
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    )}
+                </section>
             </div>
         </main>
     );

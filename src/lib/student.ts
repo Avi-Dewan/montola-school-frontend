@@ -76,3 +76,8 @@ export const getPaymentStatusForChapter = async (chapterId: number) => {
     const response = await api.get<PaymentResponseDto | "">(`/v1/payments/my-payments/chapter/${chapterId}`);
     return response.data;
 };
+
+export const getMyPayments = async () => {
+    const response = await api.get<PaymentResponseDto[]>("/v1/payments/my-payments");
+    return response.data;
+};
