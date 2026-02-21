@@ -2,10 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { getFeaturedChapters } from "@/lib/public";
-import { FeaturedChapterResponseDto } from "@/types";
+import { getMyChaptersProgress } from "@/lib/student";
+import { FeaturedChapterResponseDto, ChapterProgressResponseDto } from "@/types";
+import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import Image from "next/image";
-import { FaStar, FaChevronRight } from "react-icons/fa";
+import { FaStar, FaChevronRight, FaPlay } from "react-icons/fa";
 import ChapterPlaceholder from "@/components/ChapterPlaceholder";
 
 function ChapterImage({ chapter }: { chapter: FeaturedChapterResponseDto }) {
@@ -28,15 +30,28 @@ function ChapterImage({ chapter }: { chapter: FeaturedChapterResponseDto }) {
 }
 
 export default function FeaturedChaptersPage() {
+    const { isLoggedIn, user } = useAuth();
     const [chapters, setChapters] = useState<FeaturedChapterResponseDto[]>([]);
+    const [enrollmentMap, setEnrollmentMap] = useState<Map<number, number>>(new Map());
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
+
+    const isStudent = user?.roles?.includes("STUDENT");
 
     useEffect(() => {
         const fetchChapters = async () => {
             try {
-                const data = await getFeaturedChapters();
+                const [data, progress] = await Promise.all([
+                    getFeaturedChapters(),
+                    (isLoggedIn && isStudent) ? getMyChaptersProgress().catch(() => []) : Promise.resolve([])
+                ]);
+
                 setChapters(data);
+                if (progress && progress.length > 0) {
+                    const emap = new Map();
+                    progress.forEach(p => emap.set(p.chapterId, p.progressPercentage));
+                    setEnrollmentMap(emap);
+                }
             } catch (err) {
                 console.error("Failed to fetch featured chapters:", err);
                 setError("Failed to load featured chapters.");
@@ -45,7 +60,7 @@ export default function FeaturedChaptersPage() {
             }
         };
         fetchChapters();
-    }, []);
+    }, [isLoggedIn, isStudent]);
 
     if (loading) {
         return (
@@ -95,16 +110,37 @@ export default function FeaturedChaptersPage() {
                                     <h3 className="text-2xl font-black text-gray-900 mb-3 group-hover:text-primary-600 transition-colors leading-tight uppercase tracking-tight">{c.title}</h3>
                                     <p className="text-gray-600 mb-6 line-clamp-3 text-sm leading-relaxed">{c.description}</p>
 
+                                    {enrollmentMap.has(c.chapterId) && (
+                                        <div className="flex items-center justify-between mb-6">
+                                            <div className="flex-grow bg-gray-100 rounded-full h-1.5 mr-3">
+                                                <div
+                                                    className="bg-green-500 h-1.5 rounded-full transition-all duration-500"
+                                                    style={{ width: `${enrollmentMap.get(c.chapterId)}%` }}
+                                                />
+                                            </div>
+                                            <span className="text-[10px] font-black text-green-600 uppercase tracking-widest">{Math.round(enrollmentMap.get(c.chapterId) || 0)}% Done</span>
+                                        </div>
+                                    )}
+
                                     <div className="mt-auto pt-6 border-t border-gray-50 flex items-center justify-between">
                                         <p className="text-2xl font-black text-primary-600">
                                             {c.free ? "FREE" : `৳${c.price}`}
                                         </p>
-                                        <Link
-                                            href={`/chapters/${c.chapterId}`}
-                                            className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-2.5 rounded-xl font-black text-sm tracking-tight hover:bg-primary-700 transition shadow-lg shadow-primary-100"
-                                        >
-                                            PREVIEW <FaChevronRight size={12} />
-                                        </Link>
+                                        {enrollmentMap.has(c.chapterId) ? (
+                                            <Link
+                                                href={`/student/chapters/${c.chapterId}`}
+                                                className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-xl font-black text-sm tracking-tight hover:bg-green-700 transition shadow-lg shadow-green-100"
+                                            >
+                                                <FaPlay size={10} /> RESUME
+                                            </Link>
+                                        ) : (
+                                            <Link
+                                                href={`/chapters/${c.chapterId}`}
+                                                className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-2.5 rounded-xl font-black text-sm tracking-tight hover:bg-primary-700 transition shadow-lg shadow-primary-100"
+                                            >
+                                                PREVIEW <FaChevronRight size={12} />
+                                            </Link>
+                                        )}
                                     </div>
                                 </div>
                             </div>
