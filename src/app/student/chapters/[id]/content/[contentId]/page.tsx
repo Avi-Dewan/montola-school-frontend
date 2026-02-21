@@ -30,7 +30,7 @@ export default function ContentPlayerPage() {
     const contentId = params?.contentId ? Number(params.contentId) : null;
     const chapterId = params?.id ? Number(params.id) : null;
 
-    const { detailedProgress, refreshProgress } = useProgress();
+    const { detailedProgress, refreshProgress, structure } = useProgress();
     const isCompleted = contentId ? !!detailedProgress[contentId] : false;
 
 
@@ -145,6 +145,23 @@ export default function ContentPlayerPage() {
             toast.warning(`You did not pass. Score: ${earnedMarks}/${totalMarks} (${scorePercentage.toFixed(1)}%). Required: ${passPercentage}%`);
         }
     };
+
+    const goToNext = useCallback(() => {
+        if (!structure || !contentId) return;
+
+        // Flatten all items to find current position
+        const allItems = structure.topics.flatMap(t => t.contentItems);
+        const currentIndex = allItems.findIndex(i => i.id === contentId);
+
+        if (currentIndex !== -1 && currentIndex < allItems.length - 1) {
+            const nextItem = allItems[currentIndex + 1];
+            router.push(`/student/chapters/${chapterId}/content/${nextItem.id}`);
+        } else {
+            // Last item in chapter
+            toast.success("Congratulations! You've completed all items in this chapter.");
+            router.push(`/student/chapters/${chapterId}`);
+        }
+    }, [structure, contentId, chapterId, router]);
 
     if (loading) return (
         <div className="flex flex-col items-center justify-center min-h-[400px]">
@@ -573,10 +590,17 @@ export default function ContentPlayerPage() {
                                 )}
 
                                 <button
-                                    onClick={() => router.back()}
+                                    onClick={goToNext}
                                     className="bg-gray-900 text-white px-6 py-2.5 rounded-lg hover:bg-gray-800 transition font-medium flex items-center gap-2"
                                 >
-                                    Next Lesson <FiChevronRight size={18} />
+                                    {(() => {
+                                        const allItems = structure?.topics.flatMap(t => t.contentItems) || [];
+                                        const currentIndex = allItems.findIndex(i => i.id === contentId);
+                                        return (currentIndex !== -1 && currentIndex < allItems.length - 1)
+                                            ? "Next Lesson"
+                                            : "Finish Chapter";
+                                    })()}
+                                    <FiChevronRight size={18} />
                                 </button>
                             </div>
                         </div>

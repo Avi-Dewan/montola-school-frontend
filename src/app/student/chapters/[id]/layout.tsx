@@ -11,6 +11,7 @@ type ProgressContextType = {
     detailedProgress: Record<string, boolean>;
     overallProgress: ChapterProgressResponseDto | null;
     refreshProgress: () => Promise<void>;
+    structure: ChapterStructureResponseDto | null;
 };
 
 const ProgressContext = createContext<ProgressContextType | undefined>(undefined);
@@ -92,7 +93,7 @@ export default function CourseLayout({ children }: { children: React.ReactNode }
     }
 
     return (
-        <ProgressContext.Provider value={{ detailedProgress, overallProgress, refreshProgress }}>
+        <ProgressContext.Provider value={{ detailedProgress, overallProgress, refreshProgress, structure }}>
             <div className="flex min-h-screen bg-gray-50 pt-16 relative overflow-x-hidden">
                 {/* Mobile Overlay */}
                 {isSidebarOpen && (
