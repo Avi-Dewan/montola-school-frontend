@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import Image from "next/image";
 import ChapterPlaceholder from "@/components/ChapterPlaceholder";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import { FaPlay } from "react-icons/fa";
 
 function ChapterImage({ chapter }: { chapter: ChapterResponseDto }) {
@@ -61,7 +62,11 @@ export default function FreeChapterList() {
     }, [isLoggedIn, isStudent]);
 
     if (loading) {
-        return <div className="py-10 text-center">Loading free chapters...</div>;
+        return (
+            <div className="py-24">
+                <LoadingSpinner label="Finding free lessons for you..." size="lg" />
+            </div>
+        );
     }
 
     if (chapters.length === 0) {

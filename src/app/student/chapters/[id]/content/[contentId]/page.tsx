@@ -22,6 +22,7 @@ import {
     FiAlertCircle
 } from "react-icons/fi";
 import { toast } from "react-toastify";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 
 export default function ContentPlayerPage() {
@@ -165,8 +166,7 @@ export default function ContentPlayerPage() {
 
     if (loading) return (
         <div className="flex flex-col items-center justify-center min-h-[400px]">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-            <p className="mt-4 text-gray-500">Loading your content...</p>
+            <LoadingSpinner label="Fetching your content..." size="lg" />
         </div>
     );
 

@@ -9,6 +9,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaUnlockAlt, FaChevronRight, FaPlayCircle, FaPlay } from "react-icons/fa";
 import ChapterPlaceholder from "@/components/ChapterPlaceholder";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 function ChapterImage({ chapter }: { chapter: ChapterResponseDto }) {
     const [imageError, setImageError] = useState(false);
@@ -65,7 +66,7 @@ export default function FreeChaptersPage() {
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-20">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
+                <LoadingSpinner label="Unlocked! Fetching free chapters..." size="lg" />
             </div>
         );
     }

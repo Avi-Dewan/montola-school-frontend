@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { getChapterProgress } from "@/lib/student";
 import { ChapterProgressResponseDto } from "@/types";
 import { FaPlayCircle } from "react-icons/fa";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function ChapterStudentPage() {
     const params = useParams();
@@ -33,7 +34,11 @@ export default function ChapterStudentPage() {
     // Ideally we find the first uncompleted item from detailed progress, but for now we can just show a button
     // or let them use the sidebar.
 
-    if (loading) return <div>Loading...</div>;
+    if (loading) return (
+        <div className="min-h-[400px] flex items-center justify-center">
+            <LoadingSpinner label="Preparing your chapter overview..." />
+        </div>
+    );
 
     return (
         <div className="bg-white rounded-xl shadow-sm p-8 border border-gray-100">

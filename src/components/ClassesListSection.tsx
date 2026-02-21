@@ -5,6 +5,7 @@ import { getAllClasses } from "@/lib/public";
 import { ClassResponseDto } from "@/types";
 import Link from "next/link";
 import ChapterPlaceholder from "./ChapterPlaceholder";
+import LoadingSpinner from "./LoadingSpinner";
 
 export default function ClassesListSection() {
     const [classes, setClasses] = useState<ClassResponseDto[]>([]);
@@ -25,7 +26,11 @@ export default function ClassesListSection() {
     }, []);
 
     if (loading) {
-        return <div className="py-10 text-center">Loading classes...</div>;
+        return (
+            <div className="py-20">
+                <LoadingSpinner label="Arranging our class catalog..." size="lg" />
+            </div>
+        );
     }
 
     if (classes.length === 0) {

@@ -5,6 +5,7 @@ import { I18nProvider } from "@/contexts/I18nProvider";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AppChrome from "@/components/AppChrome";
+import NextTopLoader from "nextjs-toploader";
 
 export const metadata = {
   title: "Montola School",
@@ -12,31 +13,42 @@ export const metadata = {
 };
 
 export default function RootLayout({
-   children,
- }: {
+  children,
+}: {
   children: React.ReactNode;
 }) {
   return (
-      <html lang="en">
+    <html lang="en">
       <body>
-          <AuthProvider>
-              <I18nProvider>
-                  <AppChrome>{children}</AppChrome>
+        <NextTopLoader
+          color="#ea580c"
+          initialPosition={0.08}
+          crawlSpeed={200}
+          height={3}
+          crawl={true}
+          showSpinner={false}
+          easing="ease"
+          speed={200}
+          shadow="0 0 10px #ea580c,0 0 5px #ea580c"
+        />
+        <AuthProvider>
+          <I18nProvider>
+            <AppChrome>{children}</AppChrome>
 
-                  <ToastContainer
-                      position="top-right"
-                      autoClose={3000}
-                      hideProgressBar={false}
-                      newestOnTop={false}
-                      closeOnClick
-                      pauseOnFocusLoss
-                      draggable
-                      pauseOnHover
-                  />
+            <ToastContainer
+              position="top-right"
+              autoClose={3000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+            />
 
-              </I18nProvider>
-          </AuthProvider>
+          </I18nProvider>
+        </AuthProvider>
       </body>
-      </html>
+    </html>
   );
 }

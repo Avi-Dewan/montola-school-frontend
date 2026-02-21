@@ -6,6 +6,7 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { HiMenu, HiX } from "react-icons/hi";
 import { getHighestPriorityRole } from "@/lib/roles";
+import LoadingSpinner from "./LoadingSpinner";
 
 export default function Navbar() {
     const { isLoggedIn, removeAuthTokens, isLoading, user, activeRole } = useAuth();
@@ -39,8 +40,9 @@ export default function Navbar() {
         if (isLoading) {
             // Show loading state or nothing while checking auth
             return (
-                <div className="px-4 py-2 bg-gray-200 text-gray-500 rounded-lg animate-pulse">
-                    Loading...
+                <div className="px-4 py-2 bg-gray-50 text-gray-400 rounded-lg flex items-center gap-2 border border-gray-100">
+                    <LoadingSpinner size="sm" />
+                    <span className="text-[10px] font-black uppercase tracking-widest">Verifying</span>
                 </div>
             );
         }
@@ -78,8 +80,9 @@ export default function Navbar() {
     const renderMobileAuthButtons = () => {
         if (isLoading) {
             return (
-                <div className="w-full px-4 py-2 bg-gray-200 text-gray-500 rounded-lg animate-pulse">
-                    Loading...
+                <div className="w-full px-4 py-3 bg-gray-50 text-gray-400 rounded-lg flex items-center justify-center gap-2 border border-gray-100">
+                    <LoadingSpinner size="sm" />
+                    <span className="text-[10px] font-black uppercase tracking-widest">Verifying Account</span>
                 </div>
             );
         }

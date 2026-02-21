@@ -6,6 +6,7 @@ import { getChapterProgress, getChapterDetailedProgress } from "@/lib/student";
 import { ChapterStructureResponseDto, ChapterProgressResponseDto } from "@/types";
 import CourseSidebar from "@/components/CourseSidebar";
 import api from "@/lib/api";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 type ProgressContextType = {
     detailedProgress: Record<string, boolean>;
@@ -78,8 +79,7 @@ export default function CourseLayout({ children }: { children: React.ReactNode }
     if (loading) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-                <p className="mt-4 text-gray-500 font-medium">Loading course material...</p>
+                <LoadingSpinner label="Loading course material..." size="lg" />
             </div>
         );
     }

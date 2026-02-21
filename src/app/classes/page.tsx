@@ -6,6 +6,7 @@ import { ClassResponseDto } from "@/types";
 import Link from "next/link";
 import { FaGraduationCap, FaChevronRight } from "react-icons/fa";
 import ChapterPlaceholder from "@/components/ChapterPlaceholder";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function ClassesPage() {
     const [classes, setClasses] = useState<ClassResponseDto[]>([]);
@@ -31,10 +32,7 @@ export default function ClassesPage() {
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-20">
-                <div className="flex flex-col items-center gap-4">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary-600"></div>
-                    <p className="text-gray-500 font-medium">Loading classes...</p>
-                </div>
+                <LoadingSpinner label="Arranging our class catalog..." size="lg" />
             </div>
         );
     }

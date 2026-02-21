@@ -6,6 +6,7 @@ import { getClassPublicStructure } from "@/lib/public";
 import { ClassStructureResponseDto } from "@/types";
 import PublicStructureTree from "@/components/PublicStructureTree";
 import ChapterPlaceholder from "@/components/ChapterPlaceholder";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 export default function ClassPage() {
     const params = useParams();
@@ -36,7 +37,11 @@ export default function ClassPage() {
     if (!id) return null;
 
     if (loading) {
-        return <div className="min-h-screen pt-24 text-center">Loading class details...</div>;
+        return (
+            <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-20">
+                <LoadingSpinner label="Fetching class details..." size="lg" />
+            </div>
+        );
     }
 
     if (error || !structure) {

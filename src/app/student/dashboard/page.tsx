@@ -8,6 +8,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { FaBookOpen, FaAward, FaClock } from "react-icons/fa";
 import ChapterPlaceholder from "@/components/ChapterPlaceholder";
+import LoadingSpinner from "@/components/LoadingSpinner";
 
 // Simple Icons
 function CourseIcon({ className }: { className?: string }) {
@@ -62,7 +63,11 @@ export default function StudentDashboard() {
     }, [user, isAuthLoading]);
 
     if (loading || isAuthLoading) {
-        return <div className="min-h-screen pt-24 text-center">Loading dashboard...</div>;
+        return (
+            <div className="min-h-screen pt-24">
+                <LoadingSpinner label="Collecting your progress..." size="lg" />
+            </div>
+        );
     }
 
     if (!user) {

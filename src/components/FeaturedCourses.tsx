@@ -8,6 +8,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import Image from "next/image";
 import ChapterPlaceholder from "@/components/ChapterPlaceholder";
+import LoadingSpinner from "@/components/LoadingSpinner";
 import { FaPlay } from "react-icons/fa";
 
 function ChapterImage({ chapter }: { chapter: any }) {
@@ -61,7 +62,11 @@ export default function FeaturedCourses() {
     }, [isLoggedIn, isStudent]);
 
     if (loading) {
-        return <div className="py-20 text-center">Loading featured courses...</div>;
+        return (
+            <div className="py-32">
+                <LoadingSpinner label="Discovering featured courses..." size="lg" />
+            </div>
+        );
     }
 
     if (chapters.length === 0) {
