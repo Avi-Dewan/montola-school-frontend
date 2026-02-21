@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { getAllClasses } from "@/lib/public";
 import { ClassResponseDto } from "@/types";
 import Link from "next/link";
+import ChapterPlaceholder from "./ChapterPlaceholder";
 
 export default function ClassesListSection() {
     const [classes, setClasses] = useState<ClassResponseDto[]>([]);
@@ -39,14 +40,22 @@ export default function ClassesListSection() {
                     <Link
                         key={c.id}
                         href={`/classes/${c.id}`}
-                        className="bg-white p-6 rounded-lg shadow-sm hover:shadow-md transition text-center group"
+                        className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 block group"
                     >
-                        <div className="w-16 h-16 bg-primary-100 text-primary-600 rounded-full flex items-center justify-center mx-auto mb-4 group-hover:bg-primary-200 transition">
-                            {/* Simple icon placeholder */}
-                            <span className="text-2xl font-bold">{c.name.charAt(0)}</span>
+                        <div className="aspect-video relative overflow-hidden bg-gray-100">
+                            <ChapterPlaceholder title={c.name} className="!p-4" />
+                            <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors" />
                         </div>
-                        <h3 className="text-xl font-bold mb-2 group-hover:text-primary-600 transition">{c.name}</h3>
-                        {c.description && <p className="text-gray-500 text-sm line-clamp-2">{c.description}</p>}
+                        <div className="p-6 text-center">
+                            <h3 className="text-xl font-black text-gray-900 group-hover:text-primary-600 transition uppercase tracking-tight leading-tight mb-2">
+                                {c.name}
+                            </h3>
+                            {c.description && (
+                                <p className="text-gray-500 text-xs font-medium line-clamp-2 leading-relaxed">
+                                    {c.description}
+                                </p>
+                            )}
+                        </div>
                     </Link>
                 ))}
             </div>

@@ -4,7 +4,28 @@ import { useEffect, useState } from "react";
 import { getFeaturedChapters } from "@/lib/public";
 import { FeaturedChapterResponseDto } from "@/types";
 import Link from "next/link";
+import Image from "next/image";
 import { FaStar, FaChevronRight } from "react-icons/fa";
+import ChapterPlaceholder from "@/components/ChapterPlaceholder";
+
+function ChapterImage({ chapter }: { chapter: FeaturedChapterResponseDto }) {
+    const [imageError, setImageError] = useState(false);
+
+    if (imageError) {
+        return <ChapterPlaceholder title={chapter.title} subjectName={chapter.subjectName} />;
+    }
+
+    return (
+        <Image
+            src={`http://localhost:8080/api/v1/chapters/${chapter.chapterId}/cover-image`}
+            alt={chapter.title}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-110"
+            onError={() => setImageError(true)}
+            unoptimized
+        />
+    );
+}
 
 export default function FeaturedChaptersPage() {
     const [chapters, setChapters] = useState<FeaturedChapterResponseDto[]>([]);
@@ -61,24 +82,28 @@ export default function FeaturedChaptersPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {chapters.map((c) => (
                             <div key={c.id} className="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col">
+                                <div className="aspect-video relative overflow-hidden bg-gray-100">
+                                    <ChapterImage chapter={c} />
+                                    <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors" />
+                                </div>
                                 <div className="p-8 flex flex-col flex-grow">
                                     <div className="flex justify-between items-start mb-4">
-                                        <span className="text-xs font-bold text-primary-600 uppercase tracking-wider bg-primary-50 px-2 py-1 rounded">
+                                        <span className="text-[10px] font-black tracking-widest text-primary-600 uppercase bg-primary-50 px-2 py-1 rounded">
                                             {c.subjectName} {c.className && `[${c.className}]`}
                                         </span>
                                     </div>
-                                    <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors">{c.title}</h3>
+                                    <h3 className="text-2xl font-black text-gray-900 mb-3 group-hover:text-primary-600 transition-colors leading-tight uppercase tracking-tight">{c.title}</h3>
                                     <p className="text-gray-600 mb-6 line-clamp-3 text-sm leading-relaxed">{c.description}</p>
 
                                     <div className="mt-auto pt-6 border-t border-gray-50 flex items-center justify-between">
-                                        <p className="text-xl font-extrabold text-green-600">
+                                        <p className="text-2xl font-black text-primary-600">
                                             {c.free ? "FREE" : `৳${c.price}`}
                                         </p>
                                         <Link
                                             href={`/chapters/${c.chapterId}`}
-                                            className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-2.5 rounded-xl font-bold hover:bg-primary-700 transition"
+                                            className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-2.5 rounded-xl font-black text-sm tracking-tight hover:bg-primary-700 transition shadow-lg shadow-primary-100"
                                         >
-                                            Preview <FaChevronRight size={12} />
+                                            PREVIEW <FaChevronRight size={12} />
                                         </Link>
                                     </div>
                                 </div>

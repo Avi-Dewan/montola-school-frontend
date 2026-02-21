@@ -4,7 +4,28 @@ import { useEffect, useState } from "react";
 import { getFreeChapters } from "@/lib/public";
 import { ChapterResponseDto } from "@/types";
 import Link from "next/link";
+import Image from "next/image";
 import { FaUnlockAlt, FaChevronRight, FaPlayCircle } from "react-icons/fa";
+import ChapterPlaceholder from "@/components/ChapterPlaceholder";
+
+function ChapterImage({ chapter }: { chapter: ChapterResponseDto }) {
+    const [imageError, setImageError] = useState(false);
+
+    if (imageError) {
+        return <ChapterPlaceholder title={chapter.title} subjectName={chapter.subjectName} />;
+    }
+
+    return (
+        <Image
+            src={`http://localhost:8080/api/v1/chapters/${chapter.id}/cover-image`}
+            alt={chapter.title}
+            fill
+            className="object-cover transition-transform duration-700 group-hover:scale-110"
+            onError={() => setImageError(true)}
+            unoptimized
+        />
+    );
+}
 
 export default function FreeChaptersPage() {
     const [chapters, setChapters] = useState<ChapterResponseDto[]>([]);
@@ -61,26 +82,30 @@ export default function FreeChaptersPage() {
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {chapters.map((c) => (
                             <div key={c.id} className="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col">
+                                <div className="aspect-video relative overflow-hidden bg-gray-100">
+                                    <ChapterImage chapter={c} />
+                                    <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors" />
+                                </div>
                                 <div className="p-8 flex flex-col flex-grow">
                                     <div className="flex items-center gap-2 mb-4">
-                                        <span className="text-xs font-bold text-green-600 uppercase tracking-wider bg-green-50 px-2 py-1 rounded">
+                                        <span className="text-[10px] font-black text-green-600 uppercase tracking-widest bg-green-50 px-2 py-1 rounded">
                                             Free Access
                                         </span>
-                                        <span className="text-xs font-medium text-gray-400">
+                                        <span className="text-[10px] font-black text-gray-400 tracking-widest uppercase">
                                             {c.subjectName} {c.className && `[${c.className}]`}
                                         </span>
                                     </div>
-                                    <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors uppercase">{c.title}</h3>
+                                    <h3 className="text-2xl font-black text-gray-900 mb-3 group-hover:text-primary-600 transition-colors uppercase leading-tight tracking-tight">{c.title}</h3>
                                     <p className="text-gray-600 mb-6 line-clamp-3 text-sm leading-relaxed">{c.description}</p>
 
                                     <div className="mt-auto pt-6 border-t border-gray-50 flex items-center justify-between">
-                                        <div className="flex items-center gap-2 text-gray-500 text-sm">
-                                            <FaPlayCircle className="text-primary-500" />
+                                        <div className="flex items-center gap-2 text-gray-500 text-[10px] font-black uppercase tracking-widest">
+                                            <FaPlayCircle className="text-primary-600" />
                                             Start Learning
                                         </div>
                                         <Link
                                             href={`/chapters/${c.id}`}
-                                            className="inline-flex items-center gap-2 border-2 border-primary-600 text-primary-600 px-6 py-2 rounded-xl font-bold hover:bg-primary-600 hover:text-white transition"
+                                            className="inline-flex items-center gap-2 border-2 border-primary-600 text-primary-600 px-6 py-2.5 rounded-xl font-black text-sm hover:bg-primary-600 hover:text-white transition shadow-lg shadow-primary-50"
                                         >
                                             Enroll Now <FaChevronRight size={12} />
                                         </Link>

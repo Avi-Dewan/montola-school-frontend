@@ -182,9 +182,9 @@ export default function ChapterForm({
                     <input
                         type="checkbox"
                         id="free"
-                        checked={formData.isFree || false}
+                        checked={formData.free || false}
                         onChange={(e) =>
-                            setFormData({ ...formData, isFree: e.target.checked })
+                            setFormData({ ...formData, free: e.target.checked })
                         }
                         className="w-4 h-4 text-primary-500 border-gray-300 rounded focus:ring-primary-500"
                     />

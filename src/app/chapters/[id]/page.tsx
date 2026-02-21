@@ -11,6 +11,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { FaPlayCircle, FaCheckCircle, FaLock, FaUsers, FaHourglassHalf, FaExclamationTriangle } from "react-icons/fa";
 import PaymentModal from "@/components/student/PaymentModal";
+import ChapterPlaceholder from "@/components/ChapterPlaceholder";
 
 export default function ChapterPublicPage() {
     const params = useParams();
@@ -25,6 +26,8 @@ export default function ChapterPublicPage() {
     const [enrolling, setEnrolling] = useState(false);
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
 
+    const [imageError, setImageError] = useState(false);
+
     const isStudent = user?.roles?.includes("STUDENT");
 
     useEffect(() => {
@@ -35,6 +38,7 @@ export default function ChapterPublicPage() {
                 setLoading(true);
                 const chapterData = await getChapterPublicDetails(id);
                 setChapter(chapterData);
+                setImageError(false); // Reset error state on new data
 
                 // If logged in as student, check enrollment/progress and payment status
                 if (isLoggedIn && isStudent) {
@@ -136,19 +140,23 @@ export default function ChapterPublicPage() {
                                 ></iframe>
                             </div>
                         ) : (
-                            <div className="relative aspect-video w-full h-full min-h-[300px]">
-                                <Image
-                                    src={`http://localhost:8080/api/v1/chapters/${chapter.id}/cover-image`}
-                                    alt={chapter.title}
-                                    fill
-                                    className="object-cover"
-                                    onError={(e) => {
-                                        // Fallback if image fails
-                                        const target = e.target as HTMLImageElement;
-                                        target.src = "https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&q=80";
-                                    }}
-                                />
-                                <div className="absolute inset-0 bg-black/20 group-hover:bg-black/10 transition-colors"></div>
+                            <div className="relative aspect-video w-full h-full min-h-[300px] overflow-hidden">
+                                {!imageError ? (
+                                    <Image
+                                        src={`http://localhost:8080/api/v1/chapters/${chapter.id}/cover-image`}
+                                        alt={chapter.title}
+                                        fill
+                                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                                        onError={() => setImageError(true)}
+                                        unoptimized // Since it's from localhost/dynamic backend
+                                    />
+                                ) : (
+                                    <ChapterPlaceholder
+                                        title={chapter.title}
+                                        subjectName={chapter.subjectName}
+                                    />
+                                )}
+                                <div className="absolute inset-0 bg-black/10 group-hover:bg-black/0 transition-colors duration-500"></div>
                             </div>
                         )}
                         {!chapter.videoId && (

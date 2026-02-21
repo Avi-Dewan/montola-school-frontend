@@ -5,6 +5,7 @@ import { getAllClasses } from "@/lib/public";
 import { ClassResponseDto } from "@/types";
 import Link from "next/link";
 import { FaGraduationCap, FaChevronRight } from "react-icons/fa";
+import ChapterPlaceholder from "@/components/ChapterPlaceholder";
 
 export default function ClassesPage() {
     const [classes, setClasses] = useState<ClassResponseDto[]>([]);
@@ -64,24 +65,29 @@ export default function ClassesPage() {
                             <Link
                                 key={cls.id}
                                 href={`/classes/${cls.id}`}
-                                className="group bg-white rounded-2xl shadow-sm border border-gray-100 p-8 hover:shadow-xl hover:border-primary-500 transition-all duration-300 flex flex-col items-start text-left relative overflow-hidden"
+                                className="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col"
                             >
-                                <div className="absolute top-0 right-0 w-24 h-24 bg-primary-50 rounded-bl-full transform translate-x-8 -translate-y-8 group-hover:translate-x-4 group-hover:-translate-y-4 transition-transform duration-500 ease-out" />
-
-                                <div className="w-14 h-14 bg-primary-100 rounded-xl flex items-center justify-center text-primary-600 mb-6 group-hover:bg-primary-600 group-hover:text-white transition-colors duration-300">
-                                    <FaGraduationCap size={28} />
+                                <div className="aspect-video relative overflow-hidden bg-gray-100">
+                                    <ChapterPlaceholder title={cls.name} />
+                                    <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors duration-500" />
                                 </div>
+                                <div className="p-8 flex flex-col flex-grow">
+                                    <h2 className="text-2xl font-black text-gray-900 mb-3 group-hover:text-primary-600 transition-colors leading-tight uppercase tracking-tight">
+                                        {cls.name}
+                                    </h2>
 
-                                <h2 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors">
-                                    {cls.name}
-                                </h2>
+                                    <p className="text-gray-600 line-clamp-3 mb-6 flex-grow leading-relaxed font-medium text-sm">
+                                        {cls.description || "Explore our comprehensive curriculum and dedicated resources for this academic level."}
+                                    </p>
 
-                                <p className="text-gray-600 line-clamp-3 mb-6 flex-grow">
-                                    {cls.description || "Discover the curated curriculum and resources available for this academic level."}
-                                </p>
-
-                                <div className="flex items-center gap-2 text-primary-600 font-bold group-hover:gap-3 transition-all duration-300">
-                                    View Subject List <FaChevronRight size={14} />
+                                    <div className="flex items-center justify-between mt-auto pt-6 border-t border-gray-50">
+                                        <div className="flex items-center gap-2 text-primary-600 font-black text-xs uppercase tracking-widest group-hover:gap-3 transition-all duration-300">
+                                            EXPLORE SUBJECTS <FaChevronRight size={12} />
+                                        </div>
+                                        <div className="p-2 bg-primary-50 rounded-lg text-primary-600 group-hover:bg-primary-600 group-hover:text-white transition-colors">
+                                            <FaGraduationCap size={18} />
+                                        </div>
+                                    </div>
                                 </div>
                             </Link>
                         ))}
