@@ -33,12 +33,12 @@ export default function ChaptersPage() {
 
     useEffect(() => {
         fetchChapters();
-        
+
         // Check if we need to open modal for create
         if (searchParams.get("action") === "create") {
             setIsModalOpen(true);
         }
-        
+
         // Check for status filter in URL
         const statusParam = searchParams.get("status");
         if (statusParam) {
@@ -134,9 +134,11 @@ export default function ChaptersPage() {
         return badges[status] || badges[ChapterStatus.DRAFT];
     };
 
-    // Get subject name - use subjectName directly from API response
-    const getSubjectName = (chapter: ChapterResponseDto) => {
-        return chapter.subjectName || `Subject ${chapter.subjectId}`;
+    // Get subject name with class context
+    const getSubjectDisplayName = (chapter: ChapterResponseDto) => {
+        const subject = chapter.subjectName || `Subject ${chapter.subjectId}`;
+        const className = chapter.className ? ` [${chapter.className}]` : "";
+        return `${subject}${className}`;
     };
 
     // Get unique subjects from chapters data (using enriched subjectName field)
@@ -144,9 +146,10 @@ export default function ChaptersPage() {
         const subjectMap = new Map<number, { id: number; name: string }>();
         chapters.forEach((chapter) => {
             if (chapter.subjectId && chapter.subjectName) {
+                const className = chapter.className ? ` [${chapter.className}]` : "";
                 subjectMap.set(chapter.subjectId, {
                     id: chapter.subjectId,
-                    name: chapter.subjectName,
+                    name: `${chapter.subjectName}${className}`,
                 });
             }
         });
@@ -169,7 +172,7 @@ export default function ChaptersPage() {
             header: "Subject",
             sortable: true,
             render: (item) => (
-                <span className="text-gray-700">{getSubjectName(item)}</span>
+                <span className="text-gray-700">{getSubjectDisplayName(item)}</span>
             ),
         },
         {
@@ -192,7 +195,7 @@ export default function ChaptersPage() {
             sortable: true,
             render: (item) => (
                 <span className="text-gray-600">
-                    {item.free ? (
+                    {item.isFree ? (
                         <span className="text-green-600 font-medium">Free</span>
                     ) : (
                         `৳${item.price || 0}`

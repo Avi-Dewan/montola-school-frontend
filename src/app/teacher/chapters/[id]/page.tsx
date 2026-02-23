@@ -38,6 +38,7 @@ import ChapterTreeView from "@/components/teacher/ChapterTreeView";
 import Button from "@/components/ui/Button";
 import { toast } from "react-toastify";
 import { HiArrowLeft, HiPencil, HiCloudUpload, HiExternalLink } from "react-icons/hi";
+import ChapterPlaceholder from "@/components/ChapterPlaceholder";
 
 export default function TeacherChapterDetailPage() {
     const router = useRouter();
@@ -317,8 +318,8 @@ export default function TeacherChapterDetailPage() {
                                 setIsEditing(false);
                             }}
                             className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === tab.id
-                                    ? "border-primary-500 text-primary-600"
-                                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                                ? "border-primary-500 text-primary-600"
+                                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                                 }`}
                         >
                             {tab.label}
@@ -448,8 +449,11 @@ export default function TeacherChapterDetailPage() {
                                         </a>
                                     </div>
                                 ) : (
-                                    <div className="flex items-center justify-center h-56 bg-gray-50 rounded-lg border border-gray-200 text-gray-600 text-sm">
-                                        No cover image uploaded yet.
+                                    <div className="h-56 bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+                                        <ChapterPlaceholder
+                                            title={chapterData.title}
+                                            subjectName={chapterData.subjectName}
+                                        />
                                     </div>
                                 )}
                             </div>

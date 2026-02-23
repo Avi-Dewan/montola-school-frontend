@@ -2,6 +2,7 @@
 
 import { ReactNode, useState } from "react";
 import { HiChevronUp, HiChevronDown, HiChevronLeft, HiChevronRight } from "react-icons/hi";
+import LoadingSpinner from "../LoadingSpinner";
 
 export interface Column<T> {
     key: string;
@@ -87,11 +88,8 @@ export default function DataTable<T>({
 
     if (loading) {
         return (
-            <div className="bg-white rounded-lg shadow border border-gray-200 p-8">
-                <div className="flex items-center justify-center">
-                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
-                    <span className="ml-3 text-gray-600">Loading...</span>
-                </div>
+            <div className="bg-white rounded-lg shadow border border-gray-200 p-12">
+                <LoadingSpinner label="Organizing data..." />
             </div>
         );
     }
@@ -106,11 +104,10 @@ export default function DataTable<T>({
                                 <th
                                     key={column.key}
                                     onClick={() => handleSort(column.key)}
-                                    className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${
-                                        column.sortable
-                                            ? "cursor-pointer hover:bg-gray-100 select-none"
-                                            : ""
-                                    }`}
+                                    className={`px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider ${column.sortable
+                                        ? "cursor-pointer hover:bg-gray-100 select-none"
+                                        : ""
+                                        }`}
                                 >
                                     <span className="flex items-center">
                                         {column.header}
@@ -135,11 +132,10 @@ export default function DataTable<T>({
                                 <tr
                                     key={keyExtractor(item)}
                                     onClick={() => onRowClick?.(item)}
-                                    className={`${
-                                        onRowClick
-                                            ? "cursor-pointer hover:bg-gray-50 transition-colors"
-                                            : ""
-                                    }`}
+                                    className={`${onRowClick
+                                        ? "cursor-pointer hover:bg-gray-50 transition-colors"
+                                        : ""
+                                        }`}
                                 >
                                     {columns.map((column) => (
                                         <td

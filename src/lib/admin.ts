@@ -148,3 +148,6 @@ export const getUnverifiedPayments = () =>
 
 export const verifyPayment = (paymentId: number) =>
     api.put<PaymentResponseDto>(`/v1/payments/${paymentId}/verify`);
+
+export const rejectPayment = (paymentId: number) =>
+    api.put<PaymentResponseDto>(`/v1/payments/${paymentId}/reject`);

@@ -104,7 +104,7 @@ export default function ChapterForm({
                 }
                 options={subjects.map((subject) => ({
                     value: subject.id,
-                    label: subject.name,
+                    label: `${subject.name} ${subject.className ? `(${subject.className})` : ""}`,
                 }))}
                 error={errors.subjectId}
                 placeholder="Select a subject"
