@@ -16,7 +16,9 @@
     "activationAlreadyDone": "অ্যাকাউন্ট ইতিমধ্যেই সক্রিয়। লগইনে পাঠানো হচ্ছে...",
     "activationFailed": "সক্রিয়করণ ব্যর্থ হয়েছে। অনুগ্রহ করে আবার চেষ্টা করুন।",
     "invalidCredentials": "ভুল ব্যবহারকারীর নাম অথবা পাসওয়ার্ড",
-    "sessionExpired": "আপনার সেশন শেষ হয়েছে। অনুগ্রহ করে আবার লগ ইন করুন।"
+    "sessionExpired": "আপনার সেশন শেষ হয়েছে। অনুগ্রহ করে আবার লগ ইন করুন।",
+    "verifyEmailTitle": "আপনার ইমেল যাচাই করুন",
+    "verifyEmailMessage": "{{email}} এ একটি যাচাইকরণ লিঙ্ক পাঠানো হয়েছে। অনুগ্রহ করে ১৫ মিনিটের মধ্যে যাচাই করুন।"
   },
   "form": {
     "user": {
@@ -24,7 +26,9 @@
       "password": "পাসওয়ার্ড",
       "confirmPassword": "পাসওয়ার্ড নিশ্চিত করুন",
       "firstName": "নামের প্রথম অংশ",
-      "lastName": "নামের শেষ অংশ"
+      "lastName": "নামের শেষ অংশ",
+      "fullName": "পূর্ণ নাম",
+      "fullNameRequired": "পূর্ণ নাম আবশ্যক"
     },
     "course": {
       "title": "কোর্স শিরোনাম",
@@ -41,7 +45,10 @@
   "messages": {
     "loading": "লোড হচ্ছে...",
     "error": "কিছু ভুল হয়েছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন।",
-    "success": "অপারেশন সফলভাবে সম্পন্ন হয়েছে।"
+    "success": "অপারেশন সফলভাবে সম্পন্ন হয়েছে।",
+    "createdSuccess": "ব্যবহারকারী সফলভাবে তৈরি হয়েছে",
+    "errorCreate": "ব্যবহারকারী তৈরি করতে ব্যর্থ হয়েছে",
+    "errorFetch": "ব্যবহারকারী আনতে ব্যর্থ হয়েছে"
   },
   "course": {
     "title": "কোর্স",
@@ -49,7 +56,21 @@
   },
   "teacher": {
     "title": "শিক্ষক",
-    "noTeachers": "কোনও শিক্ষক পাওয়া যায়নি।"
+    "noTeachers": "কোনও শিক্ষক পাওয়া যায়নি।",
+    "dashboard": "শিক্ষক ড্যাশবোর্ড",
+    "assignedChapters": "নির্ধারিত অধ্যায়",
+    "chapterDetails": "অধ্যায়ের বিবরণ",
+    "addTopic": "টপিক যোগ করুন",
+    "editTopic": "টপিক সম্পাদনা করুন",
+    "deleteTopic": "টপিক মুছুন",
+    "addContent": "কন্টেন্ট যোগ করুন",
+    "editContent": "কন্টেন্ট সম্পাদনা করুন",
+    "deleteContent": "কন্টেন্ট মুছুন",
+    "contentType": {
+      "lecture": "লেকচার",
+      "pdf": "পিডিএফ",
+      "quiz": "কুইজ"
+    }
   },
   "student": {
     "title": "শিক্ষার্থী",
@@ -66,27 +87,12 @@
     "brand": "মন্টোলা অ্যাডমিন",
     "nav": {
       "dashboardOverview": "ড্যাশবোর্ড ওভারভিউ",
+      "users": "ব্যবহারকারী পরিচালনা",
       "classes": "ক্লাস",
       "subjects": "বিষয়",
       "chapters": "অধ্যায়",
       "featuredChapters": "নির্বাচিত অধ্যায়",
       "purchaseVerification": "ক্রয় যাচাইকরণ"
-    }
-  },
-  "teacher": {
-    "dashboard": "শিক্ষক ড্যাশবোর্ড",
-    "assignedChapters": "নির্ধারিত অধ্যায়",
-    "chapterDetails": "অধ্যায়ের বিবরণ",
-    "addTopic": "টপিক যোগ করুন",
-    "editTopic": "টপিক সম্পাদনা করুন",
-    "deleteTopic": "টপিক মুছুন",
-    "addContent": "কন্টেন্ট যোগ করুন",
-    "editContent": "কন্টেন্ট সম্পাদনা করুন",
-    "deleteContent": "কন্টেন্ট মুছুন",
-    "contentType": {
-      "lecture": "লেকচার",
-      "pdf": "পিডিএফ",
-      "quiz": "কুইজ"
     }
   }
 }

@@ -63,6 +63,7 @@
       "confirmPassword": "Confirm Password",
       "firstName": "First Name",
       "lastName": "Last Name",
+      "fullNameRequired": "Full Name is required",
       "role": "Role",
       "emailPlaceholder": "Enter your email",
       "phonePlaceholder": "01XXXXXXXXX (optional)",
@@ -84,7 +85,10 @@
   "messages": {
     "loading": "Loading...",
     "error": "Something went wrong. Please try again later.",
-    "success": "Operation completed successfully."
+    "success": "Operation completed successfully.",
+    "createdSuccess": "User created successfully",
+    "errorCreate": "Failed to create user",
+    "errorFetch": "Failed to fetch users"
   },
   "course": {
     "title": "Courses",
@@ -92,25 +96,7 @@
   },
   "teacher": {
     "title": "Teachers",
-    "noTeachers": "No teachers available."
-  },
-  "student": {
-    "title": "Students",
-    "noStudents": "No students available."
-  },
-  "admin": {
-    "dashboard": "Admin Dashboard",
-    "brand": "Montola Admin",
-    "nav": {
-      "dashboardOverview": "Dashboard Overview",
-      "classes": "Classes",
-      "subjects": "Subjects",
-      "chapters": "Chapters",
-      "featuredChapters": "Featured Chapters",
-      "purchaseVerification": "Purchase Verification"
-    }
-  },
-  "teacher": {
+    "noTeachers": "No teachers available.",
     "dashboard": "Teacher Dashboard",
     "assignedChapters": "Assigned Chapters",
     "chapterDetails": "Chapter Details",
@@ -124,6 +110,23 @@
       "lecture": "Lecture",
       "pdf": "PDF",
       "quiz": "Quiz"
+    }
+  },
+  "student": {
+    "title": "Students",
+    "noStudents": "No students available."
+  },
+  "admin": {
+    "dashboard": "Admin Dashboard",
+    "brand": "Montola Admin",
+    "nav": {
+      "dashboardOverview": "Dashboard Overview",
+      "users": "User Management",
+      "classes": "Classes",
+      "subjects": "Subjects",
+      "chapters": "Chapters",
+      "featuredChapters": "Featured Chapters",
+      "purchaseVerification": "Purchase Verification"
     }
   }
 }

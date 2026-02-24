@@ -8,10 +8,10 @@ import { toast } from "react-toastify";
 
 export default function RegisterPage() {
     const [email, setEmail] = useState("");
+    const [fullName, setFullName] = useState("");
     const [phone, setPhone] = useState(""); // optional
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [role, setRole] = useState<"ADMIN" | "STUDENT">("STUDENT");
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [loading, setLoading] = useState(false);
 
@@ -20,6 +20,10 @@ export default function RegisterPage() {
 
     const validate = () => {
         const newErrors: { [key: string]: string } = {};
+
+        if (!fullName.trim()) {
+            newErrors.fullName = t("form.user.fullNameRequired") || "Full Name is required";
+        }
 
         if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
             newErrors.email = t("auth.invalidEmail");
@@ -57,7 +61,7 @@ export default function RegisterPage() {
         setLoading(true);
 
         try {
-            const res = await register(email, password, [role], phone || null);
+            const res = await register(email, fullName, password, phone || undefined);
             console.log(res)
 
             toast.success(t("auth.registrationSuccess"));
@@ -92,6 +96,20 @@ export default function RegisterPage() {
                 <h1 className="text-2xl font-bold mb-6">Register</h1>
 
                 {errors.general && <Alert type="error" message={errors.general} />}
+
+                {/* Full Name */}
+                <label className="block mb-1 font-semibold">
+                    Full Name <span className="text-red-500">*</span>
+                </label>
+                <input
+                    type="text"
+                    value={fullName}
+                    placeholder="Enter your full name"
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="w-full mb-2 p-2 border rounded"
+                    required
+                />
+                {errors.fullName && <p className="text-red-500 mb-2">{errors.fullName}</p>}
 
                 {/* Email */}
                 <label className="block mb-1 font-semibold">
@@ -151,22 +169,6 @@ export default function RegisterPage() {
                 {password && confirmPassword && password !== confirmPassword && (
                     <p className="text-red-500 mb-2">{t("auth.passwordMismatch")}</p>
                 )}
-
-                {/* Role */}
-                <label className="block mb-1 font-semibold">
-                    {t("form.user.role")} <span className="text-red-500">*</span>
-                </label>
-                <select
-                    value={role}
-                    onChange={(e) => setRole(e.target.value as any)}
-                    className="w-full mb-4 p-2 border rounded"
-                >
-                    <option value="STUDENT">{t("roles.student")}</option>
-                    <option value="TEACHER">{t("roles.teacher")}</option>
-                    <option value="MANAGER">{t("roles.manager")}</option>
-                    <option value="ADMIN">{t("roles.admin")}</option>
-                </select>
-                {errors.role && <p className="text-red-500 mb-2">{errors.role}</p>}
 
                 <button
                     type="submit"

@@ -8,7 +8,7 @@ type Messages = Record<string, any>;
 
 type I18nContextType = {
     lang: "en" | "bn";
-    t: (key: string) => string;
+    t: (key: string, variables?: Record<string, any>) => string;
     switchLang: (lang: "en" | "bn") => void;
 };
 
@@ -20,7 +20,7 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 
     const [lang, setLang] = useState<"en" | "bn">("en");
 
-    const t = (key: string): string => {
+    const t = (key: string, variables?: Record<string, any>): string => {
         const keys = key.split(".");
         let value: any = resources[lang];
 
@@ -29,6 +29,12 @@ export function I18nProvider({ children }: { children: React.ReactNode }) {
 
             if (!value)
                 return key;
+        }
+
+        if (typeof value === "string" && variables) {
+            Object.entries(variables).forEach(([k, v]) => {
+                value = value.replace(new RegExp(`{{${k}}}`, "g"), v);
+            });
         }
 
         return value;
