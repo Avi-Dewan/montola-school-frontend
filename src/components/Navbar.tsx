@@ -69,6 +69,12 @@ export default function Navbar() {
     const isStudent = resolvedActiveRole === "STUDENT";
     const isTeacher = resolvedActiveRole === "TEACHER";
 
+    const getProfileRoute = () => {
+        if (isTeacher) return "/teacher/profile";
+        if (isStudent) return "/student/profile";
+        return "/student/profile";
+    };
+
     const isActive = (href: string) => {
         if (href === "/") return pathname === "/";
         return pathname.startsWith(href);
@@ -127,21 +133,23 @@ export default function Navbar() {
                                     <p className="text-sm font-bold text-gray-900 truncate">{user.email}</p>
                                 </div>
                                 <Link
-                                    href="/student/profile"
+                                    href={getProfileRoute()}
                                     onClick={() => setIsProfileOpen(false)}
                                     className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
                                 >
                                     <HiUser size={18} />
                                     My Profile
                                 </Link>
-                                <Link
-                                    href="/student/dashboard"
-                                    onClick={() => setIsProfileOpen(false)}
-                                    className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
-                                >
-                                    <HiCreditCard size={18} />
-                                    Payments
-                                </Link>
+                                {isStudent && (
+                                    <Link
+                                        href="/student/dashboard"
+                                        onClick={() => setIsProfileOpen(false)}
+                                        className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
+                                    >
+                                        <HiCreditCard size={18} />
+                                        Payments
+                                    </Link>
+                                )}
                                 <div className="h-px bg-gray-100 my-1" />
                                 <button
                                     onClick={() => {
@@ -213,13 +221,23 @@ export default function Navbar() {
                         <RoleToggle />
                     </div>
                     <Link
-                        href="/student/profile"
+                        href={getProfileRoute()}
                         onClick={() => setIsOpen(false)}
                         className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
                     >
                         <HiUser size={20} className="text-gray-400" />
                         <span className="font-medium">My Profile</span>
                     </Link>
+                    {isStudent && (
+                        <Link
+                            href="/student/dashboard"
+                            onClick={() => setIsOpen(false)}
+                            className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
+                        >
+                            <HiCreditCard size={20} className="text-gray-400" />
+                            <span className="font-medium">Payments</span>
+                        </Link>
+                    )}
                     <button
                         onClick={() => {
                             removeAuthTokens();
