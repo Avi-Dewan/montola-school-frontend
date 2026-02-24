@@ -49,40 +49,6 @@ export default function TeacherLayout({
 
     return (
         <div className="min-h-screen bg-gray-50">
-            {/* Header with role toggle */}
-            <header className="bg-white shadow-sm border-b border-gray-200 sticky top-0 z-30">
-                <div className="max-w-7xl mx-auto flex items-center justify-between px-4 md:px-6 py-4">
-                    <div className="flex items-center space-x-4">
-                        <h1 className="text-xl md:text-2xl font-bold text-gray-800">
-                            {t("teacher.dashboard")}
-                        </h1>
-                    </div>
-
-                    <div className="flex items-center space-x-2 md:space-x-4">
-                        {/* User Info - hidden on small screens */}
-                        <div className="hidden md:block text-right">
-                            <p className="text-sm font-medium text-gray-800">
-                                {user?.fullName || user?.email}
-                            </p>
-                            <p className="text-xs text-gray-500">{user?.email}</p>
-                        </div>
-
-                        {/* Role Toggle - only visible if user has multiple roles */}
-                        <RoleToggle />
-
-                        {/* Language Switch */}
-                        <select
-                            value={lang}
-                            onChange={(e) => switchLang(e.target.value as "en" | "bn")}
-                            className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
-                        >
-                            <option value="en">EN</option>
-                            <option value="bn">বাংলা</option>
-                        </select>
-                    </div>
-                </div>
-            </header>
-
             {/* Page Content */}
             <main className="max-w-7xl mx-auto p-4 md:p-6">
                 {children}

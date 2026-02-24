@@ -9,6 +9,7 @@ import { getHighestPriorityRole } from "@/lib/roles";
 import LoadingSpinner from "./LoadingSpinner";
 import { useRouter } from "next/navigation";
 import { getProfilePicture } from "@/lib/user";
+import RoleToggle from "./admin/RoleToggle";
 
 export default function Navbar() {
     const { isLoggedIn, removeAuthTokens, isLoading, user, activeRole } = useAuth();
@@ -208,6 +209,9 @@ export default function Navbar() {
                             <p className="text-xs text-gray-500 truncate">{user.email}</p>
                         </div>
                     </div>
+                    <div className="px-4 py-2">
+                        <RoleToggle />
+                    </div>
                     <Link
                         href="/student/profile"
                         onClick={() => setIsOpen(false)}
@@ -289,6 +293,7 @@ export default function Navbar() {
                         </>
                     )}
 
+                    <RoleToggle />
                     {renderAuthButtons()}
 
                     <select
