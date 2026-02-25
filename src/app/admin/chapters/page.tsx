@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
     getAllChapters,
-    getChaptersByStatus,
     getAllSubjects,
     createChapter,
     updateChapter,
@@ -71,9 +70,10 @@ export default function ChaptersPage() {
             ]);
             setChapters(chaptersRes.data);
             setSubjects(subjectsRes.data);
-        } catch (err: any) {
-            console.error(err);
-            toast.error(err.response?.data?.message || "Failed to load chapters");
+        } catch (err) {
+            const error = err as { response?: { data?: { message?: string } } };
+            console.error(error);
+            toast.error(error.response?.data?.message || "Failed to load chapters");
         } finally {
             setLoading(false);
         }
@@ -99,9 +99,10 @@ export default function ChaptersPage() {
             await deleteChapter(id);
             toast.success("Chapter deleted successfully");
             fetchChapters();
-        } catch (err: any) {
-            console.error(err);
-            toast.error(err.response?.data?.message || "Failed to delete chapter");
+        } catch (err) {
+            const error = err as { response?: { data?: { message?: string } } };
+            console.error(error);
+            toast.error(error.response?.data?.message || "Failed to delete chapter");
         }
     };
 
@@ -118,7 +119,7 @@ export default function ChaptersPage() {
             setIsModalOpen(false);
             setEditingChapter(null);
             fetchChapters();
-        } catch (err: any) {
+        } catch (err) {
             throw err; // Let form handle the error
         } finally {
             setIsSubmitting(false);
@@ -204,7 +205,7 @@ export default function ChaptersPage() {
             sortable: true,
             render: (item) => (
                 <span className="text-gray-600">
-                    {item.isFree ? (
+                    {item.free ? (
                         <span className="text-green-600 font-medium">Free</span>
                     ) : (
                         `৳${item.price || 0}`

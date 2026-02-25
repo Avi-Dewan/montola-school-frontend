@@ -33,6 +33,8 @@ function ContentIcon({ type }: { type: string }) {
     }
 }
 
+import { useI18n } from "@/contexts/I18nProvider";
+
 export default function CourseSidebar({
     structure,
     detailedProgress,
@@ -43,6 +45,7 @@ export default function CourseSidebar({
     setIsSidebarOpen
 }: Props) {
     const params = useParams();
+    const { t } = useI18n();
     const currentContentId = params?.contentId ? Number(params.contentId) : null;
     const chapterId = params?.id;
 
@@ -85,7 +88,7 @@ export default function CourseSidebar({
                     {!isCollapsed && (
                         <div className="flex-1 min-w-0">
                             <Link href="/student/dashboard" className="text-[10px] font-black text-primary-600 hover:text-primary-700 mb-2 flex items-center gap-1 transition-colors tracking-widest uppercase">
-                                <FiChevronLeft /> Dashboard
+                                <FiChevronLeft /> {t("student.sidebar.dashboard")}
                             </Link>
                             <h2 className="font-bold text-gray-900 leading-tight truncate" title={structure.title}>{structure.title}</h2>
                         </div>
@@ -116,7 +119,7 @@ export default function CourseSidebar({
                     <div className="p-5 border-b border-gray-50 bg-gray-50/30">
                         <div className="space-y-2">
                             <div className="flex items-center justify-between text-[10px] font-black text-gray-400 tracking-widest uppercase">
-                                <span>CHAPTER PROGRESS</span>
+                                <span>{t("student.sidebar.chapterProgress")}</span>
                                 <span className="text-primary-600">
                                     {(overallProgress?.progressPercentage ?? 0).toFixed(0)}%
                                 </span>
@@ -137,7 +140,6 @@ export default function CourseSidebar({
                         const isExpanded = expandedTopics[topic.id];
                         const totalItems = topic.contentItems.length;
                         const completedItems = topic.contentItems.filter(item => detailedProgress[item.id]).length;
-                        const isPartiallyComplete = completedItems > 0 && completedItems < totalItems;
                         const isFullyComplete = completedItems === totalItems;
 
                         return (
@@ -160,7 +162,7 @@ export default function CourseSidebar({
                                                     {topic.title}
                                                 </span>
                                                 <span className="text-[10px] font-medium text-gray-400">
-                                                    {completedItems}/{totalItems} Lessons
+                                                    {completedItems}/{totalItems} {t("student.sidebar.lessons")}
                                                 </span>
                                             </div>
                                         )}

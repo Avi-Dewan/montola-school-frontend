@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import Image from "next/image"; // Added import for Image component
 import { useAuth } from "@/contexts/AuthContext";
 import { changePassword } from "@/lib/auth";
 import { uploadProfilePicture, getProfilePicture } from "@/lib/user";
@@ -12,8 +13,11 @@ interface ProfileContentProps {
     className?: string;
 }
 
+import { useI18n } from "@/contexts/I18nProvider";
+
 export default function ProfileContent({ className = "" }: ProfileContentProps) {
     const { user, updateUser } = useAuth();
+    const { t } = useI18n();
     const [isUploading, setIsUploading] = useState(false);
     const [isChangingPassword, setIsChangingPassword] = useState(false);
     const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
@@ -59,12 +63,12 @@ export default function ProfileContent({ className = "" }: ProfileContentProps) 
         if (!file) return;
 
         if (!user?.id) {
-            toast.error("User identity not found. Please re-login.");
+            toast.error(t("student.profile.userIdNotFound"));
             return;
         }
 
         if (file.size > 2 * 1024 * 1024) {
-            toast.error("File size should be less than 2MB");
+            toast.error(t("student.profile.imageUploadError"));
             return;
         }
 
@@ -72,9 +76,10 @@ export default function ProfileContent({ className = "" }: ProfileContentProps) 
         try {
             await uploadProfilePicture(user.id, file);
             updateUser({ hasProfilePicture: true });
-            toast.success("Profile picture updated successfully!");
-        } catch (error: any) {
-            toast.error(error.response?.data?.message || "Failed to upload profile picture.");
+            toast.success(t("student.profile.profilePictureSuccess"));
+        } catch (error: unknown) {
+            const err = error as { response?: { data?: { message?: string } } };
+            toast.error(err.response?.data?.message || t("student.profile.profilePictureError"));
         } finally {
             setIsUploading(false);
             if (fileInputRef.current) fileInputRef.current.value = "";
@@ -85,12 +90,12 @@ export default function ProfileContent({ className = "" }: ProfileContentProps) 
         e.preventDefault();
 
         if (passwords.newPassword !== passwords.confirmPassword) {
-            toast.error("New passwords do not match");
+            toast.error(t("student.profile.passwordMismatch"));
             return;
         }
 
         if (passwords.newPassword.length < 6) {
-            toast.error("Password must be at least 6 characters");
+            toast.error(t("student.profile.passwordLength"));
             return;
         }
 
@@ -101,13 +106,14 @@ export default function ProfileContent({ className = "" }: ProfileContentProps) 
                 newPassword: passwords.newPassword
             });
 
-            toast.success("Password changed successfully!");
+            toast.success(t("student.profile.passwordSuccess"));
             setPasswords({ oldPassword: "", newPassword: "", confirmPassword: "" });
-        } catch (error: any) {
-            if (error.response?.status === 401) {
-                toast.error("Wrong Password");
+        } catch (error: unknown) {
+            const err = error as { response?: { status?: number; data?: { message?: string } } };
+            if (err.response?.status === 401) {
+                toast.error(t("student.profile.wrongPassword"));
             } else {
-                toast.error(error.response?.data?.message || "Failed to change password");
+                toast.error(err.response?.data?.message || t("student.profile.changePasswordError"));
             }
         } finally {
             setIsChangingPassword(false);
@@ -120,8 +126,8 @@ export default function ProfileContent({ className = "" }: ProfileContentProps) 
         <div className={className}>
             <div className="max-w-4xl mx-auto">
                 <header className="mb-10">
-                    <h1 className="text-3xl font-bold text-gray-900">My Profile</h1>
-                    <p className="text-gray-600 mt-2">Manage your account settings and security.</p>
+                    <h1 className="text-3xl font-bold text-gray-900">{t("student.profile.title")}</h1>
+                    <p className="text-gray-600 mt-2">{t("student.profile.subtitle")}</p>
                 </header>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -131,10 +137,12 @@ export default function ProfileContent({ className = "" }: ProfileContentProps) 
                             <div className="relative group">
                                 <div className="w-32 h-32 rounded-full bg-primary-600 flex items-center justify-center text-white text-4xl font-black overflow-hidden relative border-4 border-white shadow-md">
                                     {(user.hasProfilePicture && avatarUrl) ? (
-                                        <img
+                                        <Image
                                             src={avatarUrl}
                                             alt={user.fullName}
-                                            className="w-full h-full object-cover"
+                                            fill
+                                            className="object-cover"
+                                            unoptimized
                                         />
                                     ) : (
                                         user.fullName.split(" ").map(n => n[0]).join("").toUpperCase().slice(0, 2)
@@ -167,7 +175,7 @@ export default function ProfileContent({ className = "" }: ProfileContentProps) 
                                 <div className="mt-4 flex flex-wrap justify-center gap-2">
                                     {user.roles.map(role => (
                                         <span key={role} className="px-3 py-1 bg-primary-50 text-primary-600 text-[10px] font-black rounded-full uppercase tracking-tighter">
-                                            {role}
+                                            {t(`roles.${role.toLowerCase()}`)}
                                         </span>
                                     ))}
                                 </div>
@@ -184,14 +192,14 @@ export default function ProfileContent({ className = "" }: ProfileContentProps) 
                                     <HiLockClosed size={24} />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-bold text-gray-900">Security</h3>
-                                    <p className="text-sm text-gray-500">Update your account password</p>
+                                    <h3 className="text-lg font-bold text-gray-900">{t("student.profile.security")}</h3>
+                                    <p className="text-sm text-gray-500">{t("student.profile.updatePasswordSubtitle")}</p>
                                 </div>
                             </div>
 
                             <form onSubmit={handlePasswordChange} className="space-y-4">
                                 <div>
-                                    <label className="block text-sm font-bold text-gray-700 mb-1">Current Password</label>
+                                    <label className="block text-sm font-bold text-gray-700 mb-1">{t("student.profile.currentPassword")}</label>
                                     <input
                                         type="password"
                                         required
@@ -203,7 +211,7 @@ export default function ProfileContent({ className = "" }: ProfileContentProps) 
                                 </div>
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">New Password</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">{t("student.profile.newPassword")}</label>
                                         <input
                                             type="password"
                                             required
@@ -214,7 +222,7 @@ export default function ProfileContent({ className = "" }: ProfileContentProps) 
                                         />
                                     </div>
                                     <div>
-                                        <label className="block text-sm font-bold text-gray-700 mb-1">Confirm New Password</label>
+                                        <label className="block text-sm font-bold text-gray-700 mb-1">{t("student.profile.confirmNewPassword")}</label>
                                         <input
                                             type="password"
                                             required
@@ -234,10 +242,10 @@ export default function ProfileContent({ className = "" }: ProfileContentProps) 
                                         {isChangingPassword ? (
                                             <>
                                                 <LoadingSpinner size="sm" variant="white" />
-                                                Updating...
+                                                {t("student.profile.updating")}
                                             </>
                                         ) : (
-                                            "Update Password"
+                                            t("student.profile.updatePassword")
                                         )}
                                     </button>
                                 </div>
@@ -251,29 +259,29 @@ export default function ProfileContent({ className = "" }: ProfileContentProps) 
                                     <HiUserCircle size={24} />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-bold text-gray-900">Personal Information</h3>
-                                    <p className="text-sm text-gray-500">Registered details</p>
+                                    <h3 className="text-lg font-bold text-gray-900">{t("student.profile.personalInfo")}</h3>
+                                    <p className="text-sm text-gray-500">{t("student.profile.registeredDetails")}</p>
                                 </div>
                             </div>
 
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                                 <div>
-                                    <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Full Name</p>
+                                    <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">{t("student.profile.fullName")}</p>
                                     <p className="text-gray-900 font-bold bg-gray-50 px-4 py-2 rounded-lg">{user.fullName}</p>
                                 </div>
                                 <div>
-                                    <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Email Address</p>
+                                    <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">{t("student.profile.emailAddress")}</p>
                                     <p className="text-gray-900 font-bold bg-gray-50 px-4 py-2 rounded-lg">{user.email}</p>
                                 </div>
                                 {user.phone && (
                                     <div>
-                                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Phone Number</p>
+                                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">{t("student.profile.phoneNumber")}</p>
                                         <p className="text-gray-900 font-bold bg-gray-50 px-4 py-2 rounded-lg">{user.phone}</p>
                                     </div>
                                 )}
                                 {user.createdAt && (
                                     <div>
-                                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">Member Since</p>
+                                        <p className="text-xs font-black text-gray-400 uppercase tracking-widest mb-1">{t("student.profile.memberSince")}</p>
                                         <p className="text-gray-900 font-bold bg-gray-50 px-4 py-2 rounded-lg">
                                             {new Date(user.createdAt).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}
                                         </p>

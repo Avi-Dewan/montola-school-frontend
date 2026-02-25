@@ -71,8 +71,11 @@ function ChapterImage({ item }: { item: ChapterProgressResponseDto }) {
     );
 }
 
+import { useI18n } from "@/contexts/I18nProvider";
+
 export default function StudentDashboard() {
     const { user, isLoading: isAuthLoading } = useAuth();
+    const { t } = useI18n();
     const [progressData, setProgressData] = useState<ChapterProgressResponseDto[]>([]);
     const [paymentsData, setPaymentsData] = useState<PaymentResponseDto[]>([]);
     const [loading, setLoading] = useState(true);
@@ -103,7 +106,7 @@ export default function StudentDashboard() {
     if (loading || isAuthLoading) {
         return (
             <div className="min-h-screen pt-24">
-                <LoadingSpinner label="Collecting your progress..." size="lg" />
+                <LoadingSpinner label={t("student.dashboard.preparingOverview")} size="lg" />
             </div>
         );
     }
@@ -111,8 +114,8 @@ export default function StudentDashboard() {
     if (!user) {
         return (
             <div className="min-h-screen pt-24 text-center">
-                <p className="text-xl mb-4">Please log in to view your dashboard.</p>
-                <Link href="/auth/login" className="text-primary-600 underline">Login</Link>
+                <p className="text-xl mb-4">{t("student.dashboard.pleaseLogin")}</p>
+                <Link href="/auth/login" className="text-primary-600 underline">{t("student.dashboard.login")}</Link>
             </div>
         )
     }
@@ -121,8 +124,8 @@ export default function StudentDashboard() {
         <main className="min-h-screen bg-gray-50 pt-24 pb-16 px-6">
             <div className="max-w-6xl mx-auto">
                 <header className="mb-10">
-                    <h1 className="text-3xl font-bold text-gray-900">Welcome back, {user.fullName?.split(" ")[0]}! 👋</h1>
-                    <p className="text-gray-600 mt-2">Pick up where you left off.</p>
+                    <h1 className="text-3xl font-bold text-gray-900">{t("student.dashboard.welcome", { name: user.fullName?.split(" ")[0] })}</h1>
+                    <p className="text-gray-600 mt-2">{t("student.dashboard.subtitle")}</p>
                 </header>
 
                 {progressData.length === 0 ? (
@@ -130,13 +133,13 @@ export default function StudentDashboard() {
                         <div className="bg-blue-50 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                             <CourseIcon className="w-8 h-8 text-blue-500" />
                         </div>
-                        <h3 className="text-lg font-medium text-gray-900 mb-2">You haven't enrolled in any courses yet.</h3>
-                        <p className="text-gray-500 mb-6">Explore our catalog to start learning.</p>
+                        <h3 className="text-lg font-medium text-gray-900 mb-2">{t("student.dashboard.notEnrolledTitle")}</h3>
+                        <p className="text-gray-500 mb-6">{t("student.dashboard.notEnrolledSubtitle")}</p>
                         <Link
                             href="/"
                             className="inline-block bg-primary-600 text-white px-6 py-2 rounded-lg hover:bg-primary-700 transition"
                         >
-                            Browse Courses
+                            {t("student.dashboard.browseCourses")}
                         </Link>
                     </div>
                 ) : (
@@ -153,7 +156,7 @@ export default function StudentDashboard() {
                                     <div className="absolute top-3 right-3">
                                         <span className={`text-[10px] font-black px-2 py-1 rounded shadow-sm flex items-center gap-1 ${item.completed ? 'bg-green-500 text-white' : 'bg-primary-600 text-white'}`}>
                                             {item.completed ? <FaAward /> : <FaClock />}
-                                            {item.completed ? "COMPLETED" : "IN PROGRESS"}
+                                            {item.completed ? t("student.dashboard.completed") : t("student.dashboard.inProgress")}
                                         </span>
                                     </div>
                                 </div>
@@ -161,13 +164,13 @@ export default function StudentDashboard() {
                                     <div className="mb-4">
                                         <h3 className="text-lg font-bold text-gray-900 group-hover:text-primary-600 transition line-clamp-1">{item.chapterTitle}</h3>
                                         <p className="text-[10px] font-black text-gray-400 tracking-widest uppercase">
-                                            {item.progressPercentage === 100 ? "Finished" : "Continue Learning"}
+                                            {item.progressPercentage === 100 ? t("student.dashboard.finished") : t("student.dashboard.continueLearning")}
                                         </p>
                                     </div>
 
                                     <div className="space-y-4">
                                         <div className="flex items-center justify-between text-xs">
-                                            <span className="text-gray-500 font-medium">Your Progress</span>
+                                            <span className="text-gray-500 font-medium">{t("student.dashboard.yourProgress")}</span>
                                             <span className="font-black text-primary-600">{Math.round(item.progressPercentage)}%</span>
                                         </div>
 
@@ -180,7 +183,7 @@ export default function StudentDashboard() {
 
                                         <div className="pt-2 flex items-center justify-end">
                                             <span className="text-sm font-black text-primary-600 group-hover:translate-x-1 transition-transform inline-flex items-center gap-1">
-                                                {item.completed ? "REVIEW" : "RESUME"} &rarr;
+                                                {item.completed ? t("student.dashboard.review") : t("student.dashboard.resume")} &rarr;
                                             </span>
                                         </div>
                                     </div>
@@ -194,17 +197,17 @@ export default function StudentDashboard() {
                 <section className="mt-16">
                     <header className="flex items-center justify-between mb-8">
                         <div>
-                            <h2 className="text-2xl font-bold text-gray-900">Recent Payments</h2>
-                            <p className="text-gray-500 mt-1">Status of your course enrollments</p>
+                            <h2 className="text-2xl font-bold text-gray-900">{t("student.dashboard.recentPayments")}</h2>
+                            <p className="text-gray-500 mt-1">{t("student.dashboard.paymentSubtitle")}</p>
                         </div>
                         <Link href="/student/profile" className="text-primary-600 font-bold hover:underline flex items-center gap-1">
-                            Manage Account <FaCreditCard />
+                            {t("student.dashboard.manageAccount")} <FaCreditCard />
                         </Link>
                     </header>
 
                     {paymentsData.length === 0 ? (
                         <div className="bg-white rounded-xl p-8 text-center border border-gray-100 italic text-gray-400">
-                            No payment history found.
+                            {t("student.dashboard.noPaymentHistory")}
                         </div>
                     ) : (
                         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
@@ -212,10 +215,10 @@ export default function StudentDashboard() {
                                 <table className="w-full text-left border-collapse">
                                     <thead>
                                         <tr className="bg-gray-50 border-b border-gray-100">
-                                            <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Chapter</th>
-                                            <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Amount</th>
-                                            <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Transaction ID</th>
-                                            <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">Status</th>
+                                            <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">{t("student.dashboard.chapter")}</th>
+                                            <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">{t("student.dashboard.amount")}</th>
+                                            <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">{t("student.dashboard.transactionId")}</th>
+                                            <th className="px-6 py-4 text-xs font-black text-gray-400 uppercase tracking-widest">{t("student.dashboard.status")}</th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-50">
@@ -231,7 +234,9 @@ export default function StudentDashboard() {
                                                         {payment.status === PaymentStatus.VERIFIED && <FaCheckCircle />}
                                                         {payment.status === PaymentStatus.REJECTED && <FaExclamationCircle />}
                                                         {payment.status === PaymentStatus.PENDING && <FaClock />}
-                                                        {payment.status}
+                                                        {payment.status === PaymentStatus.VERIFIED ? t("student.dashboard.statusVerified") :
+                                                            payment.status === PaymentStatus.REJECTED ? t("student.dashboard.statusRejected") :
+                                                                t("student.dashboard.statusPending")}
                                                     </span>
                                                 </td>
                                             </tr>
