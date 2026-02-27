@@ -1,4 +1,5 @@
 import { useI18n } from "@/contexts/I18nProvider";
+import Link from "next/link";
 
 export default function Hero() {
     const { t } = useI18n();
@@ -12,12 +13,12 @@ export default function Hero() {
                 {t("home.hero.subtitle")}
             </p>
             <div className="flex justify-center space-x-4">
-                <button className="px-6 py-3 bg-white text-primary-500 rounded-lg font-semibold hover:bg-gray-100 transition">
+                <Link href="/classes" className="px-6 py-3 bg-white text-primary-500 rounded-lg font-semibold hover:bg-gray-100 transition inline-block">
                     {t("home.hero.startLearning")}
-                </button>
-                <button className="px-6 py-3 border border-white rounded-lg font-semibold hover:bg-white hover:text-primary-500 transition">
-                    {t("home.hero.exploreCourses")}
-                </button>
+                </Link>
+                <Link href="/classes" className="px-6 py-3 border border-white rounded-lg font-semibold hover:bg-white hover:text-primary-500 transition inline-block">
+                    {t("home.hero.exploreClasses")}
+                </Link>
             </div>
         </section>
     );

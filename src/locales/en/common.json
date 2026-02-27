@@ -1,10 +1,24 @@
 {
   "nav": {
     "home": "Home",
-    "courses": "Courses",
-    "teachers": "Teachers",
-    "pricing": "Pricing",
-    "about": "About Us"
+    "classes": "Classes",
+    "featuredChapters": "Featured Chapters",
+    "freeChapters": "Free Chapters",
+    "myDashboard": "My Dashboard",
+    "assignedChapters": "Assigned Chapters",
+    "myProfile": "My Profile",
+    "payments": "Payments",
+    "myChapters": "My Chapters",
+    "support": "Support"
+  },
+  "footer": {
+    "quickLinks": "Quick Links",
+    "contact": "Contact",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "rights": "All rights reserved.",
+    "description": "Eco-friendly EdTech for Chittagong Hill Tracts & beyond."
   },
   "auth": {
     "login": "Log In",
@@ -241,7 +255,7 @@
       "title": "From Zero to Infinity – Unlock Your Learning Journey",
       "subtitle": "Interactive, affordable, and structured education for Class 6–HSC students.",
       "startLearning": "Start Learning",
-      "exploreCourses": "Explore Courses"
+      "exploreClasses": "Explore Classes"
     },
     "featured": {
       "title": "Featured Courses",

@@ -89,7 +89,6 @@ export default function Navbar() {
     // Function to render auth buttons
     const renderAuthButtons = () => {
         if (isLoading) {
-            // Show loading state or nothing while checking auth
             return (
                 <div className="px-4 py-2 bg-gray-50 text-gray-400 rounded-lg flex items-center gap-2 border border-gray-100">
                     <LoadingSpinner size="sm" />
@@ -124,7 +123,6 @@ export default function Navbar() {
 
                     {isProfileOpen && (
                         <>
-                            {/* Backdrop to close dropdown */}
                             <div className="fixed inset-0 z-40" onClick={() => setIsProfileOpen(false)} />
 
                             <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
@@ -138,7 +136,7 @@ export default function Navbar() {
                                     className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
                                 >
                                     <HiUser size={18} />
-                                    My Profile
+                                    {t("nav.myProfile")}
                                 </Link>
                                 {isStudent && (
                                     <Link
@@ -147,7 +145,7 @@ export default function Navbar() {
                                         className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
                                     >
                                         <HiCreditCard size={18} />
-                                        Payments
+                                        {t("nav.payments")}
                                     </Link>
                                 )}
                                 <div className="h-px bg-gray-100 my-1" />
@@ -226,7 +224,7 @@ export default function Navbar() {
                         className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
                     >
                         <HiUser size={20} className="text-gray-400" />
-                        <span className="font-medium">My Profile</span>
+                        <span className="font-medium">{t("nav.myProfile")}</span>
                     </Link>
                     {isStudent && (
                         <Link
@@ -235,7 +233,7 @@ export default function Navbar() {
                             className="flex items-center gap-3 px-4 py-2.5 text-gray-700 hover:bg-gray-50 rounded-lg transition-colors"
                         >
                             <HiCreditCard size={20} className="text-gray-400" />
-                            <span className="font-medium">Payments</span>
+                            <span className="font-medium">{t("nav.payments")}</span>
                         </Link>
                     )}
                     <button
@@ -285,9 +283,9 @@ export default function Navbar() {
                     {(!isLoggedIn || isStudent) && (
                         <>
                             <Link href="/" className={getLinkClass("/")}>{t("nav.home")}</Link>
-                            <Link href="/classes" className={getLinkClass("/classes")}>Classes</Link>
-                            <Link href="/featured-chapters" className={getLinkClass("/featured-chapters")}>Featured Chapters</Link>
-                            <Link href="/free-chapters" className={getLinkClass("/free-chapters")}>Free Chapters</Link>
+                            <Link href="/classes" className={getLinkClass("/classes")}>{t("nav.classes")}</Link>
+                            <Link href="/featured-chapters" className={getLinkClass("/featured-chapters")}>{t("nav.featuredChapters")}</Link>
+                            <Link href="/free-chapters" className={getLinkClass("/free-chapters")}>{t("nav.freeChapters")}</Link>
                         </>
                     )}
 
@@ -295,7 +293,7 @@ export default function Navbar() {
                     {isLoggedIn && isStudent && (
                         <>
                             <Link href="/student/dashboard" className={getLinkClass("/student/dashboard", "font-medium")}>
-                                My Dashboard
+                                {t("nav.myDashboard")}
                             </Link>
                         </>
                     )}
@@ -303,10 +301,10 @@ export default function Navbar() {
                     {isLoggedIn && isTeacher && (
                         <>
                             <Link href="/teacher" className={getLinkClass("/teacher", "font-medium")}>
-                                My Dashboard
+                                {t("nav.myDashboard")}
                             </Link>
                             <Link href="/teacher/assigned-chapters" className={getLinkClass("/teacher/assigned-chapters", "font-medium")}>
-                                Assigned Chapters
+                                {t("nav.assignedChapters")}
                             </Link>
                         </>
                     )}
@@ -339,9 +337,9 @@ export default function Navbar() {
                         {(!isLoggedIn || isStudent) && (
                             <>
                                 <Link href="/" onClick={() => setIsOpen(false)} className={getLinkClass("/", "py-1")}>{t("nav.home")}</Link>
-                                <Link href="/classes" onClick={() => setIsOpen(false)} className={getLinkClass("/classes", "py-1")}>Classes</Link>
-                                <Link href="/featured-chapters" onClick={() => setIsOpen(false)} className={getLinkClass("/featured-chapters", "py-1")}>Featured Chapters</Link>
-                                <Link href="/free-chapters" onClick={() => setIsOpen(false)} className={getLinkClass("/free-chapters", "py-1")}>Free Chapters</Link>
+                                <Link href="/classes" onClick={() => setIsOpen(false)} className={getLinkClass("/classes", "py-1")}>{t("nav.classes")}</Link>
+                                <Link href="/featured-chapters" onClick={() => setIsOpen(false)} className={getLinkClass("/featured-chapters", "py-1")}>{t("nav.featuredChapters")}</Link>
+                                <Link href="/free-chapters" onClick={() => setIsOpen(false)} className={getLinkClass("/free-chapters", "py-1")}>{t("nav.freeChapters")}</Link>
                             </>
                         )}
 
@@ -352,14 +350,14 @@ export default function Navbar() {
                                     onClick={() => setIsOpen(false)}
                                     className={getLinkClass("/student/dashboard", "py-1 font-medium")}
                                 >
-                                    My Dashboard
+                                    {t("nav.myDashboard")}
                                 </Link>
                                 <Link
                                     href="/student/dashboard"
                                     onClick={() => setIsOpen(false)}
                                     className={getLinkClass("/student/dashboard", "py-1 font-medium")}
                                 >
-                                    My Chapters
+                                    {t("nav.myChapters")}
                                 </Link>
                             </>
                         )}
@@ -371,14 +369,14 @@ export default function Navbar() {
                                     onClick={() => setIsOpen(false)}
                                     className={getLinkClass("/teacher", "py-1 font-medium")}
                                 >
-                                    My Dashboard
+                                    {t("nav.myDashboard")}
                                 </Link>
                                 <Link
                                     href="/teacher/assigned-chapters"
                                     onClick={() => setIsOpen(false)}
                                     className={getLinkClass("/teacher/assigned-chapters", "py-1 font-medium")}
                                 >
-                                    Assigned Chapters
+                                    {t("nav.assignedChapters")}
                                 </Link>
                             </>
                         )}
