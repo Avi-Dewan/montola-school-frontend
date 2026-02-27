@@ -235,5 +235,52 @@
       "featuredChapters": "Featured Chapters",
       "purchaseVerification": "Purchase Verification"
     }
+  },
+  "home": {
+    "hero": {
+      "title": "From Zero to Infinity – Unlock Your Learning Journey",
+      "subtitle": "Interactive, affordable, and structured education for Class 6–HSC students.",
+      "startLearning": "Start Learning",
+      "exploreCourses": "Explore Courses"
+    },
+    "featured": {
+      "title": "Featured Courses",
+      "loading": "Discovering featured courses...",
+      "badge": "FEATURED",
+      "preview": "PREVIEW"
+    },
+    "free": {
+      "title": "Try for Free",
+      "loading": "Finding free lessons for you...",
+      "badge": "FREE",
+      "enrollNow": "ENROLL NOW"
+    },
+    "classes": {
+      "title": "Our Classes",
+      "loading": "Arranging our class catalog..."
+    },
+    "valueProps": {
+      "titlePart1": "Why ",
+      "titlePart2": "Montola?",
+      "description": "We are committed to providing world-class education that is accessible, engaging, and tailored to the needs of every student.",
+      "props": {
+        "teachers": {
+          "title": "Expert Teachers",
+          "desc": "Learn from verified & experienced educators dedicated to student success."
+        },
+        "learning": {
+          "title": "Structured Learning",
+          "desc": "Comprehensive, chapter-based content with interactive lessons and quizzes."
+        },
+        "affordable": {
+          "title": "Affordable & Flexible",
+          "desc": "High-quality education that fits your budget. Pay per chapter or for full courses."
+        },
+        "inclusive": {
+          "title": "Inclusive Education",
+          "desc": "Proudly serving the Chittagong Hill Tracts and beyond with culturally relevant content."
+        }
+      }
+    }
   }
 }

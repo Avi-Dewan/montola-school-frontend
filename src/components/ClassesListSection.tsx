@@ -7,7 +7,10 @@ import Link from "next/link";
 import ChapterPlaceholder from "./ChapterPlaceholder";
 import LoadingSpinner from "./LoadingSpinner";
 
+import { useI18n } from "@/contexts/I18nProvider";
+
 export default function ClassesListSection() {
+    const { t } = useI18n();
     const [classes, setClasses] = useState<ClassResponseDto[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -28,7 +31,7 @@ export default function ClassesListSection() {
     if (loading) {
         return (
             <div className="py-20">
-                <LoadingSpinner label="Arranging our class catalog..." size="lg" />
+                <LoadingSpinner label={t("home.classes.loading")} size="lg" />
             </div>
         );
     }
@@ -39,7 +42,7 @@ export default function ClassesListSection() {
 
     return (
         <section className="py-16 px-6 bg-gray-50">
-            <h2 className="text-3xl font-bold text-center mb-10">Our Classes</h2>
+            <h2 className="text-3xl font-bold text-center mb-10">{t("home.classes.title")}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
                 {classes.map((c) => (
                     <Link
