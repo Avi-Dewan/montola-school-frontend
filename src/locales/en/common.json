@@ -20,6 +20,20 @@
     "rights": "All rights reserved.",
     "description": "Eco-friendly EdTech for Chittagong Hill Tracts & beyond."
   },
+  "classes": {
+    "title": "Available Classes",
+    "subtitle": "Explore our comprehensive curriculum and join the class that matches your educational goals.",
+    "exploreSubjects": "Explore Subjects",
+    "noClasses": "No classes found",
+    "noClassesSub": "We're still setting up our course catalog. Please check back soon!",
+    "loading": "Arranging our class catalog...",
+    "detailsLoading": "Fetching class details...",
+    "error": "Failed to load classes. Please try again later.",
+    "contentError": "Failed to load class content.",
+    "notFound": "Class not found",
+    "fallbackDesc": "Explore our comprehensive curriculum and dedicated resources for this academic level.",
+    "noChapters": "No chapters available yet."
+  },
   "auth": {
     "login": "Log In",
     "register": "Register",
