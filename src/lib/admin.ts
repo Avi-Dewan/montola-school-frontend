@@ -122,7 +122,12 @@ export const addFeaturedChapter = (chapterId: number) =>
 export const removeFeaturedChapter = (chapterId: number) =>
     api.delete(`/v1/featured-chapters/${chapterId}`);
 
-// ==================== Teacher Management ====================
+// ==================== Teacher & User Management ====================
+
+export const getAllUsers = () => api.get<any[]>("/users");
+
+export const adminRegister = (data: { email: string; fullName: string; phone?: string; password?: string; roles: string[] }) =>
+    api.post("/auth/admin/register", data);
 
 export const getTeachersByRole = (role: UserRole = UserRole.TEACHER) =>
     api.get<TeacherDto[]>(`/users/role/${role}`);

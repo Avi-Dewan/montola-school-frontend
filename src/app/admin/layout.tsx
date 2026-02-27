@@ -6,7 +6,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useI18n } from "@/contexts/I18nProvider";
 import AdminSidebar from "@/components/admin/AdminSidebar";
 import RoleToggle from "@/components/admin/RoleToggle";
-import { HiMenu } from "react-icons/hi";
+import { HiMenu, HiUser, HiLogout, HiChevronDown, HiViewGrid } from "react-icons/hi";
+import Link from "next/link";
 
 export default function AdminLayout({
     children,
@@ -17,6 +18,16 @@ export default function AdminLayout({
     const { t, lang, switchLang } = useI18n();
     const router = useRouter();
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+
+    const getInitials = (name: string) => {
+        return name
+            .split(" ")
+            .map((n) => n[0])
+            .join("")
+            .toUpperCase()
+            .slice(0, 2);
+    };
 
     useEffect(() => {
         // Wait for auth to finish loading
@@ -48,9 +59,9 @@ export default function AdminLayout({
     return (
         <div className="flex min-h-screen bg-gray-50">
             {/* Sidebar */}
-            <AdminSidebar 
-                isMobileOpen={isMobileMenuOpen} 
-                onMobileToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)} 
+            <AdminSidebar
+                isMobileOpen={isMobileMenuOpen}
+                onMobileToggle={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
             />
 
             {/* Main Content */}
@@ -67,17 +78,16 @@ export default function AdminLayout({
                                 <HiMenu className="w-6 h-6" />
                             </button>
                             <h1 className="text-xl md:text-2xl font-bold text-gray-800">{t("admin.dashboard")}</h1>
+                            <Link
+                                href="/admin"
+                                className="hidden md:flex items-center gap-2 px-3 py-1.5 bg-gray-50 text-gray-600 rounded-lg hover:bg-gray-100 hover:text-primary-600 transition-all text-sm font-bold"
+                            >
+                                <HiViewGrid size={18} />
+                                Dashboard
+                            </Link>
                         </div>
-                        
-                        <div className="flex items-center space-x-2 md:space-x-4">
-                            {/* User Info - hidden on small screens */}
-                            <div className="hidden md:block text-right">
-                                <p className="text-sm font-medium text-gray-800">
-                                    {user?.fullName || user?.email}
-                                </p>
-                                <p className="text-xs text-gray-500">{user?.email}</p>
-                            </div>
 
+                        <div className="flex items-center space-x-2 md:space-x-4">
                             {/* Role Toggle - only visible if user has multiple roles */}
                             <RoleToggle />
 
@@ -85,19 +95,62 @@ export default function AdminLayout({
                             <select
                                 value={lang}
                                 onChange={(e) => switchLang(e.target.value as "en" | "bn")}
-                                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent mr-2"
                             >
                                 <option value="en">EN</option>
                                 <option value="bn">বাংলা</option>
                             </select>
 
-                            {/* Logout Button */}
-                            <button
-                                onClick={removeAuthTokens}
-                                className="px-3 md:px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors text-sm font-medium"
-                            >
-                                {t("auth.logout")}
-                            </button>
+                            {/* User Profile Dropdown */}
+                            <div className="relative">
+                                <button
+                                    onClick={() => setIsProfileOpen(!isProfileOpen)}
+                                    className="flex items-center gap-2 p-1 rounded-full hover:bg-gray-100 transition-colors border border-gray-100 pr-3"
+                                >
+                                    <div className="w-8 h-8 rounded-full bg-primary-600 flex items-center justify-center text-white overflow-hidden relative">
+                                        <div className="w-full h-full flex items-center justify-center font-black text-xs">
+                                            {user ? getInitials(user.fullName) : "??"}
+                                        </div>
+                                    </div>
+                                    <span className="text-sm font-bold text-gray-700 hidden lg:block">
+                                        {user?.fullName.split(" ")[0]}
+                                    </span>
+                                    <HiChevronDown className={`text-gray-400 transition-transform ${isProfileOpen ? 'rotate-180' : ''}`} />
+                                </button>
+
+                                {isProfileOpen && (
+                                    <>
+                                        {/* Backdrop to close dropdown */}
+                                        <div className="fixed inset-0 z-40" onClick={() => setIsProfileOpen(false)} />
+
+                                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-50 animate-in fade-in slide-in-from-top-2 duration-200">
+                                            <div className="px-4 py-2 border-bottom border-gray-100 mb-1">
+                                                <p className="text-xs font-black text-gray-400 uppercase tracking-widest">Signed in as</p>
+                                                <p className="text-sm font-bold text-gray-900 truncate">{user?.email}</p>
+                                            </div>
+                                            <Link
+                                                href="/admin/profile"
+                                                onClick={() => setIsProfileOpen(false)}
+                                                className="flex items-center gap-2 px-4 py-2 text-sm text-gray-700 hover:bg-primary-50 hover:text-primary-600 transition-colors"
+                                            >
+                                                <HiUser size={18} />
+                                                My Profile
+                                            </Link>
+                                            <div className="h-px bg-gray-100 my-1" />
+                                            <button
+                                                onClick={() => {
+                                                    removeAuthTokens();
+                                                    setIsProfileOpen(false);
+                                                }}
+                                                className="flex items-center gap-2 w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                                            >
+                                                <HiLogout size={18} />
+                                                {t("auth.logout")}
+                                            </button>
+                                        </div>
+                                    </>
+                                )}
+                            </div>
                         </div>
                     </div>
                 </header>

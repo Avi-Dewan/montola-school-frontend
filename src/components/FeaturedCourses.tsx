@@ -10,6 +10,7 @@ import Image from "next/image";
 import ChapterPlaceholder from "@/components/ChapterPlaceholder";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { FaPlay } from "react-icons/fa";
+import { useI18n } from "@/contexts/I18nProvider";
 
 function ChapterImage({ chapter }: { chapter: any }) {
     const [imageError, setImageError] = useState(false);
@@ -32,6 +33,7 @@ function ChapterImage({ chapter }: { chapter: any }) {
 
 export default function FeaturedCourses() {
     const { isLoggedIn, user } = useAuth();
+    const { t } = useI18n();
     const [chapters, setChapters] = useState<FeaturedChapterResponseDto[]>([]);
     const [enrollmentMap, setEnrollmentMap] = useState<Map<number, number>>(new Map());
     const [loading, setLoading] = useState(true);
@@ -64,7 +66,7 @@ export default function FeaturedCourses() {
     if (loading) {
         return (
             <div className="py-32">
-                <LoadingSpinner label="Discovering featured courses..." size="lg" />
+                <LoadingSpinner label={t("home.featured.loading")} size="lg" />
             </div>
         );
     }
@@ -75,7 +77,7 @@ export default function FeaturedCourses() {
 
     return (
         <section className="py-20 px-6 bg-gray-50">
-            <h2 className="text-3xl font-bold text-center mb-12">Featured Courses</h2>
+            <h2 className="text-3xl font-bold text-center mb-12">{t("home.featured.title")}</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 {chapters.map((c) => (
                     <div key={c.id} className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group border border-gray-100">
@@ -84,7 +86,7 @@ export default function FeaturedCourses() {
                             <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors" />
                             <div className="absolute top-3 left-3">
                                 <span className="px-2 py-1 bg-white/90 backdrop-blur-sm text-[10px] font-black text-primary-600 rounded shadow-sm">
-                                    FEATURED
+                                    {t("home.featured.badge")}
                                 </span>
                             </div>
                         </div>
@@ -106,7 +108,7 @@ export default function FeaturedCourses() {
                             <div className="mt-auto flex items-center justify-between">
                                 <p className="text-xl font-black text-primary-600">
                                     {c.free ? (
-                                        <span className="text-green-600 uppercase tracking-tighter">Free</span>
+                                        <span className="text-green-600 uppercase tracking-tighter">{t("home.free.badge")}</span>
                                     ) : (
                                         `৳${c.price}`
                                     )}
@@ -116,14 +118,14 @@ export default function FeaturedCourses() {
                                         href={`/student/chapters/${c.chapterId}`}
                                         className="py-2.5 px-6 bg-green-600 text-white rounded-lg font-black text-xs tracking-widest hover:bg-green-700 transition shadow-lg shadow-green-100 flex items-center gap-2"
                                     >
-                                        <FaPlay size={10} /> RESUME
+                                        <FaPlay size={10} /> {t("student.dashboard.resume")}
                                     </Link>
                                 ) : (
                                     <Link
                                         href={`/chapters/${c.chapterId}`}
                                         className="py-2.5 px-6 bg-primary-600 text-white rounded-lg font-black text-xs tracking-widest hover:bg-primary-700 transition shadow-lg shadow-primary-100"
                                     >
-                                        PREVIEW
+                                        {t("home.featured.preview")}
                                     </Link>
                                 )}
                             </div>

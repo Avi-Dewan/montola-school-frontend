@@ -25,9 +25,12 @@ import { toast } from "react-toastify";
 import LoadingSpinner from "@/components/LoadingSpinner";
 
 
+import { useI18n } from "@/contexts/I18nProvider";
+
 export default function ContentPlayerPage() {
     const params = useParams();
     const router = useRouter();
+    const { t } = useI18n();
     const contentId = params?.contentId ? Number(params.contentId) : null;
     const chapterId = params?.id ? Number(params.id) : null;
 
@@ -51,19 +54,20 @@ export default function ContentPlayerPage() {
         try {
             const data = await getContentById(contentId);
             setContent(data);
-        } catch (err: any) {
+        } catch (err) {
             console.error("Failed to fetch content", err);
-            if (err.response?.status === 403) {
-                setError(err.response.data?.message || "You don't have permission to access this content.");
-            } else if (err.response?.status === 404) {
-                setError("Content not found.");
+            const errorResponse = err as { response?: { status?: number; data?: { message?: string } } };
+            if (errorResponse.response?.status === 403) {
+                setError(errorResponse.response.data?.message || t("student.contentPlayer.accessDenied"));
+            } else if (errorResponse.response?.status === 404) {
+                setError(t("student.contentPlayer.contentNotFound"));
             } else {
-                setError("An unexpected error occurred.");
+                setError(t("messages.error"));
             }
         } finally {
             setLoading(false);
         }
-    }, [contentId]);
+    }, [contentId, t]);
 
     useEffect(() => {
         fetchContent();
@@ -77,11 +81,12 @@ export default function ContentPlayerPage() {
         if (!contentId) return;
         try {
             await markContentComplete(contentId);
-            toast.success("Marked as complete!");
+            toast.success(t("student.contentPlayer.markedComplete"));
             refreshProgress();
-        } catch (e: any) {
+        } catch (e) {
             console.error(e);
-            toast.error(e.response?.data?.message || "Failed to mark as complete");
+            const errorResponse = e as { response?: { data?: { message?: string } } };
+            toast.error(errorResponse.response?.data?.message || t("student.contentPlayer.failedMarkComplete"));
         }
 
     };
@@ -136,14 +141,23 @@ export default function ContentPlayerPage() {
         if (isPassed) {
             try {
                 await submitQuizScore(contentId!, earnedMarks);
-                toast.success(`Success! You passed with ${earnedMarks}/${totalMarks} (${scorePercentage.toFixed(1)}%)`);
+                toast.success(t("student.contentPlayer.passMessage", {
+                    score: earnedMarks,
+                    total: totalMarks,
+                    percentage: scorePercentage.toFixed(1)
+                }));
                 refreshProgress();
             } catch (e) {
                 console.error(e);
-                toast.error("Failed to save passing results");
+                toast.error(t("student.contentPlayer.failedSaveResults"));
             }
         } else {
-            toast.warning(`You did not pass. Score: ${earnedMarks}/${totalMarks} (${scorePercentage.toFixed(1)}%). Required: ${passPercentage}%`);
+            toast.warning(t("student.contentPlayer.failMessage", {
+                score: earnedMarks,
+                total: totalMarks,
+                percentage: scorePercentage.toFixed(1),
+                passPercentage
+            }));
         }
     };
 
@@ -159,14 +173,14 @@ export default function ContentPlayerPage() {
             router.push(`/student/chapters/${chapterId}/content/${nextItem.id}`);
         } else {
             // Last item in chapter
-            toast.success("Congratulations! You've completed all items in this chapter.");
+            toast.success(t("student.contentPlayer.congratulations"));
             router.push(`/student/chapters/${chapterId}`);
         }
-    }, [structure, contentId, chapterId, router]);
+    }, [structure, contentId, chapterId, router, t]);
 
     if (loading) return (
         <div className="flex flex-col items-center justify-center min-h-[400px]">
-            <LoadingSpinner label="Fetching your content..." size="lg" />
+            <LoadingSpinner label={t("student.contentPlayer.fetchingContent")} size="lg" />
         </div>
     );
 
@@ -176,18 +190,18 @@ export default function ContentPlayerPage() {
                 <FiAlertCircle size={32} />
             </div>
 
-            <h2 className="text-2xl font-bold text-gray-900 mb-2">Access Denied</h2>
+            <h2 className="text-2xl font-bold text-gray-900 mb-2">{t("student.contentPlayer.accessDenied")}</h2>
             <p className="text-gray-600 max-w-md mx-auto mb-8">{error}</p>
             <button
                 onClick={() => router.back()}
                 className="inline-flex items-center px-6 py-3 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
             >
-                Go Back
+                {t("student.contentPlayer.goBack")}
             </button>
         </div>
     );
 
-    if (!content) return <div className="p-8 text-center text-gray-500">Content not found</div>;
+    if (!content) return <div className="p-8 text-center text-gray-500">{t("student.contentPlayer.contentNotFound")}</div>;
 
     const isLecture = 'videoId' in content;
     const isQuiz = 'questions' in content;
@@ -203,7 +217,7 @@ export default function ContentPlayerPage() {
                             {isQuiz && <FiHelpCircle className="text-purple-600" size={18} />}
                             {isPdf && <FiFileText className="text-red-600" size={18} />}
                             <span className="text-xs font-bold uppercase tracking-wider text-gray-400">
-                                {isLecture ? "Lecture" : isQuiz ? "Quiz" : "Reference PDF"}
+                                {isLecture ? t("student.contentPlayer.lecture") : isQuiz ? t("student.contentPlayer.quiz") : t("student.contentPlayer.referencePdf")}
                             </span>
                         </div>
                         <h1 className="text-2xl md:text-3xl font-bold text-gray-900">{content.title}</h1>
@@ -225,13 +239,13 @@ export default function ContentPlayerPage() {
                                     />
                                 ) : (
                                     <div className="w-full h-full flex items-center justify-center text-gray-500">
-                                        No video available
+                                        {t("student.contentPlayer.noVideo")}
                                     </div>
                                 )}
                             </div>
                             {content.content && (
                                 <div className="prose prose-blue max-w-none p-6 md:p-0">
-                                    <h3 className="text-lg font-semibold text-gray-900 mb-4">Lecture Summary</h3>
+                                    <h3 className="text-lg font-semibold text-gray-900 mb-4">{t("student.contentPlayer.lectureSummary")}</h3>
                                     <div className="text-gray-700 leading-relaxed whitespace-pre-wrap">
                                         {content.content}
                                     </div>
@@ -256,7 +270,7 @@ export default function ContentPlayerPage() {
                                     </div>
                                     <div>
                                         <p className="font-medium text-blue-900">{content.title}</p>
-                                        <p className="text-sm text-blue-700">{content.pageCount} Pages</p>
+                                        <p className="text-sm text-blue-700">{content.pageCount} {t("student.contentPlayer.pages")}</p>
                                     </div>
                                 </div>
                             </div>
@@ -280,7 +294,7 @@ export default function ContentPlayerPage() {
                                                     <FiHelpCircle size={20} />
                                                 </div>
                                                 <div>
-                                                    <h3 className="text-sm font-bold text-purple-900 uppercase tracking-tight mb-1">Instructions</h3>
+                                                    <h3 className="text-sm font-bold text-purple-900 uppercase tracking-tight mb-1">{t("student.contentPlayer.instructions")}</h3>
                                                     <p className="text-purple-800 text-sm">{quiz.instruction}</p>
                                                 </div>
                                             </div>
@@ -302,11 +316,11 @@ export default function ContentPlayerPage() {
                                                 </div>
                                                 <div>
                                                     <h2 className="text-2xl font-bold mb-1">
-                                                        {isPassed ? "Assessment Passed!" : "Assessment Failed"}
+                                                        {isPassed ? t("student.contentPlayer.assessmentPassed") : t("student.contentPlayer.assessmentFailed")}
                                                     </h2>
                                                     <p className="text-sm font-medium opacity-90">
-                                                        Total Score: {Number.isInteger(quizScore) ? quizScore : quizScore.toFixed(1)} / {totalMarks} ({percentage.toFixed(1)}%)
-                                                        {!isPassed && ` • Required: ${passPercentage}%`}
+                                                        {t("student.contentPlayer.totalScore")} {Number.isInteger(quizScore) ? quizScore : quizScore.toFixed(1)} / {totalMarks} ({percentage.toFixed(1)}%)
+                                                        {!isPassed && ` • ${t("student.contentPlayer.required")}: ${passPercentage}%`}
                                                     </p>
                                                 </div>
                                                 {!isPassed && (
@@ -318,7 +332,7 @@ export default function ContentPlayerPage() {
                                                         }}
                                                         className="ml-auto px-6 py-2 bg-red-600 text-white rounded-lg font-bold hover:bg-red-700 transition"
                                                     >
-                                                        Try Again
+                                                        {t("student.contentPlayer.tryAgain")}
                                                     </button>
                                                 )}
                                             </div>
@@ -362,7 +376,7 @@ export default function ContentPlayerPage() {
                                                             </div>
                                                             <div className="flex-grow">
                                                                 <h3 className="text-lg font-medium text-gray-900 mb-1">{q.questionText}</h3>
-                                                                <p className="text-xs font-bold text-gray-400 uppercase">{q.marks} Marks • {q.type.replace(/_/g, ' ')}</p>
+                                                                <p className="text-xs font-bold text-gray-400 uppercase">{q.marks} {t("student.contentPlayer.marks")} • {t(`student.contentPlayer.questionTypes.${q.type}`)}</p>
                                                             </div>
                                                         </div>
 
@@ -461,7 +475,7 @@ export default function ContentPlayerPage() {
                                                                                 : "border-gray-100 focus:border-primary-500 outline-none"
                                                                                 }`}
                                                                         >
-                                                                            <option value="">Select match</option>
+                                                                            <option value="">{t("student.contentPlayer.selectMatch")}</option>
                                                                             {q.tableMatchings.map(item => (
                                                                                 <option key={item.id} value={item.rightItem}>{item.rightItem}</option>
                                                                             ))}
@@ -469,10 +483,10 @@ export default function ContentPlayerPage() {
                                                                         {quizSubmitted && (
                                                                             <div className="text-xs font-bold whitespace-nowrap">
                                                                                 {quizAnswers[q.id]?.[tm.id] === tm.rightItem
-                                                                                    ? <span className="text-green-600">Correct</span>
+                                                                                    ? <span className="text-green-600">{t("student.contentPlayer.correct")}</span>
                                                                                     : isPassed
-                                                                                        ? <span className="text-red-600 font-bold bg-red-50 px-2 py-1 rounded">Correct Ans: {tm.rightItem}</span>
-                                                                                        : <span className="text-red-600 font-bold">Incorrect</span>
+                                                                                        ? <span className="text-red-600 font-bold bg-red-50 px-2 py-1 rounded">{t("student.contentPlayer.correct")}: {tm.rightItem}</span>
+                                                                                        : <span className="text-red-600 font-bold">{t("student.contentPlayer.incorrect")}</span>
                                                                                 }
                                                                             </div>
                                                                         )}
@@ -493,7 +507,7 @@ export default function ContentPlayerPage() {
                                                                                     <input
                                                                                         type="text"
                                                                                         disabled={quizSubmitted}
-                                                                                        placeholder="type answer..."
+                                                                                        placeholder={t("student.contentPlayer.typeAnswer")}
                                                                                         value={quizAnswers[q.id]?.[i + 1] || ""}
                                                                                         onChange={(e) => setQuizAnswers({
                                                                                             ...quizAnswers,
@@ -509,7 +523,7 @@ export default function ContentPlayerPage() {
                                                                                     {quizSubmitted && isPassed &&
                                                                                         quizAnswers[q.id]?.[i + 1]?.trim().toLowerCase() !== q.fillBlanks.find(fb => fb.blankPosition === i + 1)?.correctAnswer.trim().toLowerCase() && (
                                                                                             <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white px-2 py-1 rounded shadow-lg text-xs font-bold whitespace-nowrap z-10">
-                                                                                                Correct: {q.fillBlanks.find(fb => fb.blankPosition === i + 1)?.correctAnswer}
+                                                                                                {t("student.contentPlayer.correct")}: {q.fillBlanks.find(fb => fb.blankPosition === i + 1)?.correctAnswer}
                                                                                             </div>
                                                                                         )}
                                                                                 </span>
@@ -526,14 +540,14 @@ export default function ContentPlayerPage() {
                                                                 <textarea
                                                                     disabled={quizSubmitted}
                                                                     rows={4}
-                                                                    placeholder="Type your answer here..."
+                                                                    placeholder={t("student.contentPlayer.typeAnswer")}
                                                                     value={quizAnswers[q.id] || ""}
                                                                     onChange={(e) => setQuizAnswers({ ...quizAnswers, [q.id]: e.target.value })}
                                                                     className="w-full p-4 rounded-xl border-2 border-gray-100 focus:border-primary-500 outline-none transition-all resize-none"
                                                                 />
                                                                 {quizSubmitted && q.writtenAnswer && isPassed && (
                                                                     <div className="p-6 bg-blue-50 rounded-xl border border-blue-100">
-                                                                        <h4 className="text-sm font-bold text-blue-900 uppercase tracking-tight mb-2">Sample Answer</h4>
+                                                                        <h4 className="text-sm font-bold text-blue-900 uppercase tracking-tight mb-2">{t("student.contentPlayer.sampleAnswer")}</h4>
                                                                         <p className="text-blue-800 text-sm italic">{q.writtenAnswer.sampleAnswer}</p>
                                                                     </div>
                                                                 )}
@@ -550,7 +564,7 @@ export default function ContentPlayerPage() {
                                                     onClick={handleQuizSubmit}
                                                     className="bg-gray-900 text-white px-10 py-4 rounded-xl font-bold hover:bg-gray-800 transition shadow-lg shadow-gray-200 active:transform active:scale-95"
                                                 >
-                                                    Submit Assessment
+                                                    {t("student.contentPlayer.submitAssessment")}
                                                 </button>
                                             </div>
                                         )}
@@ -573,7 +587,7 @@ export default function ContentPlayerPage() {
                 })() && (
                         <div className="bg-gray-50 px-8 py-6 flex flex-col md:flex-row items-center justify-between gap-4 border-t border-gray-100">
                             <div className="text-sm text-gray-500">
-                                {isQuiz ? "Quiz results submitted." : "Finished this lesson?"}
+                                {isQuiz ? t("student.contentPlayer.quizSubmitted") : t("student.contentPlayer.finishedLesson")}
                             </div>
                             <div className="flex gap-3">
                                 {!isQuiz && (
@@ -585,7 +599,7 @@ export default function ContentPlayerPage() {
                                             : "bg-white text-gray-700 border border-gray-200 hover:bg-gray-50 hover:border-gray-300"
                                             }`}
                                     >
-                                        {isCompleted ? <><FiCheckCircle /> Completed</> : "Mark as Complete"}
+                                        {isCompleted ? <><FiCheckCircle /> {t("student.contentPlayer.completed")}</> : t("student.contentPlayer.markComplete")}
                                     </button>
                                 )}
 
@@ -597,8 +611,8 @@ export default function ContentPlayerPage() {
                                         const allItems = structure?.topics.flatMap(t => t.contentItems) || [];
                                         const currentIndex = allItems.findIndex(i => i.id === contentId);
                                         return (currentIndex !== -1 && currentIndex < allItems.length - 1)
-                                            ? "Next Lesson"
-                                            : "Finish Chapter";
+                                            ? t("student.contentPlayer.nextLesson")
+                                            : t("student.contentPlayer.finishChapter");
                                     })()}
                                     <FiChevronRight size={18} />
                                 </button>

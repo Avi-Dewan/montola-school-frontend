@@ -1,26 +1,13 @@
 "use client";
 
-import { ClassStructureResponseDto, ChapterStatus } from "@/types";
+import { ClassStructureResponseDto } from "@/types";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
 import ChapterPlaceholder from "./ChapterPlaceholder";
 import { useAuth } from "@/contexts/AuthContext";
 import { getMyChaptersProgress } from "@/lib/student";
-import { FaPlay } from "react-icons/fa";
-
-// Using lucide-react icons if available, otherwise consider text fallback or verify icons
-// Assuming lucide-react is commonly used or I can use simple SVGs/text
-// Checking package.json would be good, but I'll use simple text/emoji or generic svg if I can't verify.
-// Actually, I'll use simple SVGs to be safe and avoiding dependency issues if not installed.
-
-function LockIcon({ className }: { className?: string }) {
-    return (
-        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className={className}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z" />
-        </svg>
-    )
-}
+import { useI18n } from "@/contexts/I18nProvider";
 
 function ChapterImageIcon({ chapterId, title }: { chapterId: number, title: string }) {
     const [imageError, setImageError] = useState(false);
@@ -53,6 +40,7 @@ interface Props {
 
 export default function PublicStructureTree({ structure }: Props) {
     const { isLoggedIn, user } = useAuth();
+    const { t } = useI18n();
     const [enrollmentMap, setEnrollmentMap] = useState<Map<number, number>>(new Map());
 
     const isStudent = user?.roles?.includes("STUDENT");
@@ -80,9 +68,9 @@ export default function PublicStructureTree({ structure }: Props) {
                     </div>
                     <div className="divide-y divide-gray-100">
                         {subject.chapters.length === 0 ? (
-                            <div className="p-6 text-gray-400 text-center italic">No chapters available yet.</div>
+                            <div className="p-6 text-gray-400 text-center italic">{t("classes.noChapters")}</div>
                         ) : (
-                            subject.chapters.map((chapter, index) => (
+                            subject.chapters.map((chapter) => (
                                 <Link
                                     key={chapter.id}
                                     href={enrollmentMap.has(chapter.id) ? `/student/chapters/${chapter.id}` : `/chapters/${chapter.id}`}
@@ -113,7 +101,7 @@ export default function PublicStructureTree({ structure }: Props) {
                                         <div className="flex items-center gap-3 flex-shrink-0">
                                             {enrollmentMap.has(chapter.id) ? (
                                                 <span className="text-[10px] font-black text-white bg-green-600 px-2 py-1 rounded uppercase tracking-tighter shadow-sm">
-                                                    RESUME
+                                                    {t("student.dashboard.resume")}
                                                 </span>
                                             ) : (
                                                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 text-gray-300 group-hover:text-primary-400 transition">

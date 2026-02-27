@@ -4,12 +4,12 @@ import { useEffect, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import {
     getAllChapters,
-    getChaptersByStatus,
+    getAllSubjects,
     createChapter,
     updateChapter,
     deleteChapter,
 } from "@/lib/admin";
-import { ChapterResponseDto, ChapterRequestDto, ChapterStatus } from "@/types";
+import { ChapterResponseDto, ChapterRequestDto, ChapterStatus, SubjectResponseDto } from "@/types";
 import DataTable, { Column } from "@/components/ui/DataTable";
 import Modal from "@/components/ui/Modal";
 import ChapterForm from "@/components/admin/ChapterForm";
@@ -21,6 +21,7 @@ export default function ChaptersPage() {
     const router = useRouter();
     const searchParams = useSearchParams();
     const [chapters, setChapters] = useState<ChapterResponseDto[]>([]);
+    const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
     const [filteredChapters, setFilteredChapters] = useState<ChapterResponseDto[]>([]);
     const [selectedStatus, setSelectedStatus] = useState<string>("");
     const [selectedSubjectId, setSelectedSubjectId] = useState<number | "">("");
@@ -63,11 +64,16 @@ export default function ChaptersPage() {
     const fetchChapters = async () => {
         try {
             setLoading(true);
-            const res = await getAllChapters();
-            setChapters(res.data);
-        } catch (err: any) {
-            console.error(err);
-            toast.error(err.response?.data?.message || "Failed to load chapters");
+            const [chaptersRes, subjectsRes] = await Promise.all([
+                getAllChapters(),
+                getAllSubjects()
+            ]);
+            setChapters(chaptersRes.data);
+            setSubjects(subjectsRes.data);
+        } catch (err) {
+            const error = err as { response?: { data?: { message?: string } } };
+            console.error(error);
+            toast.error(error.response?.data?.message || "Failed to load chapters");
         } finally {
             setLoading(false);
         }
@@ -93,9 +99,10 @@ export default function ChaptersPage() {
             await deleteChapter(id);
             toast.success("Chapter deleted successfully");
             fetchChapters();
-        } catch (err: any) {
-            console.error(err);
-            toast.error(err.response?.data?.message || "Failed to delete chapter");
+        } catch (err) {
+            const error = err as { response?: { data?: { message?: string } } };
+            console.error(error);
+            toast.error(error.response?.data?.message || "Failed to delete chapter");
         }
     };
 
@@ -112,7 +119,7 @@ export default function ChaptersPage() {
             setIsModalOpen(false);
             setEditingChapter(null);
             fetchChapters();
-        } catch (err: any) {
+        } catch (err) {
             throw err; // Let form handle the error
         } finally {
             setIsSubmitting(false);
@@ -136,24 +143,27 @@ export default function ChaptersPage() {
 
     // Get subject name with class context
     const getSubjectDisplayName = (chapter: ChapterResponseDto) => {
-        const subject = chapter.subjectName || `Subject ${chapter.subjectId}`;
-        const className = chapter.className ? ` [${chapter.className}]` : "";
-        return `${subject}${className}`;
+        const subject = subjects.find(s => s.id === chapter.subjectId);
+        if (subject) {
+            return `${subject.name}[${subject.className || '?'}]`;
+        }
+
+        const subjectName = chapter.subjectName || `Subject ${chapter.subjectId}`;
+        const className = chapter.className ? `[${chapter.className}]` : "";
+        return `${subjectName}${className}`;
     };
 
-    // Get unique subjects from chapters data (using enriched subjectName field)
-    const getUniqueSubjects = () => {
-        const subjectMap = new Map<number, { id: number; name: string }>();
-        chapters.forEach((chapter) => {
-            if (chapter.subjectId && chapter.subjectName) {
-                const className = chapter.className ? ` [${chapter.className}]` : "";
-                subjectMap.set(chapter.subjectId, {
-                    id: chapter.subjectId,
-                    name: `${chapter.subjectName}${className}`,
-                });
-            }
-        });
-        return Array.from(subjectMap.values());
+    // Get available subjects for filter
+    const getFilterSubjects = () => {
+        // Only show subjects that have at least one chapter
+        const subjectIdsWithChapters = new Set(chapters.map(c => c.subjectId));
+
+        return subjects
+            .filter(s => subjectIdsWithChapters.has(s.id))
+            .map(s => ({
+                id: s.id,
+                name: `${s.name}[${s.className || '?'}]`
+            }));
     };
 
     const columns: Column<ChapterResponseDto>[] = [
@@ -195,7 +205,7 @@ export default function ChaptersPage() {
             sortable: true,
             render: (item) => (
                 <span className="text-gray-600">
-                    {item.isFree ? (
+                    {item.free ? (
                         <span className="text-green-600 font-medium">Free</span>
                     ) : (
                         `৳${item.price || 0}`
@@ -287,7 +297,7 @@ export default function ChaptersPage() {
                             className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent"
                         >
                             <option value="">All Subjects</option>
-                            {getUniqueSubjects().map((subject) => (
+                            {getFilterSubjects().map((subject) => (
                                 <option key={subject.id} value={subject.id}>
                                     {subject.name}
                                 </option>

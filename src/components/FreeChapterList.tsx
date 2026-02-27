@@ -10,6 +10,7 @@ import Image from "next/image";
 import ChapterPlaceholder from "@/components/ChapterPlaceholder";
 import LoadingSpinner from "@/components/LoadingSpinner";
 import { FaPlay } from "react-icons/fa";
+import { useI18n } from "@/contexts/I18nProvider";
 
 function ChapterImage({ chapter }: { chapter: ChapterResponseDto }) {
     const [imageError, setImageError] = useState(false);
@@ -32,6 +33,7 @@ function ChapterImage({ chapter }: { chapter: ChapterResponseDto }) {
 
 export default function FreeChapterList() {
     const { isLoggedIn, user } = useAuth();
+    const { t } = useI18n();
     const [chapters, setChapters] = useState<ChapterResponseDto[]>([]);
     const [enrollmentMap, setEnrollmentMap] = useState<Map<number, number>>(new Map());
     const [loading, setLoading] = useState(true);
@@ -64,7 +66,7 @@ export default function FreeChapterList() {
     if (loading) {
         return (
             <div className="py-24">
-                <LoadingSpinner label="Finding free lessons for you..." size="lg" />
+                <LoadingSpinner label={t("home.free.loading")} size="lg" />
             </div>
         );
     }
@@ -75,7 +77,7 @@ export default function FreeChapterList() {
 
     return (
         <section className="py-16 px-6 bg-white">
-            <h2 className="text-3xl font-bold text-center mb-10">Try for Free</h2>
+            <h2 className="text-3xl font-bold text-center mb-10">{t("home.free.title")}</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
                 {chapters.map((c) => (
                     <div key={c.id} className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group border border-gray-100">
@@ -84,7 +86,7 @@ export default function FreeChapterList() {
                             <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors" />
                             <div className="absolute top-3 right-3">
                                 <span className="px-2 py-1 bg-green-600 text-[10px] font-black text-white rounded shadow-sm">
-                                    FREE
+                                    {t("home.free.badge")}
                                 </span>
                             </div>
                         </div>
@@ -109,14 +111,14 @@ export default function FreeChapterList() {
                                         href={`/student/chapters/${c.id}`}
                                         className="w-full py-3 px-4 bg-green-600 text-white rounded-lg font-black text-xs tracking-widest hover:bg-green-700 transition flex items-center justify-center gap-2 shadow-lg shadow-green-50"
                                     >
-                                        <FaPlay size={10} /> RESUME LEARNING
+                                        <FaPlay size={10} /> {t("student.dashboard.resume")}
                                     </Link>
                                 ) : (
                                     <Link
                                         href={`/chapters/${c.id}`}
                                         className="block w-full py-3 px-4 border-2 border-primary-600 text-primary-600 rounded-lg font-black text-xs tracking-widest hover:bg-primary-600 hover:text-white transition-all transform hover:-translate-y-1"
                                     >
-                                        ENROLL NOW
+                                        {t("home.free.enrollNow")}
                                     </Link>
                                 )}
                             </div>

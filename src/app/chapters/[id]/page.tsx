@@ -12,8 +12,10 @@ import Link from "next/link";
 import { FaPlayCircle, FaCheckCircle, FaLock, FaUsers, FaHourglassHalf, FaExclamationTriangle } from "react-icons/fa";
 import PaymentModal from "@/components/student/PaymentModal";
 import ChapterPlaceholder from "@/components/ChapterPlaceholder";
+import { useI18n } from "@/contexts/I18nProvider";
 
 export default function ChapterPublicPage() {
+    const { t } = useI18n();
     const params = useParams();
     const router = useRouter();
     const { isLoggedIn, user, isLoading: isAuthLoading } = useAuth();
@@ -56,20 +58,20 @@ export default function ChapterPublicPage() {
                 }
             } catch (err) {
                 console.error("Failed to fetch chapter details:", err);
-                toast.error("Failed to load chapter details.");
+                toast.error(t("chapterPublic.error"));
             } finally {
                 setLoading(false);
             }
         };
 
         fetchData();
-    }, [id, isLoggedIn, isStudent]);
+    }, [id, isLoggedIn, isStudent, t]);
 
     const handleEnroll = async () => {
         if (!chapter) return;
 
         if (!isLoggedIn) {
-            toast.info("You need to login first to enroll.");
+            toast.info(t("chapterPublic.loginToEnroll"));
             router.push(`/auth/login?returnUrl=/chapters/${chapter.id}`); // Assuming login supports returnUrl
             return;
         }
@@ -78,21 +80,21 @@ export default function ChapterPublicPage() {
             setEnrolling(true);
             try {
                 await enrollInFreeChapter(chapter.id);
-                toast.success("Enrolled successfully!");
+                toast.success(t("chapterPublic.enrollSuccess"));
                 // Re-fetch progress to show "Continue" button
                 setTimeout(() => {
                     window.location.reload();
                 }, 1000);
             } catch (error) {
                 console.error("Enrollment failed:", error);
-                toast.error("Failed to enroll. Please try again.");
+                toast.error(t("chapterPublic.enrollFailed"));
             } finally {
                 setEnrolling(false);
             }
         } else {
             // Paid chapter
             if (!isLoggedIn) {
-                toast.info("You need to login first to purchase.");
+                toast.info(t("chapterPublic.loginToPurchase"));
                 router.push(`/auth/login?returnUrl=/chapters/${chapter.id}`);
                 return;
             }
@@ -104,23 +106,23 @@ export default function ChapterPublicPage() {
     const handlePaymentSubmit = async (data: PaymentRequestDto) => {
         try {
             await submitPaymentApi(data);
-            toast.success("Payment submitted successfully! Waiting for verification.");
+            toast.success(t("chapterPublic.paymentSuccess"));
             // Refresh payment status
             const status = await getPaymentStatusForChapter(chapter!.id);
             if (status) setPayment(status as PaymentResponseDto);
             setIsPaymentModalOpen(false);
         } catch (error) {
             console.error("Payment submission failed:", error);
-            toast.error("Failed to submit payment details.");
+            toast.error(t("chapterPublic.paymentFailed"));
         }
     };
 
     if (loading || isAuthLoading) {
-        return <div className="min-h-screen pt-24 text-center">Loading chapter details...</div>;
+        return <div className="min-h-screen pt-24 text-center">{t("chapterPublic.loading")}</div>;
     }
 
     if (!chapter) {
-        return <div className="min-h-screen pt-24 text-center text-red-500">Chapter not found</div>;
+        return <div className="min-h-screen pt-24 text-center text-red-500 font-bold uppercase tracking-widest">{t("chapterPublic.notFound")}</div>;
     }
 
     return (
@@ -163,7 +165,7 @@ export default function ChapterPublicPage() {
                             <div className="absolute top-4 left-4">
                                 <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-bold rounded-lg shadow-sm flex items-center gap-1">
                                     <FaPlayCircle className="text-primary-600" />
-                                    PREVIEW
+                                    {t("chapterPublic.preview")}
                                 </span>
                             </div>
                         )}
@@ -176,7 +178,7 @@ export default function ChapterPublicPage() {
                                 href="/classes"
                                 className="px-3 py-1 bg-primary-50 text-primary-600 hover:bg-primary-100 rounded-full text-xs font-bold tracking-tight transition-colors"
                             >
-                                {chapter.className || "General"}
+                                {chapter.className || t("chapterPublic.noGeneral")}
                             </Link>
                             <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-bold tracking-tight">
                                 {chapter.subjectName}
@@ -187,28 +189,28 @@ export default function ChapterPublicPage() {
                             {chapter.title}
                         </h1>
                         <p className="text-gray-600 mb-8 leading-relaxed text-lg">
-                            {chapter.description || "Master this topic with our expert-led chapter tutorials, exclusive resources, and interactive quizzes."}
+                            {chapter.description || t("chapterPublic.fallbackDescription")}
                         </p>
 
                         <div className="grid grid-cols-2 gap-6 mb-10">
                             <div>
-                                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1 font-sans">Instructors</p>
+                                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1 font-sans">{t("chapterPublic.instructors")}</p>
                                 <div className="flex flex-wrap gap-1 items-center">
                                     <FaUsers className="text-gray-400" size={14} />
                                     <p className="font-bold text-gray-800 text-sm">
                                         {chapter.teachers && chapter.teachers.length > 0
                                             ? chapter.teachers.map(t => t.fullName).join(", ")
-                                            : "Montola Faculty"}
+                                            : t("chapterPublic.faculty")}
                                     </p>
                                 </div>
                             </div>
                             <div>
                                 <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1 font-sans">
-                                    {chapter.free ? "Status" : "Price"}
+                                    {chapter.free ? t("chapterPublic.status") : t("chapterPublic.price")}
                                 </p>
                                 <p className="text-2xl font-black text-primary-600">
                                     {chapter.free ? (
-                                        <span className="text-green-600">FREE</span>
+                                        <span className="text-green-600">{t("home.free.badge")}</span>
                                     ) : (
                                         `৳${chapter.price || 0}`
                                     )}
@@ -220,7 +222,7 @@ export default function ChapterPublicPage() {
                             <div className="space-y-4">
                                 <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
                                     <div className="flex justify-between items-center mb-2">
-                                        <span className="text-sm font-bold text-gray-700">Progress</span>
+                                        <span className="text-sm font-bold text-gray-700">{t("chapterPublic.progress")}</span>
                                         <span className="text-sm font-black text-primary-600">{Math.round(progress.progressPercentage)}%</span>
                                     </div>
                                     <div className="w-full bg-gray-200 rounded-full h-3 overflow-hidden">
@@ -234,15 +236,15 @@ export default function ChapterPublicPage() {
                                     href={`/student/chapters/${chapter.id}`}
                                     className="block w-full text-center py-4 bg-primary-600 text-white rounded-2xl font-black text-xl shadow-xl shadow-primary-200 hover:bg-primary-700 transition transform hover:-translate-y-1"
                                 >
-                                    CONTINUE LEARNING
+                                    {t("chapterPublic.continueLearning")}
                                 </Link>
                             </div>
                         ) : payment && payment.status === PaymentStatus.PENDING ? (
                             <div className="bg-blue-50 border border-blue-100 rounded-2xl p-6 text-center space-y-4">
                                 <FaHourglassHalf className="mx-auto text-blue-500 text-3xl" />
                                 <div>
-                                    <p className="text-lg font-bold text-blue-900 leading-tight">Verification Pending</p>
-                                    <p className="text-sm text-blue-700 mt-1">Please wait for admin to verify your payment. This usually takes less than 24 hours.</p>
+                                    <p className="text-lg font-bold text-blue-900 leading-tight">{t("chapterPublic.verificationPending")}</p>
+                                    <p className="text-sm text-blue-700 mt-1">{t("chapterPublic.verificationPendingSub")}</p>
                                 </div>
                             </div>
                         ) : (
@@ -251,7 +253,7 @@ export default function ChapterPublicPage() {
                                     <div className="bg-red-50 border border-red-100 rounded-xl p-4 flex items-center gap-3 mb-2">
                                         <FaExclamationTriangle className="text-red-500 flex-shrink-0" />
                                         <p className="text-xs font-medium text-red-700">
-                                            Your previous payment was rejected. Please resubmit the payment info.
+                                            {t("chapterPublic.rejected")}
                                         </p>
                                     </div>
                                 )}
@@ -264,18 +266,18 @@ export default function ChapterPublicPage() {
                                         } ${enrolling ? "opacity-70 cursor-not-allowed" : ""}`}
                                 >
                                     {enrolling ? (
-                                        "PROCESSING..."
+                                        t("chapterPublic.enrolling")
                                     ) : (
                                         <>
                                             {chapter.free ? <FaPlayCircle /> : <FaCheckCircle />}
-                                            {chapter.free ? "ENROLL NOW" : (payment && payment.status === PaymentStatus.REJECTED ? "RESUBMIT PAYMENT INFO" : "BUY THIS CHAPTER")}
+                                            {chapter.free ? t("chapterPublic.enrollNow") : (payment && payment.status === PaymentStatus.REJECTED ? t("chapterPublic.resubmitPayment") : t("chapterPublic.buyChapter"))}
                                         </>
                                     )}
                                 </button>
                                 {chapter.free && !isLoggedIn && (
                                     <div className="flex items-center justify-center gap-2 text-gray-400 bg-gray-50 py-2 rounded-xl">
                                         <FaLock size={12} />
-                                        <p className="text-xs font-bold uppercase tracking-widest">Login required to access</p>
+                                        <p className="text-xs font-bold uppercase tracking-widest">{t("chapterPublic.loginRequired")}</p>
                                     </div>
                                 )}
                             </div>
@@ -298,9 +300,9 @@ export default function ChapterPublicPage() {
 
             {/* Additional Details Section could go here */}
             <div className="max-w-5xl mx-auto mt-12 bg-white rounded-xl shadow-sm border border-gray-100 p-8">
-                <h3 className="text-xl font-bold mb-4">What you'll learn</h3>
+                <h3 className="text-xl font-bold mb-4">{t("chapterPublic.whatYouWillLearn")}</h3>
                 {/* Fallback content or fetch from structure? For public details, usually descriptive text is enough */}
-                <p className="text-gray-600">{chapter.description || "Detailed curriculum not available publicly."}</p>
+                <p className="text-gray-600">{chapter.description || t("chapterPublic.fallbackDescription")}</p>
             </div>
 
         </main>

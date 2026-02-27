@@ -10,7 +10,6 @@ import ValueProps from "@/components/ValueProps";
 import FeaturedCourses from "@/components/FeaturedCourses";
 import FreeChapterList from "@/components/FreeChapterList";
 import ClassesListSection from "@/components/ClassesListSection";
-import Testimonials from "@/components/Testimonials";
 
 export default function HomePage() {
     const router = useRouter();
@@ -62,7 +61,6 @@ export default function HomePage() {
     return (
         <main className="overflow-x-hidden">
             <Hero />
-            <ValueProps />
             <div id="featured">
                 <FeaturedCourses />
             </div>
@@ -70,7 +68,7 @@ export default function HomePage() {
                 <FreeChapterList />
             </div>
             <ClassesListSection />
-            <Testimonials />
+            <ValueProps />
         </main>
     );
 }
