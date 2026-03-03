@@ -1,7 +1,7 @@
 "use client";
 
 import { PaymentResponseDto, PaymentStatus } from "@/types";
-import { verifyPayment } from "@/lib/admin";
+import { verifyPayment, rejectPayment } from "@/lib/admin";
 import Button from "@/components/ui/Button";
 import Modal from "@/components/ui/Modal";
 import { toast } from "react-toastify";
@@ -33,6 +33,25 @@ export default function PaymentVerification({
         } catch (err: any) {
             console.error(err);
             toast.error(err.response?.data?.message || "Failed to verify payment");
+        } finally {
+            setIsVerifying(false);
+        }
+    };
+
+    const handleReject = async () => {
+        if (!confirm("Are you sure you want to reject this payment?")) {
+            return;
+        }
+
+        setIsVerifying(true);
+        try {
+            await rejectPayment(payment.id);
+            toast.success("Payment rejected");
+            setIsModalOpen(false);
+            onVerified();
+        } catch (err: any) {
+            console.error(err);
+            toast.error(err.response?.data?.message || "Failed to reject payment");
         } finally {
             setIsVerifying(false);
         }
@@ -150,6 +169,13 @@ export default function PaymentVerification({
                             disabled={isVerifying}
                         >
                             Cancel
+                        </Button>
+                        <Button
+                            variant="danger"
+                            onClick={handleReject}
+                            isLoading={isVerifying}
+                        >
+                            Reject
                         </Button>
                         <Button
                             variant="primary"

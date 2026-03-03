@@ -98,6 +98,7 @@ export const toggleChapterFreeStatus = (id: number, isFree: boolean) =>
 export const uploadChapterCoverImage = (id: number, file: File) => {
     const formData = new FormData();
     formData.append("file", file);
+
     return api.post(`/v1/chapters/${id}/cover-image`, formData, {
         headers: {
             "Content-Type": "multipart/form-data",
@@ -147,3 +148,6 @@ export const getUnverifiedPayments = () =>
 
 export const verifyPayment = (paymentId: number) =>
     api.put<PaymentResponseDto>(`/v1/payments/${paymentId}/verify`);
+
+export const rejectPayment = (paymentId: number) =>
+    api.put<PaymentResponseDto>(`/v1/payments/${paymentId}/reject`);

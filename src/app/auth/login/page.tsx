@@ -54,7 +54,7 @@ export default function LoginPage() {
             const res = await login(email, password);
 
             // The API returns AuthResponse with accessToken, refreshToken, email, fullName, roles
-            setAuthTokens(res.data);
+            await setAuthTokens(res.data);
 
             // Role-based redirect after login using centralized helpers
             const roles: string[] = Array.isArray(res.data?.roles) ? res.data.roles : [];
@@ -127,9 +127,8 @@ export default function LoginPage() {
                 <button
                     type="submit"
                     disabled={loading}
-                    className={`w-full p-2 rounded text-white ${
-                        loading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
-                    }`}
+                    className={`w-full p-2 rounded text-white ${loading ? "bg-blue-400" : "bg-blue-600 hover:bg-blue-700"
+                        }`}
                 >
                     {loading ? t("messages.loading") : t("auth.login")}
                 </button>

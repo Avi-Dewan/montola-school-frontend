@@ -23,6 +23,7 @@ import TeacherAssignment from "@/components/admin/TeacherAssignment";
 import Button from "@/components/ui/Button";
 import { toast } from "react-toastify";
 import { HiArrowLeft, HiPencil, HiCloudUpload, HiExternalLink } from "react-icons/hi";
+import ChapterPlaceholder from "@/components/ChapterPlaceholder";
 
 export default function ChapterDetailPage() {
     const router = useRouter();
@@ -213,11 +214,10 @@ export default function ChapterDetailPage() {
                                 setActiveTab(tab.id as any);
                                 setIsEditing(false);
                             }}
-                            className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
-                                activeTab === tab.id
-                                    ? "border-primary-500 text-primary-600"
-                                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
-                            }`}
+                            className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === tab.id
+                                ? "border-primary-500 text-primary-600"
+                                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                                }`}
                         >
                             {tab.label}
                         </button>
@@ -292,13 +292,12 @@ export default function ChapterDetailPage() {
                                         </dt>
                                         <dd className="mt-1">
                                             <span
-                                                className={`px-2 py-1 rounded text-xs font-medium ${
-                                                    chapterData.status === "PUBLISHED"
-                                                        ? "bg-green-100 text-green-800"
-                                                        : chapterData.status === "DRAFT"
+                                                className={`px-2 py-1 rounded text-xs font-medium ${chapterData.status === "PUBLISHED"
+                                                    ? "bg-green-100 text-green-800"
+                                                    : chapterData.status === "DRAFT"
                                                         ? "bg-yellow-100 text-yellow-800"
                                                         : "bg-gray-100 text-gray-800"
-                                                }`}
+                                                    }`}
                                             >
                                                 {chapterData.status}
                                             </span>
@@ -431,8 +430,11 @@ export default function ChapterDetailPage() {
                                         </a>
                                     </div>
                                 ) : (
-                                    <div className="flex items-center justify-center h-56 bg-gray-50 rounded-lg border border-gray-200 text-gray-600 text-sm">
-                                        No cover image uploaded yet.
+                                    <div className="h-56 bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+                                        <ChapterPlaceholder
+                                            title={chapterData.title}
+                                            subjectName={chapterData.subjectName}
+                                        />
                                     </div>
                                 )}
                             </div>
