@@ -1,10 +1,106 @@
 {
   "nav": {
     "home": "Home",
-    "courses": "Courses",
-    "teachers": "Teachers",
-    "pricing": "Pricing",
-    "about": "About Us"
+    "classes": "Classes",
+    "featuredChapters": "Featured Chapters",
+    "freeChapters": "Free Chapters",
+    "myDashboard": "My Dashboard",
+    "assignedChapters": "Assigned Chapters",
+    "myProfile": "My Profile",
+    "payments": "Payments",
+    "myChapters": "My Chapters",
+    "support": "Support"
+  },
+  "footer": {
+    "quickLinks": "Quick Links",
+    "contact": "Contact",
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address",
+    "rights": "All rights reserved.",
+    "description": "Eco-friendly EdTech for Chittagong Hill Tracts & beyond."
+  },
+  "classes": {
+    "title": "Available Classes",
+    "subtitle": "Explore our comprehensive curriculum and join the class that matches your educational goals.",
+    "exploreSubjects": "Explore Subjects",
+    "noClasses": "No classes found",
+    "noClassesSub": "We're still setting up our course catalog. Please check back soon!",
+    "loading": "Arranging our class catalog...",
+    "detailsLoading": "Fetching class details...",
+    "error": "Failed to load classes. Please try again later.",
+    "contentError": "Failed to load class content.",
+    "notFound": "Class not found",
+    "fallbackDesc": "Explore our comprehensive curriculum and dedicated resources for this academic level.",
+    "noChapters": "No chapters available yet."
+  },
+  "featuredChapters": {
+    "title": "Featured Chapters",
+    "subtitle": "Elevate your learning with our most popular and highly-rated lessons, handpicked by our expert educators.",
+    "badge": "CURATED SELECTIONS",
+    "loading": "Collecting our best chapters...",
+    "noChapters": "No featured chapters yet",
+    "noChaptersSub": "Check back soon for our top picks!",
+    "error": "Failed to load featured chapters."
+  },
+  "freeChapters": {
+    "title": "Free Chapters",
+    "subtitle": "Sample our quality. Dive into these complimentary lessons and experience the Montola School advantage before you commit.",
+    "badge": "OPEN ACCESS",
+    "loading": "Unlocked! Fetching free chapters...",
+    "noChapters": "No free chapters right now",
+    "noChaptersSub": "We're updating our free catalog. Check back soon!",
+    "error": "Failed to load free chapters.",
+    "startLearning": "Start Learning",
+    "enrollNow": "Enroll Now",
+    "freeAccess": "Free Access"
+  },
+  "chapterPublic": {
+    "loading": "Loading chapter details...",
+    "notFound": "Chapter not found",
+    "error": "Failed to load chapter details.",
+    "preview": "PREVIEW",
+    "instructors": "Instructors",
+    "faculty": "Montola Faculty",
+    "status": "Status",
+    "price": "Price",
+    "progress": "Progress",
+    "continueLearning": "CONTINUE LEARNING",
+    "verificationPending": "Verification Pending",
+    "verificationPendingSub": "Please wait for admin to verify your payment. This usually takes less than 24 hours.",
+    "rejected": "Your previous payment was rejected. Please resubmit the payment info.",
+    "enrolling": "PROCESSING...",
+    "enrollNow": "ENROLL NOW",
+    "resubmitPayment": "RESUBMIT PAYMENT INFO",
+    "buyChapter": "BUY THIS CHAPTER",
+    "loginRequired": "Login required to access",
+    "loginToEnroll": "You need to login first to enroll.",
+    "loginToPurchase": "You need to login first to purchase.",
+    "enrollSuccess": "Enrolled successfully!",
+    "enrollFailed": "Failed to enroll. Please try again.",
+    "paymentSuccess": "Payment submitted successfully! Waiting for verification.",
+    "paymentFailed": "Failed to submit payment details.",
+    "whatYouWillLearn": "What you'll learn",
+    "fallbackDescription": "Master this topic with our expert-led chapter tutorials, exclusive resources, and interactive quizzes.",
+    "noGeneral": "General"
+  },
+  "paymentModal": {
+    "title": "Complete Your Payment",
+    "chapterHeader": "Chapter",
+    "totalAmount": "Total Amount:",
+    "howToPayTitle": "How to pay",
+    "howToPayStep1": "1. Send <strong>৳ {{amount}}</strong> to our bKash Merchant number: <span className=\"font-bold underline\">{{number}}</span>",
+    "howToPayStep2": "2. Copy the <strong>Transaction ID</strong> and enter it below along with your <strong>Sender Number</strong>.",
+    "paymentMethod": "Payment Method",
+    "senderNumber": "Your bKash/Nagad Number",
+    "senderNumberPlaceholder": "e.g. 01XXXXXXXXX",
+    "transactionId": "Transaction ID",
+    "transactionIdPlaceholder": "e.g. TRX12345ABC",
+    "cancel": "Cancel",
+    "submit": "Submit Payment",
+    "errorSenderRequired": "Sender number is required",
+    "errorTxnRequired": "Transaction ID is required",
+    "errorInvalidFormat": "Invalid phone number format"
   },
   "auth": {
     "login": "Log In",
@@ -63,6 +159,7 @@
       "confirmPassword": "Confirm Password",
       "firstName": "First Name",
       "lastName": "Last Name",
+      "fullNameRequired": "Full Name is required",
       "role": "Role",
       "emailPlaceholder": "Enter your email",
       "phonePlaceholder": "01XXXXXXXXX (optional)",
@@ -84,7 +181,10 @@
   "messages": {
     "loading": "Loading...",
     "error": "Something went wrong. Please try again later.",
-    "success": "Operation completed successfully."
+    "success": "Operation completed successfully.",
+    "createdSuccess": "User created successfully",
+    "errorCreate": "Failed to create user",
+    "errorFetch": "Failed to fetch users"
   },
   "course": {
     "title": "Courses",
@@ -92,25 +192,7 @@
   },
   "teacher": {
     "title": "Teachers",
-    "noTeachers": "No teachers available."
-  },
-  "student": {
-    "title": "Students",
-    "noStudents": "No students available."
-  },
-  "admin": {
-    "dashboard": "Admin Dashboard",
-    "brand": "Montola Admin",
-    "nav": {
-      "dashboardOverview": "Dashboard Overview",
-      "classes": "Classes",
-      "subjects": "Subjects",
-      "chapters": "Chapters",
-      "featuredChapters": "Featured Chapters",
-      "purchaseVerification": "Purchase Verification"
-    }
-  },
-  "teacher": {
+    "noTeachers": "No teachers available.",
     "dashboard": "Teacher Dashboard",
     "assignedChapters": "Assigned Chapters",
     "chapterDetails": "Chapter Details",
@@ -124,6 +206,177 @@
       "lecture": "Lecture",
       "pdf": "PDF",
       "quiz": "Quiz"
+    }
+  },
+  "student": {
+    "title": "Students",
+    "noStudents": "No students available.",
+    "dashboard": {
+      "welcome": "Welcome back, {{name}}! 👋",
+      "subtitle": "Pick up where you left off.",
+      "notEnrolledTitle": "You haven't enrolled in any courses yet.",
+      "notEnrolledSubtitle": "Explore our catalog to start learning.",
+      "browseCourses": "Browse Courses",
+      "completed": "COMPLETED",
+      "inProgress": "IN PROGRESS",
+      "finished": "Finished",
+      "continueLearning": "Continue Learning",
+      "yourProgress": "Your Progress",
+      "review": "REVIEW",
+      "resume": "RESUME",
+      "recentPayments": "Recent Payments",
+      "paymentSubtitle": "Status of your course enrollments",
+      "manageAccount": "Manage Account",
+      "noPaymentHistory": "No payment history found.",
+      "chapter": "Chapter",
+      "amount": "Amount",
+      "transactionId": "Transaction ID",
+      "status": "Status",
+      "statusPending": "PENDING",
+      "statusVerified": "VERIFIED",
+      "statusRejected": "REJECTED",
+      "preparingOverview": "Preparing your chapter overview...",
+      "courseOverview": "Course Overview",
+      "readyToLearn": "Ready to learn?",
+      "selectTopic": "Select a topic from the sidebar to start watching videos or taking quizzes.",
+      "loadingCourseMaterial": "Loading course material...",
+      "courseContentNotFound": "Course content not found",
+      "pleaseLogin": "Please log in to view your dashboard.",
+      "login": "Login"
+    },
+    "profile": {
+      "title": "My Profile",
+      "subtitle": "Manage your account settings and security.",
+      "security": "Security",
+      "updatePasswordSubtitle": "Update your account password",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "confirmNewPassword": "Confirm New Password",
+      "updatePassword": "Update Password",
+      "updating": "Updating...",
+      "personalInfo": "Personal Information",
+      "registeredDetails": "Registered details",
+      "fullName": "Full Name",
+      "emailAddress": "Email Address",
+      "phoneNumber": "Phone Number",
+      "memberSince": "Member Since",
+      "imageUploadError": "File size should be less than 2MB",
+      "passwordMismatch": "New passwords do not match",
+      "passwordLength": "Password must be at least 6 characters",
+      "passwordSuccess": "Password changed successfully!",
+      "userIdNotFound": "User identity not found. Please re-login.",
+      "profilePictureSuccess": "Profile picture updated successfully!",
+      "profilePictureError": "Failed to upload profile picture.",
+      "wrongPassword": "Wrong Password",
+      "changePasswordError": "Failed to change password"
+    },
+    "contentPlayer": {
+      "fetchingContent": "Fetching your content...",
+      "accessDenied": "Access Denied",
+      "goBack": "Go Back",
+      "contentNotFound": "Content not found",
+      "lecture": "Lecture",
+      "quiz": "Quiz",
+      "referencePdf": "Reference PDF",
+      "noVideo": "No video available",
+      "lectureSummary": "Lecture Summary",
+      "pages": "Pages",
+      "instructions": "Instructions",
+      "assessmentPassed": "Assessment Passed!",
+      "assessmentFailed": "Assessment Failed",
+      "totalScore": "Total Score:",
+      "required": "Required",
+      "tryAgain": "Try Again",
+      "marks": "Marks",
+      "selectMatch": "Select match",
+      "correct": "Correct",
+      "incorrect": "Incorrect",
+      "typeAnswer": "type answer...",
+      "sampleAnswer": "Sample Answer",
+      "submitAssessment": "Submit Assessment",
+      "quizSubmitted": "Quiz results submitted.",
+      "finishedLesson": "Finished this lesson?",
+      "markComplete": "Mark as Complete",
+      "nextLesson": "Next Lesson",
+      "finishChapter": "Finish Chapter",
+      "congratulations": "Congratulations! You've completed all items in this chapter.",
+      "markedComplete": "Marked as complete!",
+      "failedMarkComplete": "Failed to mark as complete",
+      "passMessage": "Success! You passed with {{score}}/{{total}} ({{percentage}}%)",
+      "failMessage": "You did not pass. Score: {{score}}/{{total}} ({{percentage}}%). Required: {{passPercentage}}%",
+      "failedSaveResults": "Failed to save passing results",
+      "completed": "Completed",
+      "questionTypes": {
+        "MULTIPLE_CHOICE": "Multiple Choice",
+        "FILL_IN_THE_BLANK": "Fill in the Blanks",
+        "MATCHING": "Matching",
+        "WRITTEN": "Written"
+      }
+    },
+    "sidebar": {
+      "dashboard": "Dashboard",
+      "chapterProgress": "CHAPTER PROGRESS",
+      "lessons": "Lessons"
+    }
+  },
+  "admin": {
+    "dashboard": "Admin Dashboard",
+    "brand": "Montola Admin",
+    "nav": {
+      "dashboardOverview": "Dashboard Overview",
+      "users": "User Management",
+      "classes": "Classes",
+      "subjects": "Subjects",
+      "chapters": "Chapters",
+      "featuredChapters": "Featured Chapters",
+      "purchaseVerification": "Purchase Verification"
+    }
+  },
+  "home": {
+    "hero": {
+      "title": "From Zero to Infinity – Unlock Your Learning Journey",
+      "subtitle": "Interactive, affordable, and structured education for Class 6–HSC students.",
+      "startLearning": "Start Learning",
+      "exploreClasses": "Explore Classes"
+    },
+    "featured": {
+      "title": "Featured Courses",
+      "loading": "Discovering featured courses...",
+      "badge": "FEATURED",
+      "preview": "PREVIEW"
+    },
+    "free": {
+      "title": "Try for Free",
+      "loading": "Finding free lessons for you...",
+      "badge": "FREE",
+      "enrollNow": "ENROLL NOW"
+    },
+    "classes": {
+      "title": "Our Classes",
+      "loading": "Arranging our class catalog..."
+    },
+    "valueProps": {
+      "titlePart1": "Why ",
+      "titlePart2": "Montola?",
+      "description": "We are committed to providing world-class education that is accessible, engaging, and tailored to the needs of every student.",
+      "props": {
+        "teachers": {
+          "title": "Expert Teachers",
+          "desc": "Learn from verified & experienced educators dedicated to student success."
+        },
+        "learning": {
+          "title": "Structured Learning",
+          "desc": "Comprehensive, chapter-based content with interactive lessons and quizzes."
+        },
+        "affordable": {
+          "title": "Affordable & Flexible",
+          "desc": "High-quality education that fits your budget. Pay per chapter or for full courses."
+        },
+        "inclusive": {
+          "title": "Inclusive Education",
+          "desc": "Proudly serving the Chittagong Hill Tracts and beyond with culturally relevant content."
+        }
+      }
     }
   }
 }

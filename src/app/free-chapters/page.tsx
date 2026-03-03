@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import { getFreeChapters } from "@/lib/public";
 import { getMyChaptersProgress } from "@/lib/student";
-import { ChapterResponseDto, ChapterProgressResponseDto } from "@/types";
+import { ChapterResponseDto } from "@/types";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import Image from "next/image";
 import { FaUnlockAlt, FaChevronRight, FaPlayCircle, FaPlay } from "react-icons/fa";
 import ChapterPlaceholder from "@/components/ChapterPlaceholder";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { useI18n } from "@/contexts/I18nProvider";
 
 function ChapterImage({ chapter }: { chapter: ChapterResponseDto }) {
     const [imageError, setImageError] = useState(false);
@@ -31,6 +32,7 @@ function ChapterImage({ chapter }: { chapter: ChapterResponseDto }) {
 }
 
 export default function FreeChaptersPage() {
+    const { t } = useI18n();
     const { isLoggedIn, user } = useAuth();
     const [chapters, setChapters] = useState<ChapterResponseDto[]>([]);
     const [enrollmentMap, setEnrollmentMap] = useState<Map<number, number>>(new Map());
@@ -55,18 +57,18 @@ export default function FreeChaptersPage() {
                 }
             } catch (err) {
                 console.error("Failed to fetch free chapters:", err);
-                setError("Failed to load free chapters.");
+                setError(t("freeChapters.error"));
             } finally {
                 setLoading(false);
             }
         };
         fetchChapters();
-    }, [isLoggedIn, isStudent]);
+    }, [isLoggedIn, isStudent, t]);
 
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-20">
-                <LoadingSpinner label="Unlocked! Fetching free chapters..." size="lg" />
+                <LoadingSpinner label={t("freeChapters.loading")} size="lg" />
             </div>
         );
     }
@@ -76,11 +78,11 @@ export default function FreeChaptersPage() {
             <div className="max-w-6xl mx-auto">
                 <header className="mb-12 text-center text-balance">
                     <div className="inline-flex items-center gap-2 bg-green-100 text-green-700 px-4 py-1.5 rounded-full text-sm font-bold mb-4">
-                        <FaUnlockAlt /> OPEN ACCESS
+                        <FaUnlockAlt /> {t("freeChapters.badge")}
                     </div>
-                    <h1 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">Free Chapters</h1>
+                    <h1 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">{t("freeChapters.title")}</h1>
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                        Sample our quality. Dive into these complimentary lessons and experience the Montola School advantage before you commit.
+                        {t("freeChapters.subtitle")}
                     </p>
                 </header>
 
@@ -91,8 +93,8 @@ export default function FreeChaptersPage() {
                 ) : chapters.length === 0 ? (
                     <div className="text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-100">
                         <FaUnlockAlt className="w-16 h-16 text-gray-200 mx-auto mb-4" />
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">No free chapters right now</h3>
-                        <p className="text-gray-500">We're updating our free catalog. Check back soon!</p>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">{t("freeChapters.noChapters")}</h3>
+                        <p className="text-gray-500">{t("freeChapters.noChaptersSub")}</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -105,7 +107,7 @@ export default function FreeChaptersPage() {
                                 <div className="p-8 flex flex-col flex-grow">
                                     <div className="flex items-center gap-2 mb-4">
                                         <span className="text-[10px] font-black text-green-600 uppercase tracking-widest bg-green-50 px-2 py-1 rounded">
-                                            Free Access
+                                            {t("freeChapters.freeAccess")}
                                         </span>
                                         <span className="text-[10px] font-black text-gray-400 tracking-widest uppercase">
                                             {c.subjectName} {c.className && `[${c.className}]`}
@@ -122,28 +124,28 @@ export default function FreeChaptersPage() {
                                                     style={{ width: `${enrollmentMap.get(c.id)}%` }}
                                                 />
                                             </div>
-                                            <span className="text-[10px] font-black text-green-600 uppercase tracking-widest">{Math.round(enrollmentMap.get(c.id) || 0)}% Done</span>
+                                            <span className="text-[10px] font-black text-green-600 uppercase tracking-widest">{Math.round(enrollmentMap.get(c.id) || 0)}% {t("student.dashboard.finished")}</span>
                                         </div>
                                     )}
 
                                     <div className="mt-auto pt-6 border-t border-gray-50 flex items-center justify-between">
                                         <div className="flex items-center gap-2 text-gray-500 text-[10px] font-black uppercase tracking-widest">
                                             <FaPlayCircle className="text-primary-600" />
-                                            Start Learning
+                                            {t("freeChapters.startLearning")}
                                         </div>
                                         {enrollmentMap.has(c.id) ? (
                                             <Link
                                                 href={`/student/chapters/${c.id}`}
                                                 className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-xl font-black text-sm hover:bg-green-700 transition shadow-lg shadow-green-50"
                                             >
-                                                <FaPlay size={10} /> RESUME <FaChevronRight size={12} />
+                                                <FaPlay size={10} /> {t("student.dashboard.resume")} <FaChevronRight size={12} />
                                             </Link>
                                         ) : (
                                             <Link
                                                 href={`/chapters/${c.id}`}
                                                 className="inline-flex items-center gap-2 border-2 border-primary-600 text-primary-600 px-6 py-2.5 rounded-xl font-black text-sm hover:bg-primary-600 hover:text-white transition shadow-lg shadow-primary-50"
                                             >
-                                                Enroll Now <FaChevronRight size={12} />
+                                                {t("freeChapters.enrollNow")} <FaChevronRight size={12} />
                                             </Link>
                                         )}
                                     </div>

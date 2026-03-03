@@ -7,8 +7,10 @@ import { ClassStructureResponseDto } from "@/types";
 import PublicStructureTree from "@/components/PublicStructureTree";
 import ChapterPlaceholder from "@/components/ChapterPlaceholder";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { useI18n } from "@/contexts/I18nProvider";
 
 export default function ClassPage() {
+    const { t } = useI18n();
     const params = useParams();
     const id = params?.id ? Number(params.id) : null;
 
@@ -25,27 +27,27 @@ export default function ClassPage() {
                 setStructure(data);
             } catch (err) {
                 console.error("Failed to fetch class structure:", err);
-                setError("Failed to load class content.");
+                setError(t("classes.contentError"));
             } finally {
                 setLoading(false);
             }
         };
 
         fetchStructure();
-    }, [id]);
+    }, [id, t]);
 
     if (!id) return null;
 
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-20">
-                <LoadingSpinner label="Fetching class details..." size="lg" />
+                <LoadingSpinner label={t("classes.detailsLoading")} size="lg" />
             </div>
         );
     }
 
     if (error || !structure) {
-        return <div className="min-h-screen pt-24 text-center text-red-500">{error || "Class not found"}</div>;
+        return <div className="min-h-screen pt-24 text-center text-red-500 font-bold uppercase tracking-widest">{error || t("classes.notFound")}</div>;
     }
 
     return (

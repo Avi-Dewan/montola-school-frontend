@@ -23,8 +23,11 @@ export const useProgress = () => {
     return context;
 };
 
+import { useI18n } from "@/contexts/I18nProvider";
+
 export default function CourseLayout({ children }: { children: React.ReactNode }) {
     const params = useParams();
+    const { t } = useI18n();
     const chapterId = params?.id ? Number(params.id) : null;
 
     const [structure, setStructure] = useState<ChapterStructureResponseDto | null>(null);
@@ -79,7 +82,7 @@ export default function CourseLayout({ children }: { children: React.ReactNode }
     if (loading) {
         return (
             <div className="min-h-screen flex flex-col items-center justify-center bg-gray-50">
-                <LoadingSpinner label="Loading course material..." size="lg" />
+                <LoadingSpinner label={t("student.dashboard.loadingCourseMaterial")} size="lg" />
             </div>
         );
     }
@@ -87,7 +90,7 @@ export default function CourseLayout({ children }: { children: React.ReactNode }
     if (!structure) {
         return (
             <div className="min-h-screen flex items-center justify-center text-red-500 bg-gray-50">
-                Course content not found
+                {t("student.dashboard.courseContentNotFound")}
             </div>
         );
     }

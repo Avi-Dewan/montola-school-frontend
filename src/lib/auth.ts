@@ -3,8 +3,8 @@ import api from "./api";
 export const login = (email: string, password: string) =>
     api.post("/auth/login", { email, password });
 
-export const register = (email: string, password: string, roles: string[], phone?: string) =>
-    api.post("/auth/register", { email, phone, password, roles });
+export const register = (email: string, fullName: string, password: string, phone?: string) =>
+    api.post("/auth/register", { email, fullName, phone, password });
 
 export const activateAccount = (email: string, token: string) =>
     api.post("/auth/activate", { email, token });

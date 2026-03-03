@@ -3,13 +3,14 @@
 import { useEffect, useState } from "react";
 import { getFeaturedChapters } from "@/lib/public";
 import { getMyChaptersProgress } from "@/lib/student";
-import { FeaturedChapterResponseDto, ChapterProgressResponseDto } from "@/types";
+import { FeaturedChapterResponseDto } from "@/types";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import Image from "next/image";
 import { FaStar, FaChevronRight, FaPlay } from "react-icons/fa";
 import ChapterPlaceholder from "@/components/ChapterPlaceholder";
 import LoadingSpinner from "@/components/LoadingSpinner";
+import { useI18n } from "@/contexts/I18nProvider";
 
 function ChapterImage({ chapter }: { chapter: FeaturedChapterResponseDto }) {
     const [imageError, setImageError] = useState(false);
@@ -31,6 +32,7 @@ function ChapterImage({ chapter }: { chapter: FeaturedChapterResponseDto }) {
 }
 
 export default function FeaturedChaptersPage() {
+    const { t } = useI18n();
     const { isLoggedIn, user } = useAuth();
     const [chapters, setChapters] = useState<FeaturedChapterResponseDto[]>([]);
     const [enrollmentMap, setEnrollmentMap] = useState<Map<number, number>>(new Map());
@@ -55,18 +57,18 @@ export default function FeaturedChaptersPage() {
                 }
             } catch (err) {
                 console.error("Failed to fetch featured chapters:", err);
-                setError("Failed to load featured chapters.");
+                setError(t("featuredChapters.error"));
             } finally {
                 setLoading(false);
             }
         };
         fetchChapters();
-    }, [isLoggedIn, isStudent]);
+    }, [isLoggedIn, isStudent, t]);
 
     if (loading) {
         return (
             <div className="min-h-screen flex items-center justify-center bg-gray-50 pt-20">
-                <LoadingSpinner label="Collecting our best chapters..." size="lg" />
+                <LoadingSpinner label={t("featuredChapters.loading")} size="lg" />
             </div>
         );
     }
@@ -76,11 +78,11 @@ export default function FeaturedChaptersPage() {
             <div className="max-w-6xl mx-auto">
                 <header className="mb-12 text-center">
                     <div className="inline-flex items-center gap-2 bg-yellow-100 text-yellow-700 px-4 py-1.5 rounded-full text-sm font-bold mb-4">
-                        <FaStar /> CURATED SELECTIONS
+                        <FaStar /> {t("featuredChapters.badge")}
                     </div>
-                    <h1 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">Featured Chapters</h1>
+                    <h1 className="text-4xl font-extrabold text-gray-900 mb-4 tracking-tight">{t("featuredChapters.title")}</h1>
                     <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-                        Elevate your learning with our most popular and highly-rated lessons, handpicked by our expert educators.
+                        {t("featuredChapters.subtitle")}
                     </p>
                 </header>
 
@@ -91,8 +93,8 @@ export default function FeaturedChaptersPage() {
                 ) : chapters.length === 0 ? (
                     <div className="text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-100">
                         <FaStar className="w-16 h-16 text-gray-200 mx-auto mb-4" />
-                        <h3 className="text-xl font-bold text-gray-900 mb-2">No featured chapters yet</h3>
-                        <p className="text-gray-500">Check back soon for our top picks!</p>
+                        <h3 className="text-xl font-bold text-gray-900 mb-2">{t("featuredChapters.noChapters")}</h3>
+                        <p className="text-gray-500">{t("featuredChapters.noChaptersSub")}</p>
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -119,27 +121,27 @@ export default function FeaturedChaptersPage() {
                                                     style={{ width: `${enrollmentMap.get(c.chapterId)}%` }}
                                                 />
                                             </div>
-                                            <span className="text-[10px] font-black text-green-600 uppercase tracking-widest">{Math.round(enrollmentMap.get(c.chapterId) || 0)}% Done</span>
+                                            <span className="text-[10px] font-black text-green-600 uppercase tracking-widest">{Math.round(enrollmentMap.get(c.chapterId) || 0)}% {t("student.dashboard.finished")}</span>
                                         </div>
                                     )}
 
                                     <div className="mt-auto pt-6 border-t border-gray-50 flex items-center justify-between">
                                         <p className="text-2xl font-black text-primary-600">
-                                            {c.free ? "FREE" : `৳${c.price}`}
+                                            {c.free ? t("home.free.badge") : `৳${c.price}`}
                                         </p>
                                         {enrollmentMap.has(c.chapterId) ? (
                                             <Link
                                                 href={`/student/chapters/${c.chapterId}`}
                                                 className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-xl font-black text-sm tracking-tight hover:bg-green-700 transition shadow-lg shadow-green-100"
                                             >
-                                                <FaPlay size={10} /> RESUME
+                                                <FaPlay size={10} /> {t("student.dashboard.resume")}
                                             </Link>
                                         ) : (
                                             <Link
                                                 href={`/chapters/${c.chapterId}`}
                                                 className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-2.5 rounded-xl font-black text-sm tracking-tight hover:bg-primary-700 transition shadow-lg shadow-primary-100"
                                             >
-                                                PREVIEW <FaChevronRight size={12} />
+                                                {t("home.featured.preview")} <FaChevronRight size={12} />
                                             </Link>
                                         )}
                                     </div>

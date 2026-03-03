@@ -7,7 +7,8 @@ import Button from "@/components/ui/Button";
 import Select from "@/components/ui/Select";
 import { PaymentRequestDto } from "@/types";
 import { toast } from "react-toastify";
-import { FaMobileAlt, FaMoneyBillWave, FaExchangeAlt } from "react-icons/fa";
+import { useI18n } from "@/contexts/I18nProvider";
+import schoolInfo from "@/config/schoolInfo.json";
 
 interface PaymentModalProps {
     isOpen: boolean;
@@ -26,6 +27,7 @@ export default function PaymentModal({
     amount,
     onSubmit,
 }: PaymentModalProps) {
+    const { t } = useI18n();
     const [formData, setFormData] = useState<Omit<PaymentRequestDto, "chapterId" | "amount">>({
         transactionId: "",
         senderNumber: "",
@@ -36,12 +38,12 @@ export default function PaymentModal({
 
     const validate = () => {
         const newErrors: Record<string, string> = {};
-        if (!formData.senderNumber) newErrors.senderNumber = "Sender number is required";
-        if (!formData.transactionId) newErrors.transactionId = "Transaction ID is required";
+        if (!formData.senderNumber) newErrors.senderNumber = t("paymentModal.errorSenderRequired");
+        if (!formData.transactionId) newErrors.transactionId = t("paymentModal.errorTxnRequired");
 
         // Simple BD phone number validation
         if (formData.senderNumber && !/^(01)[3-9][0-9]{8}$/.test(formData.senderNumber)) {
-            newErrors.senderNumber = "Invalid phone number format";
+            newErrors.senderNumber = t("paymentModal.errorInvalidFormat");
         }
 
         setErrors(newErrors);
@@ -62,7 +64,7 @@ export default function PaymentModal({
             // Success state handling is left to the parent's onSubmit implementation
         } catch (err: any) {
             console.error("Payment submission failed:", err);
-            toast.error(err.response?.data?.message || "Failed to submit payment.");
+            toast.error(err.response?.data?.message || t("chapterPublic.paymentFailed"));
         } finally {
             setLoading(false);
         }
@@ -75,30 +77,30 @@ export default function PaymentModal({
     ];
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} title="Complete Your Payment" size="md">
+        <Modal isOpen={isOpen} onClose={onClose} title={t("paymentModal.title")} size="md">
             <div className="space-y-6 p-1">
                 <div className="bg-primary-50 p-4 rounded-xl border border-primary-100">
-                    <p className="text-sm text-primary-700 font-medium mb-1">Chapter</p>
+                    <p className="text-sm text-primary-700 font-medium mb-1">{t("paymentModal.chapterHeader")}</p>
                     <p className="text-lg font-bold text-primary-900">{chapterTitle}</p>
                     <div className="mt-3 flex items-center justify-between">
-                        <span className="text-sm text-gray-600">Total Amount:</span>
+                        <span className="text-sm text-gray-600">{t("paymentModal.totalAmount")}</span>
                         <span className="text-xl font-black text-primary-600">৳ {amount}</span>
                     </div>
                 </div>
 
                 <div className="bg-yellow-50 p-4 rounded-xl border border-yellow-100 space-y-2">
-                    <p className="text-xs font-bold text-yellow-800 uppercase tracking-widest">How to pay</p>
-                    <p className="text-sm text-yellow-900">
-                        1. Send <strong>৳ {amount}</strong> to our bKash Merchant number: <span className="font-bold underline">017XXXXXXXX</span>
-                    </p>
-                    <p className="text-sm text-yellow-900">
-                        2. Copy the <strong>Transaction ID</strong> and enter it below along with your <strong>Sender Number</strong>.
-                    </p>
+                    <p className="text-xs font-bold text-yellow-800 uppercase tracking-widest">{t("paymentModal.howToPayTitle")}</p>
+                    <p className="text-sm text-yellow-900"
+                        dangerouslySetInnerHTML={{ __html: t("paymentModal.howToPayStep1", { amount, number: schoolInfo.paymentNumbers.bkashMerchant }) }}
+                    />
+                    <p className="text-sm text-yellow-900"
+                        dangerouslySetInnerHTML={{ __html: t("paymentModal.howToPayStep2") }}
+                    />
                 </div>
 
                 <form onSubmit={handleSubmit} className="space-y-4">
                     <Select
-                        label="Payment Method"
+                        label={t("paymentModal.paymentMethod")}
                         value={formData.paymentMethod}
                         onChange={(e) => setFormData({ ...formData, paymentMethod: e.target.value })}
                         options={paymentMethods}
@@ -106,8 +108,8 @@ export default function PaymentModal({
                     />
 
                     <Input
-                        label="Your bKash/Nagad Number"
-                        placeholder="e.g. 01712345678"
+                        label={t("paymentModal.senderNumber")}
+                        placeholder={t("paymentModal.senderNumberPlaceholder")}
                         value={formData.senderNumber}
                         onChange={(e) => setFormData({ ...formData, senderNumber: e.target.value })}
                         error={errors.senderNumber}
@@ -115,8 +117,8 @@ export default function PaymentModal({
                     />
 
                     <Input
-                        label="Transaction ID"
-                        placeholder="e.g. TRX12345ABC"
+                        label={t("paymentModal.transactionId")}
+                        placeholder={t("paymentModal.transactionIdPlaceholder")}
                         value={formData.transactionId}
                         onChange={(e) => setFormData({ ...formData, transactionId: e.target.value })}
                         error={errors.transactionId}
@@ -131,7 +133,7 @@ export default function PaymentModal({
                             className="flex-1"
                             disabled={loading}
                         >
-                            Cancel
+                            {t("paymentModal.cancel")}
                         </Button>
                         <Button
                             type="submit"
@@ -139,7 +141,7 @@ export default function PaymentModal({
                             className="flex-1"
                             isLoading={loading}
                         >
-                            Submit Payment
+                            {t("paymentModal.submit")}
                         </Button>
                     </div>
                 </form>

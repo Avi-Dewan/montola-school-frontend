@@ -11,7 +11,8 @@ import {
     HiCash,
     HiMenu,
     HiX,
-    HiStar
+    HiStar,
+    HiUserGroup
 } from "react-icons/hi";
 
 interface NavItem {
@@ -31,6 +32,7 @@ export default function AdminSidebar({ isMobileOpen, onMobileToggle }: AdminSide
 
     const navItems: NavItem[] = [
         { href: "/admin", labelKey: "admin.nav.dashboardOverview", icon: HiHome },
+        { href: "/admin/users", labelKey: "admin.nav.users", icon: HiUserGroup },
         { href: "/admin/classes", labelKey: "admin.nav.classes", icon: HiBookOpen },
         { href: "/admin/subjects", labelKey: "admin.nav.subjects", icon: HiLibrary },
         { href: "/admin/chapters", labelKey: "admin.nav.chapters", icon: HiDocumentText },
