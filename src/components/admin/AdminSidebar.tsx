@@ -57,8 +57,15 @@ export default function AdminSidebar({ isMobileOpen, onMobileToggle }: AdminSide
             >
                 <div className="flex flex-col h-full">
                     {/* Logo/Brand with mobile close button */}
-                    <div className="p-6 border-b border-gray-200 flex items-center justify-between">
-                        <h2 className="text-xl font-bold text-primary-500">{t("admin.brand")}</h2>
+                    <div className="p-6 border-b border-gray-200 flex items-center justify-between group">
+                        <Link href="/admin" className="flex items-center gap-3">
+                            <img
+                                src="/montola-logo.png"
+                                alt="Montola Logo"
+                                className="w-8 h-8 rounded-lg object-cover shadow-sm group-hover:scale-105 transition-transform"
+                            />
+                            <h2 className="text-xl font-black text-primary-600 tracking-tight">{t("admin.brand")}</h2>
+                        </Link>
                         <button
                             onClick={onMobileToggle}
                             className="md:hidden text-gray-600 hover:text-gray-800"

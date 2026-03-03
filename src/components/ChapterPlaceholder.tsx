@@ -64,6 +64,13 @@ const ChapterPlaceholder: React.FC<ChapterPlaceholderProps> = ({
             {/* Abstract Decorative Elements */}
             <div className="absolute top-4 right-4 w-20 h-20 bg-white/5 rounded-full blur-2xl"></div>
             <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-black/5 rounded-full blur-3xl"></div>
+
+            {/* Subtle Brand Watermark */}
+            <img
+                src="/montola-logo.png"
+                alt=""
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 md:w-48 md:h-48 object-contain opacity-[0.04] pointer-events-none grayscale invert contrast-150 transition-transform duration-700 group-hover:scale-110"
+            />
         </div>
     );
 };
