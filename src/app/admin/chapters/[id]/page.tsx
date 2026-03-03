@@ -215,8 +215,8 @@ export default function ChapterDetailPage() {
                                 setIsEditing(false);
                             }}
                             className={`py-4 px-1 border-b-2 font-medium text-sm transition-colors ${activeTab === tab.id
-                                    ? "border-primary-500 text-primary-600"
-                                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                                ? "border-primary-500 text-primary-600"
+                                : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
                                 }`}
                         >
                             {tab.label}
@@ -293,10 +293,10 @@ export default function ChapterDetailPage() {
                                         <dd className="mt-1">
                                             <span
                                                 className={`px-2 py-1 rounded text-xs font-medium ${chapterData.status === "PUBLISHED"
-                                                        ? "bg-green-100 text-green-800"
-                                                        : chapterData.status === "DRAFT"
-                                                            ? "bg-yellow-100 text-yellow-800"
-                                                            : "bg-gray-100 text-gray-800"
+                                                    ? "bg-green-100 text-green-800"
+                                                    : chapterData.status === "DRAFT"
+                                                        ? "bg-yellow-100 text-yellow-800"
+                                                        : "bg-gray-100 text-gray-800"
                                                     }`}
                                             >
                                                 {chapterData.status}
