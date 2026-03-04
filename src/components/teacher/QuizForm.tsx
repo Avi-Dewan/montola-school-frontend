@@ -591,7 +591,7 @@ export default function QuizForm({
                     </div>
                 ) : (
                     <p className="text-gray-500 text-center py-4">
-                        No questions added yet. Click "Add Question" to get started.
+                        No questions added yet. Click &quot;Add Question&quot; to get started.
                     </p>
                 )}
             </div>

@@ -2,7 +2,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 
 const api = axios.create({
-    baseURL: "http://localhost:8080/api",
+    baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api",
 });
 
 // Attach access token to every request (if available)
@@ -23,7 +23,7 @@ const forceLogout = () => {
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("user");
-        
+
     } catch (e) {
         console.error("Failed to clear auth data during logout:", e);
     }

@@ -6,7 +6,15 @@ export default function Hero() {
 
     return (
         <section className="bg-gradient-to-r from-primary-400 to-primary-500 text-white py-32 px-6 text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6">
+            {/* White container for brand visibility on green background */}
+            <div className="w-24 h-24 mx-auto mb-8 bg-white rounded-full flex items-center justify-center shadow-2xl p-4 animate-in fade-in zoom-in duration-700 ring-4 ring-white/30">
+                <img
+                    src="/montola-logo.png"
+                    alt="Montola School Logo"
+                    className="w-full h-full object-contain"
+                />
+            </div>
+            <h1 className="text-4xl md:text-6xl font-black mb-6 tracking-tight">
                 {t("home.hero.title")}
             </h1>
             <p className="text-lg md:text-xl mb-8">

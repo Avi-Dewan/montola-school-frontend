@@ -21,7 +21,7 @@ function ChapterImage({ chapter }: { chapter: any }) {
 
     return (
         <Image
-            src={`http://localhost:8080/api/v1/chapters/${chapter.chapterId || chapter.id}/cover-image`}
+            src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/v1/chapters/${chapter.chapterId || chapter.id}/cover-image`}
             alt={chapter.title}
             fill
             className="object-cover transition-transform duration-500 group-hover:scale-110"

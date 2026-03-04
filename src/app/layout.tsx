@@ -10,6 +10,9 @@ import NextTopLoader from "nextjs-toploader";
 export const metadata = {
   title: "Montola School",
   description: "Learning Platform",
+  icons: {
+    icon: "/montola-logo.png",
+  },
 };
 
 export default function RootLayout({
