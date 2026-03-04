@@ -16,7 +16,7 @@ function ChapterImageIcon({ chapterId, title }: { chapterId: number, title: stri
         <div className="relative w-12 h-12 rounded-lg overflow-hidden border border-gray-100 flex-shrink-0 shadow-sm transition-transform group-hover:scale-105 duration-300">
             {!imageError ? (
                 <Image
-                    src={`http://localhost:8080/api/v1/chapters/${chapterId}/cover-image`}
+                    src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/v1/chapters/${chapterId}/cover-image`}
                     alt={title}
                     fill
                     className="object-cover"
