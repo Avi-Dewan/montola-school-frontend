@@ -145,7 +145,7 @@ export default function ChapterPublicPage() {
                             <div className="relative aspect-video w-full h-full min-h-[300px] overflow-hidden">
                                 {!imageError ? (
                                     <Image
-                                        src={`http://localhost:8080/api/v1/chapters/${chapter.id}/cover-image`}
+                                        src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/v1/chapters/${chapter.id}/cover-image`}
                                         alt={chapter.title}
                                         fill
                                         className="object-cover transition-transform duration-700 group-hover:scale-105"

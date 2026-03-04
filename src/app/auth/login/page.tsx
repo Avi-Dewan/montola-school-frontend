@@ -77,14 +77,21 @@ export default function LoginPage() {
         <div className="flex items-center justify-center min-h-screen bg-gray-100">
             <form
                 onSubmit={handleSubmit}
-                className="bg-white shadow-lg p-8 rounded-xl w-96"
+                className="bg-white shadow-lg p-8 rounded-xl w-96 flex flex-col items-center"
             >
-                <h1 className="text-2xl font-bold mb-6">{t("auth.login")}</h1>
+                <Link href="/">
+                    <img
+                        src="/montola-logo.png"
+                        alt="Montola School Logo"
+                        className="w-20 h-20 rounded-2xl object-cover shadow-md mb-6 hover:scale-105 transition-transform"
+                    />
+                </Link>
+                <h1 className="text-2xl font-bold mb-6 text-gray-800 self-start">{t("auth.login")}</h1>
 
                 {errors.general && <Alert type="error" message={errors.general} />}
 
                 {/* email */}
-                <div className="mb-4">
+                <div className="mb-4 w-full">
                     <label className="block mb-1 font-semibold">
                         {t("form.user.email")} <span className="text-red-500">*</span>
                     </label>
@@ -101,7 +108,7 @@ export default function LoginPage() {
                 </div>
 
                 {/* password */}
-                <div className="mb-4">
+                <div className="mb-4 w-full">
                     <label className="block mb-1 font-semibold">
                         {t("form.user.password")} <span className="text-red-500">*</span>
                     </label>
@@ -118,7 +125,7 @@ export default function LoginPage() {
                 </div>
 
                 {/* Forgot password link */}
-                <div className="text-right mb-4">
+                <div className="text-right mb-4 w-full">
                     <Link href="/auth/forgot-password" className="text-blue-600 text-sm hover:underline">
                         {t("auth.forgotPassword")}
                     </Link>

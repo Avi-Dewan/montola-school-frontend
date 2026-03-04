@@ -5,6 +5,7 @@ import { register } from "@/lib/auth";
 import { useI18n } from "@/contexts/I18nProvider";
 import { Alert } from "@/components/Alert";
 import { toast } from "react-toastify";
+import Link from "next/link";
 
 export default function RegisterPage() {
     const [email, setEmail] = useState("");
@@ -91,80 +92,97 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className="flex items-center justify-center min-h-screen bg-gray-100">
-            <form className="bg-white shadow-lg p-8 rounded-xl w-96" onSubmit={handleSubmit}>
-                <h1 className="text-2xl font-bold mb-6">Register</h1>
+        <div className="flex items-center justify-center min-h-screen bg-gray-100 py-12">
+            <form className="bg-white shadow-lg p-8 rounded-xl w-96 flex flex-col items-center" onSubmit={handleSubmit}>
+                <Link href="/">
+                    <img
+                        src="/montola-logo.png"
+                        alt="Montola School Logo"
+                        className="w-20 h-20 rounded-2xl object-cover shadow-md mb-6 hover:scale-105 transition-transform"
+                    />
+                </Link>
+                <h1 className="text-2xl font-bold mb-6 text-gray-800 self-start">Register</h1>
 
                 {errors.general && <Alert type="error" message={errors.general} />}
 
                 {/* Full Name */}
-                <label className="block mb-1 font-semibold">
-                    Full Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                    type="text"
-                    value={fullName}
-                    placeholder="Enter your full name"
-                    onChange={(e) => setFullName(e.target.value)}
-                    className="w-full mb-2 p-2 border rounded"
-                    required
-                />
-                {errors.fullName && <p className="text-red-500 mb-2">{errors.fullName}</p>}
+                <div className="w-full">
+                    <label className="block mb-1 font-semibold">
+                        Full Name <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="text"
+                        value={fullName}
+                        placeholder="Enter your full name"
+                        onChange={(e) => setFullName(e.target.value)}
+                        className="w-full mb-2 p-2 border rounded"
+                        required
+                    />
+                    {errors.fullName && <p className="text-red-500 mb-2">{errors.fullName}</p>}
+                </div>
 
                 {/* Email */}
-                <label className="block mb-1 font-semibold">
-                    {t("form.user.email")} <span className="text-red-500">*</span>
-                </label>
-                <input
-                    type="email"
-                    value={email}
-                    placeholder={t("form.user.emailPlaceholder")}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full mb-2 p-2 border rounded"
-                    required
-                />
-                {errors.email && <p className="text-red-500 mb-2">{errors.email}</p>}
+                <div className="w-full">
+                    <label className="block mb-1 font-semibold">
+                        {t("form.user.email")} <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="email"
+                        value={email}
+                        placeholder={t("form.user.emailPlaceholder")}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full mb-2 p-2 border rounded"
+                        required
+                    />
+                    {errors.email && <p className="text-red-500 mb-2">{errors.email}</p>}
+                </div>
 
                 {/* Phone (optional) */}
-                <label className="block mb-1 font-semibold">
-                    {t("form.user.phone")}
-                </label>
-                <input
-                    type="text"
-                    value={phone}
-                    placeholder={t("form.user.phonePlaceholder")}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full mb-2 p-2 border rounded"
-                />
-                {errors.phone && <p className="text-red-500 mb-2">{errors.phone}</p>}
+                <div className="w-full">
+                    <label className="block mb-1 font-semibold">
+                        {t("form.user.phone")}
+                    </label>
+                    <input
+                        type="text"
+                        value={phone}
+                        placeholder={t("form.user.phonePlaceholder")}
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="w-full mb-2 p-2 border rounded"
+                    />
+                    {errors.phone && <p className="text-red-500 mb-2">{errors.phone}</p>}
+                </div>
 
                 {/* Password */}
-                <label className="block mb-1 font-semibold">
-                    {t("form.user.password")} <span className="text-red-500">*</span>
-                </label>
-                <input
-                    type="password"
-                    value={password}
-                    placeholder={t("form.user.passwordPlaceholder")}
-                    onChange={(e) => setPassword(e.target.value)}
-                    className="w-full mb-2 p-2 border rounded"
-                    required
-                />
-                {errors.password && <p className="text-red-500 mb-2">{errors.password}</p>}
+                <div className="w-full">
+                    <label className="block mb-1 font-semibold">
+                        {t("form.user.password")} <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="password"
+                        value={password}
+                        placeholder={t("form.user.passwordPlaceholder")}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="w-full mb-2 p-2 border rounded"
+                        required
+                    />
+                    {errors.password && <p className="text-red-500 mb-2">{errors.password}</p>}
+                </div>
 
                 {/* Confirm Password */}
-                <label className="block mb-1 font-semibold">
-                    {t("form.user.confirmPassword")} <span className="text-red-500">*</span>
-                </label>
-                <input
-                    type="password"
-                    value={confirmPassword}
-                    placeholder={t("form.user.confirmPasswordPlaceholder")}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full mb-2 p-2 border rounded"
-                    required
-                />
-                {errors.confirmPassword && <p className="text-red-500 mb-2">{errors.confirmPassword}</p>}
+                <div className="w-full">
+                    <label className="block mb-1 font-semibold">
+                        {t("form.user.confirmPassword")} <span className="text-red-500">*</span>
+                    </label>
+                    <input
+                        type="password"
+                        value={confirmPassword}
+                        placeholder={t("form.user.confirmPasswordPlaceholder")}
+                        onChange={(e) => setConfirmPassword(e.target.value)}
+                        className="w-full mb-2 p-2 border rounded"
+                        required
+                    />
+                    {errors.confirmPassword && <p className="text-red-500 mb-2">{errors.confirmPassword}</p>}
+                </div>
 
                 {password && confirmPassword && password !== confirmPassword && (
                     <p className="text-red-500 mb-2">{t("auth.passwordMismatch")}</p>

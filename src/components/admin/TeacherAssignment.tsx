@@ -46,7 +46,7 @@ export default function TeacherAssignment({
     };
 
     const handleAssign = async () => {
-        if (!selectedTeacherId || selectedTeacherId === "") {
+        if (!selectedTeacherId) {
             toast.error("Please select a teacher");
             return;
         }

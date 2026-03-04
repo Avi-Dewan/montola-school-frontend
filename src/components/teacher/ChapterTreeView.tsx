@@ -267,7 +267,7 @@ export default function ChapterTreeView({
                 </div>
             ) : (
                 <div className="text-center py-8 text-gray-500">
-                    <p>No topics yet. Click "Add Topic" to get started.</p>
+                    <p>No topics yet. Click &quot;Add Topic&quot; to get started.</p>
                 </div>
             )}
 
@@ -307,8 +307,8 @@ export default function ChapterTreeView({
                     editingContent
                         ? `Edit ${editingContent.type}`
                         : selectedContentType
-                        ? `Add ${selectedContentType}`
-                        : "Add Content"
+                            ? `Add ${selectedContentType}`
+                            : "Add Content"
                 }
                 size="lg"
             >

@@ -11,7 +11,7 @@ export default function Testimonials() {
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 {testimonials.map((t) => (
                     <div key={t.name} className="bg-white p-6 rounded-lg shadow hover:shadow-lg transition">
-                        <p className="text-gray-700 mb-4">"{t.text}"</p>
+                        <p className="text-gray-700 mb-4">&quot;{t.text}&quot;</p>
                         <p className="font-semibold text-green-600">- {t.name}</p>
                     </div>
                 ))}

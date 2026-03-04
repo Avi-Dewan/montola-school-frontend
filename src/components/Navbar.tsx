@@ -273,8 +273,15 @@ export default function Navbar() {
     return (
         <nav className="sticky top-0 bg-white shadow-md z-50">
             <div className="max-w-7xl mx-auto flex justify-between items-center py-4 px-6">
-                <Link href="/" className="text-2xl font-bold text-primary-500 hover:text-primary-600 transition-colors">
-                    Montola School
+                <Link href="/" className="flex items-center gap-3 hover:opacity-90 transition-opacity">
+                    <img
+                        src="/montola-logo.png"
+                        alt="Montola School Logo"
+                        className="w-10 h-10 rounded-lg object-cover shadow-sm border border-gray-100"
+                    />
+                    <span className="text-2xl font-black text-primary-600 tracking-tight hidden sm:block">
+                        Montola School
+                    </span>
                 </Link>
 
                 {/* Desktop links */}

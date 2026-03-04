@@ -21,7 +21,17 @@ export default function Footer() {
         <footer className="bg-primary-700 text-white py-16 px-6">
             <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
                 <div className="space-y-4">
-                    <h3 className="text-2xl font-black tracking-tight">Montola School</h3>
+                    <div className="flex items-center gap-3">
+                        {/* High contrast wrapper for dark backgrounds */}
+                        <div className="w-12 h-12 bg-white rounded-full p-2 flex items-center justify-center shadow-lg border border-white/20">
+                            <img
+                                src="/montola-logo.png"
+                                alt="Montola School Logo"
+                                className="w-full h-full object-contain"
+                            />
+                        </div>
+                        <h3 className="text-2xl font-black tracking-tighter">Montola School</h3>
+                    </div>
                     <p className="text-blue-100/80 leading-relaxed max-w-sm">
                         {t("footer.description")}
                     </p>
