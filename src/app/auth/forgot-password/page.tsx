@@ -1,11 +1,11 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { toast } from "react-toastify";
-import { useI18n } from "@/contexts/I18nProvider";
 import { Alert } from "@/components/Alert";
+import { useI18n } from "@/contexts/I18nProvider";
 import { requestPasswordReset } from "@/lib/auth";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 export default function ForgotPasswordPage() {
     const [email, setEmail] = useState("");
@@ -33,7 +33,7 @@ export default function ForgotPasswordPage() {
 
             if (res.status === 200) {
                 setSuccess(true);
-                toast.success(t("auth.resetLinkSent"));
+                toast.success(t("auth.resetLinkSentCheckEmail"));
             }
 
         } catch (err: any) {

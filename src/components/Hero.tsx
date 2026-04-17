@@ -14,10 +14,10 @@ export default function Hero() {
                     className="w-full h-full object-contain"
                 />
             </div>
-            <h1 className="text-4xl md:text-6xl font-black mb-6 tracking-tight">
+            <h1 className="text-3xl md:text-4xl font-semibold mb-6 tracking-tight">
                 {t("home.hero.title")}
             </h1>
-            <p className="text-lg md:text-xl mb-8">
+            <p className="text-xl md:text-2xl mb-10 text-white/90 max-w-3xl mx-auto">
                 {t("home.hero.subtitle")}
             </p>
             <div className="flex justify-center space-x-4">
