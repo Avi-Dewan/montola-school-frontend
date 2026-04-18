@@ -2,14 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { getChapterPublicDetails } from "@/lib/public";
+import { getChapterPublicDetails, getChapterPublicStructure } from "@/lib/public";
 import { getChapterProgress, enrollInFreeChapter, getPaymentStatusForChapter, submitPayment as submitPaymentApi } from "@/lib/student";
 import { ChapterResponseDto, ChapterProgressResponseDto, PaymentResponseDto, PaymentStatus, PaymentRequestDto } from "@/types";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
-import { FaPlayCircle, FaCheckCircle, FaLock, FaUsers, FaHourglassHalf, FaExclamationTriangle } from "react-icons/fa";
+import { FaPlayCircle, FaCheckCircle, FaLock, FaUsers, FaHourglassHalf, FaExclamationTriangle, FaChevronDown, FaChevronUp, FaFilePdf, FaQuestionCircle, FaVideo } from "react-icons/fa";
 import PaymentModal from "@/components/student/PaymentModal";
 import ChapterPlaceholder from "@/components/ChapterPlaceholder";
 import { useI18n } from "@/contexts/I18nProvider";
@@ -22,11 +22,14 @@ export default function ChapterPublicPage() {
     const id = params?.id ? Number(params.id) : null;
 
     const [chapter, setChapter] = useState<ChapterResponseDto | null>(null);
+    const [structure, setStructure] = useState<any | null>(null);
     const [progress, setProgress] = useState<ChapterProgressResponseDto | null>(null);
     const [payment, setPayment] = useState<PaymentResponseDto | null>(null);
     const [loading, setLoading] = useState(true);
     const [enrolling, setEnrolling] = useState(false);
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
+    const [expandedTopics, setExpandedTopics] = useState<Set<number>>(new Set());
+    const [isHighlighting, setIsHighlighting] = useState(false);
 
     const [imageError, setImageError] = useState(false);
 
@@ -38,8 +41,18 @@ export default function ChapterPublicPage() {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                const chapterData = await getChapterPublicDetails(id);
+                const [chapterData, structureData] = await Promise.all([
+                    getChapterPublicDetails(id),
+                    getChapterPublicStructure(id).catch(() => null)
+                ]);
+                
                 setChapter(chapterData);
+                setStructure(structureData);
+                
+                if (structureData?.topics) {
+                    setExpandedTopics(new Set(structureData.topics.map((t: any) => t.id)));
+                }
+                
                 setImageError(false); // Reset error state on new data
 
                 // If logged in as student, check enrollment/progress and payment status
@@ -117,6 +130,40 @@ export default function ChapterPublicPage() {
         }
     };
 
+    const toggleTopic = (topicId: number) => {
+        const next = new Set(expandedTopics);
+        if (next.has(topicId)) next.delete(topicId);
+        else next.add(topicId);
+        setExpandedTopics(next);
+    };
+
+    const handleContentClick = () => {
+        if (!isLoggedIn) {
+            toast.info(t("chapterPublic.loginRequired"));
+            router.push(`/auth/login?returnUrl=/chapters/${id}`);
+        } else if (!progress) {
+            if (chapter?.free) {
+                toast.info(t("chapterPublic.enrollToAccess"));
+            } else {
+                toast.warning(t("chapterPublic.buyToAccess"));
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setIsHighlighting(true);
+            setTimeout(() => setIsHighlighting(false), 4000);
+        } else {
+            router.push(`/student/chapters/${id}`);
+        }
+    };
+
+    const getContentIcon = (type: string) => {
+        switch (type) {
+            case "LECTURE": return <FaVideo className="text-blue-500" />;
+            case "PDF": return <FaFilePdf className="text-red-500" />;
+            case "QUIZ": return <FaQuestionCircle className="text-green-500" />;
+            default: return <FaPlayCircle className="text-gray-400" />;
+        }
+    };
+
     if (loading || isAuthLoading) {
         return <div className="min-h-screen pt-24 text-center">{t("chapterPublic.loading")}</div>;
     }
@@ -185,12 +232,28 @@ export default function ChapterPublicPage() {
                             </span>
                         </div>
 
-                        <h1 className="text-4xl font-black text-gray-900 mb-4 leading-tight uppercase tracking-tight">
+                        <h1 className="text-3xl font-black text-gray-900 mb-6 leading-tight tracking-tight">
                             {chapter.title}
                         </h1>
-                        <p className="text-gray-600 mb-8 leading-relaxed text-lg">
-                            {chapter.description || t("chapterPublic.fallbackDescription")}
-                        </p>
+
+                        <div className="mb-8">
+                            <ul className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-4">
+                                {[
+                                    { key: 'live', icon: <FaVideo className="text-primary-500" /> },
+                                    { key: 'sheets', icon: <FaFilePdf className="text-primary-500" /> },
+                                    { key: 'webapp', icon: <FaCheckCircle className="text-primary-500" /> },
+                                    { key: 'notice', icon: <FaCheckCircle className="text-primary-500" /> },
+                                    { key: 'exams', icon: <FaCheckCircle className="text-primary-500" /> }
+                                ].map((feature) => (
+                                    <li key={feature.key} className="flex items-center gap-2.5 text-gray-600 font-semibold text-xs tracking-tight">
+                                        <div className="flex-shrink-0 w-4 h-4 flex items-center justify-center">
+                                            {feature.icon}
+                                        </div>
+                                        {t(`chapterPublic.features.${feature.key}`)}
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
 
                         <div className="grid grid-cols-2 gap-6 mb-10">
                             <div>
@@ -260,9 +323,10 @@ export default function ChapterPublicPage() {
                                 <button
                                     onClick={handleEnroll}
                                     disabled={enrolling}
-                                    className={`w-full py-5 rounded-2xl font-black text-xl shadow-2xl transition transform hover:-translate-y-1 flex items-center justify-center gap-3 ${chapter.free
-                                        ? "bg-green-600 text-white hover:bg-green-700 shadow-green-100"
-                                        : "bg-primary-600 text-white hover:bg-primary-700 shadow-primary-100"
+                                    className={`w-full py-5 rounded-2xl font-black text-xl shadow-2xl transition-all duration-300 flex items-center justify-center gap-3 ${isHighlighting ? "scale-105 ring-4 ring-primary-300 shadow-primary-200" : ""
+                                        } ${chapter.free
+                                            ? "bg-green-600 text-white hover:bg-green-700 shadow-green-100"
+                                            : "bg-primary-600 text-white hover:bg-primary-700 shadow-primary-100"
                                         } ${enrolling ? "opacity-70 cursor-not-allowed" : ""}`}
                                 >
                                     {enrolling ? (
@@ -286,6 +350,67 @@ export default function ChapterPublicPage() {
                 </div>
             </div>
 
+            {/* Description Section */}
+            <div className="max-w-5xl mx-auto mt-12 px-2 md:px-0">
+                <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-8">
+                    <h3 className="text-xl font-bold mb-4 text-gray-900">{t("chapterPublic.whatYouWillLearn")}</h3>
+                    <p className="text-gray-600 leading-relaxed text-base">
+                        {chapter.description || t("chapterPublic.fallbackDescription")}
+                    </p>
+                </div>
+            </div>
+
+            {/* Syllabus Section */}
+            {structure && (
+                <div className="max-w-5xl mx-auto mt-12 bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div className="bg-gray-50 px-8 py-6 border-b border-gray-100">
+                        <h3 className="text-2xl font-black text-gray-900 tracking-tight">Syllabus</h3>
+                        <p className="text-sm text-gray-500 font-medium">{structure.topics?.length || 0} Topics • {structure.topics?.reduce((acc: number, t: any) => acc + (t.contentItems?.length || 0), 0)} Items</p>
+                    </div>
+                    <div className="divide-y divide-gray-100">
+                        {structure.topics?.map((topic: any) => (
+                            <div key={topic.id} className="bg-white">
+                                <button
+                                    onClick={() => toggleTopic(topic.id)}
+                                    className="w-full px-8 py-5 flex items-center justify-between hover:bg-gray-50 transition-colors group text-left"
+                                >
+                                    <div className="flex items-center gap-4">
+                                        <h4 className="font-bold text-gray-800 text-lg group-hover:text-primary-600 transition-colors">{topic.title}</h4>
+                                    </div>
+                                    <div className="flex items-center gap-4">
+                                        <span className="text-xs font-black text-gray-400 uppercase tracking-widest">{topic.contentItems?.length || 0} items</span>
+                                        {expandedTopics.has(topic.id) ? <FaChevronUp className="text-gray-300" /> : <FaChevronDown className="text-gray-300" />}
+                                    </div>
+                                </button>
+                                
+                                {expandedTopics.has(topic.id) && (
+                                    <div className="px-8 pb-5 space-y-2">
+                                        {topic.contentItems?.map((item: any) => (
+                                            <button
+                                                key={item.id}
+                                                onClick={handleContentClick}
+                                                className="w-full flex items-center justify-between p-4 rounded-xl border border-gray-50 hover:border-primary-100 hover:bg-primary-50/30 transition-all group"
+                                            >
+                                                <div className="flex items-center gap-4">
+                                                    <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform">
+                                                        {getContentIcon(item.type)}
+                                                    </div>
+                                                    <div className="text-left">
+                                                        <p className="font-bold text-gray-700 text-sm group-hover:text-primary-600 transition-colors">{item.title}</p>
+                                                        <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">{item.type}</p>
+                                                    </div>
+                                                </div>
+                                                <FaLock className="text-gray-200 group-hover:text-primary-200 transition-colors" size={12} />
+                                            </button>
+                                        ))}
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            )}
+
             {/* Payment Modal */}
             {chapter && (
                 <PaymentModal
@@ -297,14 +422,6 @@ export default function ChapterPublicPage() {
                     onSubmit={handlePaymentSubmit}
                 />
             )}
-
-            {/* Additional Details Section could go here */}
-            <div className="max-w-5xl mx-auto mt-12 bg-white rounded-xl shadow-sm border border-gray-100 p-8">
-                <h3 className="text-xl font-bold mb-4">{t("chapterPublic.whatYouWillLearn")}</h3>
-                {/* Fallback content or fetch from structure? For public details, usually descriptive text is enough */}
-                <p className="text-gray-600">{chapter.description || t("chapterPublic.fallbackDescription")}</p>
-            </div>
-
         </main>
     );
 }

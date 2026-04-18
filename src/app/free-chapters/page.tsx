@@ -99,7 +99,11 @@ export default function FreeChaptersPage() {
                 ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {chapters.map((c) => (
-                            <div key={c.id} className="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col">
+                            <Link
+                                key={c.id}
+                                href={enrollmentMap.has(c.id) ? `/student/chapters/${c.id}` : `/chapters/${c.id}`}
+                                className="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col"
+                            >
                                 <div className="aspect-video relative overflow-hidden bg-gray-100">
                                     <ChapterImage chapter={c} />
                                     <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors" />
@@ -134,23 +138,21 @@ export default function FreeChaptersPage() {
                                             {t("freeChapters.startLearning")}
                                         </div>
                                         {enrollmentMap.has(c.id) ? (
-                                            <Link
-                                                href={`/student/chapters/${c.id}`}
+                                            <span
                                                 className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-xl font-black text-sm hover:bg-green-700 transition shadow-lg shadow-green-50"
                                             >
                                                 <FaPlay size={10} /> {t("student.dashboard.resume")} <FaChevronRight size={12} />
-                                            </Link>
+                                            </span>
                                         ) : (
-                                            <Link
-                                                href={`/chapters/${c.id}`}
+                                            <span
                                                 className="inline-flex items-center gap-2 border-2 border-primary-600 text-primary-600 px-6 py-2.5 rounded-xl font-black text-sm hover:bg-primary-600 hover:text-white transition shadow-lg shadow-primary-50"
                                             >
                                                 {t("freeChapters.enrollNow")} <FaChevronRight size={12} />
-                                            </Link>
+                                            </span>
                                         )}
                                     </div>
                                 </div>
-                            </div>
+                            </Link>
                         ))}
                     </div>
                 )}

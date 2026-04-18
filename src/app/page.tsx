@@ -61,13 +61,13 @@ export default function HomePage() {
     return (
         <main className="overflow-x-hidden">
             <Hero />
-            <div id="featured">
-                <FeaturedCourses />
-            </div>
+            <ClassesListSection />
             <div id="free">
                 <FreeChapterList />
             </div>
-            <ClassesListSection />
+            <div id="featured">
+                <FeaturedCourses />
+            </div>
             <ValueProps />
         </main>
     );

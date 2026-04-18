@@ -1,9 +1,9 @@
 "use client";
 
-import { useEffect, useState } from "react";
 import { getAllClasses } from "@/lib/public";
 import { ClassResponseDto } from "@/types";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 import ChapterPlaceholder from "./ChapterPlaceholder";
 import LoadingSpinner from "./LoadingSpinner";
 
@@ -41,28 +41,39 @@ export default function ClassesListSection() {
     }
 
     return (
-        <section className="py-16 px-6 bg-gray-50">
-            <h2 className="text-3xl font-bold text-center mb-10">{t("home.classes.title")}</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
+        <section className="py-20 px-6 bg-gray-50">
+            <div className="text-center mb-12">
+                <h2 className="text-3xl font-bold text-gray-900 mb-4 tracking-tight">
+                    {t("home.classes.title")}
+                </h2>
+                <p className="text-gray-600 max-w-2xl mx-auto text-lg leading-relaxed">
+                    {t("home.classes.subtitle")}
+                </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-6xl mx-auto">
                 {classes.map((c) => (
                     <Link
                         key={c.id}
                         href={`/classes/${c.id}`}
-                        className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 block group"
+                        className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group border border-gray-100"
                     >
-                        <div className="aspect-video relative overflow-hidden bg-gray-100">
+                        <div className="aspect-video relative overflow-hidden bg-gray-100 block">
                             <ChapterPlaceholder title={c.name} className="!p-4" />
                             <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors" />
                         </div>
-                        <div className="p-6 text-center">
-                            <h3 className="text-xl font-black text-gray-900 group-hover:text-primary-600 transition uppercase tracking-tight leading-tight mb-2">
-                                {c.name}
-                            </h3>
-                            {c.description && (
-                                <p className="text-gray-500 text-xs font-medium line-clamp-2 leading-relaxed">
-                                    {c.description}
-                                </p>
-                            )}
+                        <div className="p-6 flex flex-col flex-grow text-center">
+                            <h3 className="text-xl font-bold mb-1 group-hover:text-primary-600 transition line-clamp-1 tracking-tight">{c.name}</h3>
+                            <p className="text-gray-400 text-[10px] font-black tracking-widest uppercase mb-4">Montola School</p>
+                            <p className="text-gray-600 mb-6 line-clamp-2 text-sm leading-relaxed">
+                                {c.description || t("classes.fallbackDesc")}
+                            </p>
+                            <div className="mt-auto">
+                                <span
+                                    className="block w-full py-3 px-4 border-2 border-primary-600 text-primary-600 rounded-lg font-black text-xs tracking-widest group-hover:bg-primary-600 group-hover:text-white transition-all transform group-hover:-translate-y-1 text-center"
+                                >
+                                    VIEW CLASS
+                                </span>
+                            </div>
                         </div>
                     </Link>
                 ))}

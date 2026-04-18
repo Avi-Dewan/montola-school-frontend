@@ -52,13 +52,13 @@ export default function ClassPage() {
 
     return (
         <main className="min-h-screen bg-gray-50 pt-24 pb-16 px-6">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-6xl mx-auto">
                 <div className="mb-12 overflow-hidden rounded-3xl shadow-xl shadow-gray-200 border border-gray-100">
                     <div className="aspect-[21/9] md:aspect-[3/1] relative">
                         <ChapterPlaceholder title={structure.name} />
                     </div>
                     <div className="bg-white p-8 md:p-10 text-center">
-                        <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-6 tracking-tight uppercase">{structure.name}</h1>
+                        <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6 tracking-tight">{structure.name}</h1>
                         {structure.description && (
                             <p className="text-lg text-gray-600 max-w-2xl mx-auto leading-relaxed font-medium">{structure.description}</p>
                         )}
