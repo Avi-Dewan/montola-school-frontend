@@ -82,9 +82,15 @@
     "paymentFailed": "Failed to submit payment details.",
     "whatYouWillLearn": "What you'll learn",
     "fallbackDescription": "Master this topic with our expert-led chapter tutorials, exclusive resources, and interactive quizzes.",
-    "noGeneral": "General"
-  },
-  "paymentModal": {
+    "noGeneral": "General",
+    "features": {
+      "live": "Live classes",
+      "sheets": "Lecture sheets",
+      "webapp": "Dedicated webapp",
+      "notice": "Exclusive notice board feature",
+      "exams": "World class exam system"
+    }
+  },  "paymentModal": {
     "title": "Complete Your Payment",
     "chapterHeader": "Chapter",
     "totalAmount": "Total Amount:",
