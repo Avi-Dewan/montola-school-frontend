@@ -80,8 +80,9 @@
     "enrollFailed": "Failed to enroll. Please try again.",
     "paymentSuccess": "Payment submitted successfully! Waiting for verification.",
     "paymentFailed": "Failed to submit payment details.",
-    "whatYouWillLearn": "What you'll learn",
-    "fallbackDescription": "Master this topic with our expert-led chapter tutorials, exclusive resources, and interactive quizzes.",
+    "enrollToAccess": "You need to enroll to access this content.",
+    "buyToAccess": "You need to purchase this chapter to access this content.",
+    "whatYouWillLearn": "What you'll learn",    "fallbackDescription": "Master this topic with our expert-led chapter tutorials, exclusive resources, and interactive quizzes.",
     "noGeneral": "General",
     "features": {
       "live": "Live classes",

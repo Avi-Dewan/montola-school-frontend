@@ -29,6 +29,7 @@ export default function ChapterPublicPage() {
     const [enrolling, setEnrolling] = useState(false);
     const [isPaymentModalOpen, setIsPaymentModalOpen] = useState(false);
     const [expandedTopics, setExpandedTopics] = useState<Set<number>>(new Set());
+    const [isHighlighting, setIsHighlighting] = useState(false);
 
     const [imageError, setImageError] = useState(false);
 
@@ -141,7 +142,14 @@ export default function ChapterPublicPage() {
             toast.info(t("chapterPublic.loginRequired"));
             router.push(`/auth/login?returnUrl=/chapters/${id}`);
         } else if (!progress) {
-            toast.warning(t("chapterPublic.buyChapter"));
+            if (chapter?.free) {
+                toast.info(t("chapterPublic.enrollToAccess"));
+            } else {
+                toast.warning(t("chapterPublic.buyToAccess"));
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+            setIsHighlighting(true);
+            setTimeout(() => setIsHighlighting(false), 4000);
         } else {
             router.push(`/student/chapters/${id}`);
         }
@@ -315,9 +323,10 @@ export default function ChapterPublicPage() {
                                 <button
                                     onClick={handleEnroll}
                                     disabled={enrolling}
-                                    className={`w-full py-5 rounded-2xl font-black text-xl shadow-2xl transition transform hover:-translate-y-1 flex items-center justify-center gap-3 ${chapter.free
-                                        ? "bg-green-600 text-white hover:bg-green-700 shadow-green-100"
-                                        : "bg-primary-600 text-white hover:bg-primary-700 shadow-primary-100"
+                                    className={`w-full py-5 rounded-2xl font-black text-xl shadow-2xl transition-all duration-300 flex items-center justify-center gap-3 ${isHighlighting ? "scale-105 ring-4 ring-primary-300 shadow-primary-200" : ""
+                                        } ${chapter.free
+                                            ? "bg-green-600 text-white hover:bg-green-700 shadow-green-100"
+                                            : "bg-primary-600 text-white hover:bg-primary-700 shadow-primary-100"
                                         } ${enrolling ? "opacity-70 cursor-not-allowed" : ""}`}
                                 >
                                     {enrolling ? (
