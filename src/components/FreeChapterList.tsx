@@ -77,11 +77,15 @@ export default function FreeChapterList() {
 
     return (
         <section className="py-16 px-6 bg-white">
-            <h2 className="text-3xl font-bold text-center mb-10">{t("home.free.title")}</h2>
+            <h2 className="text-3xl font-bold text-center mb-10 tracking-tight">{t("home.free.title")}</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
                 {chapters.map((c) => (
-                    <div key={c.id} className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group border border-gray-100">
-                        <div className="aspect-video relative overflow-hidden bg-gray-100">
+                    <Link
+                        key={c.id}
+                        href={enrollmentMap.has(c.id) ? `/student/chapters/${c.id}` : `/chapters/${c.id}`}
+                        className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group border border-gray-100"
+                    >
+                        <div className="aspect-video relative overflow-hidden bg-gray-100 block">
                             <ChapterImage chapter={c} />
                             <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors" />
                             <div className="absolute top-3 right-3">
@@ -107,23 +111,21 @@ export default function FreeChapterList() {
                                     </div>
                                 )}
                                 {enrollmentMap.has(c.id) ? (
-                                    <Link
-                                        href={`/student/chapters/${c.id}`}
-                                        className="w-full py-3 px-4 bg-green-600 text-white rounded-lg font-black text-xs tracking-widest hover:bg-green-700 transition flex items-center justify-center gap-2 shadow-lg shadow-green-50"
+                                    <span
+                                        className="w-full py-3 px-4 bg-green-600 text-white rounded-lg font-black text-xs tracking-widest group-hover:bg-green-700 transition flex items-center justify-center gap-2 shadow-lg shadow-green-50"
                                     >
                                         <FaPlay size={10} /> {t("student.dashboard.resume")}
-                                    </Link>
+                                    </span>
                                 ) : (
-                                    <Link
-                                        href={`/chapters/${c.id}`}
-                                        className="block w-full py-3 px-4 border-2 border-primary-600 text-primary-600 rounded-lg font-black text-xs tracking-widest hover:bg-primary-600 hover:text-white transition-all transform hover:-translate-y-1"
+                                    <span
+                                        className="block w-full py-3 px-4 border-2 border-primary-600 text-primary-600 rounded-lg font-black text-xs tracking-widest group-hover:bg-primary-600 group-hover:text-white transition-all transform group-hover:-translate-y-1"
                                     >
                                         {t("home.free.enrollNow")}
-                                    </Link>
+                                    </span>
                                 )}
                             </div>
                         </div>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </section>

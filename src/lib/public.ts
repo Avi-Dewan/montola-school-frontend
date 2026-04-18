@@ -26,6 +26,11 @@ export const getClassPublicStructure = async (id: number) => {
     return response.data;
 };
 
+export const getChapterPublicStructure = async (id: number) => {
+    const response = await api.get<any>(`/v1/chapters/${id}/public-structure`);
+    return response.data;
+};
+
 export const getChapterPublicDetails = async (id: number) => {
     const response = await api.get<ChapterResponseDto>(`/v1/chapters/${id}/public`);
     return response.data;

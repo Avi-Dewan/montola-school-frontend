@@ -80,11 +80,18 @@
     "enrollFailed": "Failed to enroll. Please try again.",
     "paymentSuccess": "Payment submitted successfully! Waiting for verification.",
     "paymentFailed": "Failed to submit payment details.",
-    "whatYouWillLearn": "What you'll learn",
-    "fallbackDescription": "Master this topic with our expert-led chapter tutorials, exclusive resources, and interactive quizzes.",
-    "noGeneral": "General"
-  },
-  "paymentModal": {
+    "enrollToAccess": "You need to enroll to access this content.",
+    "buyToAccess": "You need to purchase this chapter to access this content.",
+    "whatYouWillLearn": "What you'll learn",    "fallbackDescription": "Master this topic with our expert-led chapter tutorials, exclusive resources, and interactive quizzes.",
+    "noGeneral": "General",
+    "features": {
+      "live": "Live classes",
+      "sheets": "Lecture sheets",
+      "webapp": "Dedicated webapp",
+      "notice": "Exclusive notice board feature",
+      "exams": "World class exam system"
+    }
+  },  "paymentModal": {
     "title": "Complete Your Payment",
     "chapterHeader": "Chapter",
     "totalAmount": "Total Amount:",
@@ -334,13 +341,13 @@
   },
   "home": {
     "hero": {
-      "title": "From Zero to Infinity – Unlock Your Learning Journey",
-      "subtitle": "Interactive, affordable, and structured education for Class 6–HSC students.",
+      "title": "Redefining how true learning happens",
+      "subtitle": "In a world of memorized answers, we are building a home for curious minds. At Montola School, we don't just teach the 'How'—we empower every child to demand the 'Why'",
       "startLearning": "Start Learning",
       "exploreClasses": "Explore Classes"
     },
     "featured": {
-      "title": "Featured Courses",
+      "title": "Featured Chapters",
       "loading": "Discovering featured courses...",
       "badge": "FEATURED",
       "preview": "PREVIEW"
@@ -352,29 +359,27 @@
       "enrollNow": "ENROLL NOW"
     },
     "classes": {
-      "title": "Our Classes",
+      "title": "Available Classes",
+      "subtitle": "Select a Class you want to explore",
       "loading": "Arranging our class catalog..."
     },
     "valueProps": {
-      "titlePart1": "Why ",
-      "titlePart2": "Montola?",
-      "description": "We are committed to providing world-class education that is accessible, engaging, and tailored to the needs of every student.",
+      "titlePart1": "Why we founded ",
+      "titlePart2": "Montola School?",
+      "descriptionPart1": "There is a story behind every initiative. Behind Montola School lies a journey born from the landscapes and spirit of the Chittagong Hill Tracts —it’s about ",
+      "descriptionPart2": "redefining how learning happens",
       "props": {
-        "teachers": {
-          "title": "Expert Teachers",
-          "desc": "Learn from verified & experienced educators dedicated to student success."
+        "why": {
+          "title": "Start With Why",
+          "desc": "Instead of just teaching students what the answer is, we guide them to see why that answer is the only logical conclusion."
         },
-        "learning": {
-          "title": "Structured Learning",
-          "desc": "Comprehensive, chapter-based content with interactive lessons and quizzes."
+        "personalized": {
+          "title": "Personalized learning",
+          "desc": "Because everyone learns differently, teaching works best when it is made just for you."
         },
-        "affordable": {
-          "title": "Affordable & Flexible",
-          "desc": "High-quality education that fits your budget. Pay per chapter or for full courses."
-        },
-        "inclusive": {
-          "title": "Inclusive Education",
-          "desc": "Proudly serving the Chittagong Hill Tracts and beyond with culturally relevant content."
+        "reciprocal": {
+          "title": "Reciprocal teaching",
+          "desc": "When you have to explain a concept to someone else, your brain organizes the information more clearly, making the lesson much harder to forget."
         }
       }
     }

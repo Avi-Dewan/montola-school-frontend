@@ -410,16 +410,18 @@ export default function ChapterDetailPage() {
                                 </div>
 
                                 {coverImageLoading ? (
-                                    <div className="flex items-center justify-center h-56 bg-gray-50 rounded-lg border border-gray-200">
+                                    <div className="flex items-center justify-center aspect-video bg-gray-50 rounded-lg border border-gray-200">
                                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-500"></div>
                                     </div>
                                 ) : coverImageUrl ? (
                                     <div className="space-y-3">
-                                        <img
-                                            src={coverImageUrl}
-                                            alt="Chapter cover"
-                                            className="w-full h-56 object-cover rounded-lg border border-gray-200"
-                                        />
+                                        <div className="aspect-video relative overflow-hidden rounded-lg border border-gray-200">
+                                            <img
+                                                src={coverImageUrl}
+                                                alt="Chapter cover"
+                                                className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
+                                            />
+                                        </div>
                                         <a
                                             href={coverImageUrl}
                                             target="_blank"
@@ -430,7 +432,7 @@ export default function ChapterDetailPage() {
                                         </a>
                                     </div>
                                 ) : (
-                                    <div className="h-56 bg-gray-50 rounded-lg border border-gray-200 overflow-hidden">
+                                    <div className="aspect-video bg-gray-50 rounded-lg border border-gray-200 overflow-hidden relative">
                                         <ChapterPlaceholder
                                             title={chapterData.title}
                                             subjectName={chapterData.subjectName}

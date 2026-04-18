@@ -77,14 +77,18 @@ export default function FeaturedCourses() {
 
     return (
         <section className="py-20 px-6 bg-gray-50">
-            <h2 className="text-3xl font-bold text-center mb-12">{t("home.featured.title")}</h2>
+            <h2 className="text-3xl font-bold text-center mb-12 tracking-tight">{t("home.featured.title")}</h2>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
                 {chapters.map((c) => (
-                    <div key={c.id} className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group border border-gray-100">
-                        <div className="aspect-video relative overflow-hidden bg-gray-100">
+                    <Link
+                        key={c.id}
+                        href={enrollmentMap.has(c.chapterId) ? `/student/chapters/${c.chapterId}` : `/chapters/${c.chapterId}`}
+                        className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group border border-gray-100"
+                    >
+                        <div className="aspect-video relative overflow-hidden bg-gray-100 block">
                             <ChapterImage chapter={c} />
                             <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors" />
-                            <div className="absolute top-3 left-3">
+                            <div className="absolute top-3 right-3">
                                 <span className="px-2 py-1 bg-white/90 backdrop-blur-sm text-[10px] font-black text-primary-600 rounded shadow-sm">
                                     {t("home.featured.badge")}
                                 </span>
@@ -114,23 +118,21 @@ export default function FeaturedCourses() {
                                     )}
                                 </p>
                                 {enrollmentMap.has(c.chapterId) ? (
-                                    <Link
-                                        href={`/student/chapters/${c.chapterId}`}
-                                        className="py-2.5 px-6 bg-green-600 text-white rounded-lg font-black text-xs tracking-widest hover:bg-green-700 transition shadow-lg shadow-green-100 flex items-center gap-2"
+                                    <span
+                                        className="py-2.5 px-6 bg-green-600 text-white rounded-lg font-black text-xs tracking-widest group-hover:bg-green-700 transition shadow-lg shadow-green-100 flex items-center gap-2"
                                     >
                                         <FaPlay size={10} /> {t("student.dashboard.resume")}
-                                    </Link>
+                                    </span>
                                 ) : (
-                                    <Link
-                                        href={`/chapters/${c.chapterId}`}
-                                        className="py-2.5 px-6 bg-primary-600 text-white rounded-lg font-black text-xs tracking-widest hover:bg-primary-700 transition shadow-lg shadow-primary-100"
+                                    <span
+                                        className="py-2.5 px-6 bg-primary-600 text-white rounded-lg font-black text-xs tracking-widest group-hover:bg-primary-700 transition shadow-lg shadow-primary-100 text-center"
                                     >
                                         {t("home.featured.preview")}
-                                    </Link>
+                                    </span>
                                 )}
                             </div>
                         </div>
-                    </div>
+                    </Link>
                 ))}
             </div>
         </section>

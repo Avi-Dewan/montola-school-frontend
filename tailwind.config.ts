@@ -24,8 +24,8 @@ const config: Config = {
                 accent: "#ffffff",
             },
             fontFamily: {
-                sans: ['"Poppins"', "ui-sans-serif", "system-ui"],
-                heading: ['"Poppins"', "ui-sans-serif", "system-ui"],
+                sans: ["var(--font-poppins)", "ui-sans-serif", "system-ui"],
+                heading: ["var(--font-poppins)", "ui-sans-serif", "system-ui"],
             },
         },
     },
