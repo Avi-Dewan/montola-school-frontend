@@ -293,6 +293,7 @@ export default function Navbar() {
                             <Link href="/classes" className={getLinkClass("/classes")}>{t("nav.classes")}</Link>
                             <Link href="/featured-chapters" className={getLinkClass("/featured-chapters")}>{t("nav.featuredChapters")}</Link>
                             <Link href="/free-chapters" className={getLinkClass("/free-chapters")}>{t("nav.freeChapters")}</Link>
+                            <Link href="/resources" className={getLinkClass("/resources")}>{t("nav.resources")}</Link>
                         </>
                     )}
 
@@ -347,6 +348,7 @@ export default function Navbar() {
                                 <Link href="/classes" onClick={() => setIsOpen(false)} className={getLinkClass("/classes", "py-1")}>{t("nav.classes")}</Link>
                                 <Link href="/featured-chapters" onClick={() => setIsOpen(false)} className={getLinkClass("/featured-chapters", "py-1")}>{t("nav.featuredChapters")}</Link>
                                 <Link href="/free-chapters" onClick={() => setIsOpen(false)} className={getLinkClass("/free-chapters", "py-1")}>{t("nav.freeChapters")}</Link>
+                                <Link href="/resources" onClick={() => setIsOpen(false)} className={getLinkClass("/resources", "py-1")}>{t("nav.resources")}</Link>
                             </>
                         )}
 
