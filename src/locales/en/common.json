@@ -32,7 +32,18 @@
     "contentError": "Failed to load class content.",
     "notFound": "Class not found",
     "fallbackDesc": "Explore our comprehensive curriculum and dedicated resources for this academic level.",
-    "noChapters": "No chapters available yet."
+    "subjectFallbackDesc": "Explore the published chapters and learning materials for this subject.",
+    "viewChapters": "View Chapters",
+    "chapter": "Chapter",
+    "chapters": "Chapters",
+    "subject": "Subject",
+    "noSubjects": "No subjects available yet",
+    "noSubjectsSub": "We're still organizing the subjects for this class.",
+    "subjectLoading": "Fetching subject details...",
+    "subjectContentError": "Failed to load subject content.",
+    "subjectNotFound": "Subject not found",
+    "noChapters": "No chapters available yet.",
+    "noChaptersSub": "We're still preparing the chapters for this subject."
   },
   "featuredChapters": {
     "title": "Featured Chapters",

@@ -9,7 +9,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "react-toastify";
 import Image from "next/image";
 import Link from "next/link";
-import { FaPlayCircle, FaCheckCircle, FaLock, FaUsers, FaHourglassHalf, FaExclamationTriangle, FaChevronDown, FaChevronUp, FaFilePdf, FaQuestionCircle, FaVideo } from "react-icons/fa";
+import { FaPlayCircle, FaCheckCircle, FaLock, FaUsers, FaHourglassHalf, FaExclamationTriangle, FaChevronDown, FaChevronUp, FaChevronRight, FaFilePdf, FaQuestionCircle, FaVideo } from "react-icons/fa";
 import PaymentModal from "@/components/student/PaymentModal";
 import ChapterPlaceholder from "@/components/ChapterPlaceholder";
 import { useI18n } from "@/contexts/I18nProvider";
@@ -177,12 +177,12 @@ export default function ChapterPublicPage() {
             <div className="max-w-5xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="md:flex">
                     {/* Visual Section */}
-                    <div className="md:w-1/2 relative bg-gray-900 group">
+                    <div className="md:w-1/2 relative bg-gray-900 group flex items-center justify-center">
                         {chapter.videoId ? (
-                            <div className="aspect-video w-full h-full min-h-[300px]">
+                            <div className="aspect-video w-full">
                                 <iframe
-                                    className="w-full h-full"
-                                    src={`https://www.youtube.com/embed/${chapter.videoId}`}
+                                    className="w-full h-full border-0"
+                                    src={`https://www.youtube.com/embed/${chapter.videoId}?modestbranding=1&rel=0`}
                                     title="Chapter Preview"
                                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                     allowFullScreen
@@ -220,17 +220,24 @@ export default function ChapterPublicPage() {
 
                     {/* Content Section */}
                     <div className="p-10 md:w-1/2 flex flex-col justify-center bg-white">
-                        <div className="flex flex-wrap items-center gap-2 mb-6">
-                            <Link
-                                href="/classes"
-                                className="px-3 py-1 bg-primary-50 text-primary-600 hover:bg-primary-100 rounded-full text-xs font-bold tracking-tight transition-colors"
-                            >
-                                {chapter.className || t("chapterPublic.noGeneral")}
-                            </Link>
-                            <span className="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-bold tracking-tight">
-                                {chapter.subjectName}
-                            </span>
-                        </div>
+                        {/* Breadcrumb */}
+                        <nav className="inline-flex flex-wrap items-center gap-2 text-xs mb-6 bg-gray-50 border border-gray-200 rounded-full px-4 py-2" aria-label="Breadcrumb">
+                            {chapter.classId && (
+                                <Link href={`/classes/${chapter.classId}`} className="text-gray-500 hover:text-primary-600 transition-colors font-semibold">
+                                    {chapter.className || t("chapterPublic.noGeneral")}
+                                </Link>
+                            )}
+                            {chapter.subjectId && chapter.classId && (
+                                <>
+                                    <FaChevronRight className="text-gray-400" size={9} />
+                                    <Link href={`/classes/${chapter.classId}/subjects/${chapter.subjectId}`} className="text-gray-500 hover:text-primary-600 transition-colors font-semibold">
+                                        {chapter.subjectName}
+                                    </Link>
+                                </>
+                            )}
+                            <FaChevronRight className="text-gray-400" size={9} />
+                            <span className="text-gray-900 font-bold truncate max-w-[140px]">{chapter.title}</span>
+                        </nav>
 
                         <h1 className="text-3xl font-black text-gray-900 mb-6 leading-tight tracking-tight">
                             {chapter.title}
