@@ -352,8 +352,8 @@
   },
   "home": {
     "hero": {
-      "title": "Redefining how true learning happens",
-      "subtitle": "In a world of memorized answers, we are building a home for curious minds. At Montola School, we don't just teach the 'How'—we empower every child to demand the 'Why'",
+      "title": "Redefining how true learning happens.",
+      "subtitle": "In a world of memorized answers, we are building a home for curious minds. At Montola School, we don't just teach the 'How'—we empower every child to demand the 'Why’.",
       "startLearning": "Start Learning",
       "exploreClasses": "Explore Classes"
     },
@@ -365,6 +365,7 @@
     },
     "free": {
       "title": "Try for Free",
+      "subtitle": "Our free resources represent how we build our contents for students.",
       "loading": "Finding free lessons for you...",
       "badge": "FREE",
       "enrollNow": "ENROLL NOW"
@@ -375,10 +376,10 @@
       "loading": "Arranging our class catalog..."
     },
     "valueProps": {
-      "titlePart1": "Why we founded ",
+      "titlePart1": "Why we started ",
       "titlePart2": "Montola School?",
       "descriptionPart1": "There is a story behind every initiative. Behind Montola School lies a journey born from the landscapes and spirit of the Chittagong Hill Tracts —it’s about ",
-      "descriptionPart2": "redefining how learning happens",
+      "descriptionPart2": "redefining how true learning happens.",
       "props": {
         "why": {
           "title": "Start With Why",
@@ -391,6 +392,22 @@
         "reciprocal": {
           "title": "Reciprocal teaching",
           "desc": "When you have to explain a concept to someone else, your brain organizes the information more clearly, making the lesson much harder to forget."
+        }
+      },
+      "comparison": {
+        "conventional": "The Conventional Student",
+        "montola": "The Montola Student",
+        "row1": {
+          "left": "Asks: \"Will this be on the exam?\"",
+          "right": "Asks: \"How does this connect to what we learned yesterday?\""
+        },
+        "row2": {
+          "left": "Waits for the teacher to start speaking.",
+          "right": "Interrupts with a \"Why\" before the teacher finishes."
+        },
+        "row3": {
+          "left": "Memorizes the steps to solve a problem.",
+          "right": "Can explain why a different step wouldn't work."
         }
       }
     }
