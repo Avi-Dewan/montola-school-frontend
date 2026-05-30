@@ -176,7 +176,7 @@ export default function ChapterDetailPage() {
         { id: "status", label: "Status" },
         { id: "teachers", label: "Teachers" },
         { id: "image", label: "Cover Image" },
-        { id: "structure", label: "Structure" },
+        { id: "structure", label: "Content" },
     ];
 
     return (
