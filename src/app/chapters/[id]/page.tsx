@@ -176,8 +176,8 @@ export default function ChapterPublicPage() {
         <main className="min-h-screen bg-gray-50 pt-24 pb-16 px-6">
             <div className="max-w-5xl mx-auto bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
                 <div className="md:flex">
-                    {/* Visual Section */}
-                    <div className="md:w-1/2 relative bg-gray-900 group flex items-center justify-center">
+                    {/* Visual Section — vertically centered within the row */}
+                    <div className="md:w-1/2 relative group flex items-center bg-gray-50">
                         {chapter.videoId ? (
                             <div className="aspect-video w-full">
                                 <iframe
@@ -189,7 +189,7 @@ export default function ChapterPublicPage() {
                                 ></iframe>
                             </div>
                         ) : (
-                            <div className="relative aspect-video w-full h-full min-h-[300px] overflow-hidden">
+                            <div className="relative aspect-video w-full overflow-hidden">
                                 {!imageError ? (
                                     <Image
                                         src={`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080/api'}/v1/chapters/${chapter.id}/cover-image`}
@@ -197,7 +197,7 @@ export default function ChapterPublicPage() {
                                         fill
                                         className="object-cover transition-transform duration-700 group-hover:scale-105"
                                         onError={() => setImageError(true)}
-                                        unoptimized // Since it's from localhost/dynamic backend
+                                        unoptimized
                                     />
                                 ) : (
                                     <ChapterPlaceholder
@@ -209,7 +209,7 @@ export default function ChapterPublicPage() {
                             </div>
                         )}
                         {!chapter.videoId && (
-                            <div className="absolute top-4 left-4">
+                            <div className="absolute top-4 left-4 z-10">
                                 <span className="px-3 py-1 bg-white/90 backdrop-blur-sm text-gray-900 text-xs font-bold rounded-lg shadow-sm flex items-center gap-1">
                                     <FaPlayCircle className="text-primary-600" />
                                     {t("chapterPublic.preview")}

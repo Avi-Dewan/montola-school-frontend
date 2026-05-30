@@ -453,7 +453,7 @@ export default function ChapterDetailPage() {
                                 )}
                                 <input
                                     type="file"
-                                    accept="image/*"
+                                    accept="image/jpeg,image/png,image/webp"
                                     onChange={handleImageUpload}
                                     className="hidden"
                                     id="cover-image-upload"
@@ -464,6 +464,29 @@ export default function ChapterDetailPage() {
                                 >
                                     Choose Image
                                 </label>
+
+                                {/* Upload Guidelines */}
+                                <div className="mt-6 text-left bg-gray-50 rounded-lg p-4 border border-gray-200">
+                                    <p className="text-xs font-bold text-gray-700 mb-2 uppercase tracking-wider">Image Guidelines</p>
+                                    <ul className="text-xs text-gray-500 space-y-1.5">
+                                        <li className="flex items-start gap-2">
+                                            <span className="text-primary-500 font-bold mt-0.5">•</span>
+                                            <span><span className="font-semibold text-gray-600">Recommended size:</span> 1280 × 720 px (16:9 ratio)</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <span className="text-primary-500 font-bold mt-0.5">•</span>
+                                            <span><span className="font-semibold text-gray-600">Formats:</span> JPG, PNG, or WebP</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <span className="text-primary-500 font-bold mt-0.5">•</span>
+                                            <span><span className="font-semibold text-gray-600">Max file size:</span> 500 KB</span>
+                                        </li>
+                                        <li className="flex items-start gap-2">
+                                            <span className="text-primary-500 font-bold mt-0.5">•</span>
+                                            <span>Use landscape orientation — portrait images will be cropped</span>
+                                        </li>
+                                    </ul>
+                                </div>
                             </div>
                         </div>
                     </div>
