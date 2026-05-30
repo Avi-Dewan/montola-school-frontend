@@ -70,7 +70,7 @@ export default function ClassesPage() {
                                 className="group bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 flex flex-col"
                             >
                                 <div className="aspect-video relative overflow-hidden bg-gray-100">
-                                    <ChapterPlaceholder title={cls.name} />
+                                    <ChapterPlaceholder title={cls.name} type="class" />
                                     <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors duration-500" />
                                 </div>
                                 <div className="p-8 flex flex-col flex-grow">
