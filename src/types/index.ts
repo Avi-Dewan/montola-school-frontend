@@ -299,7 +299,8 @@ export enum QuizType {
     MCQ = "MCQ",
     WRITTEN = "WRITTEN",
     FILL_BLANK = "FILL_BLANK",
-    TABLE_MATCHING = "TABLE_MATCHING"
+    TABLE_MATCHING = "TABLE_MATCHING",
+    MIXED = "MIXED"
 }
 
 export enum QuizQuestionType {
