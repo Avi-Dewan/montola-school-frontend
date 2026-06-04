@@ -77,7 +77,12 @@ export default function FreeChapterList() {
 
     return (
         <section className="py-16 px-6 bg-white">
-            <h2 className="text-3xl font-bold text-center mb-10 tracking-tight">{t("home.free.title")}</h2>
+            <div className="text-center mb-10">
+                <h2 className="text-3xl font-bold tracking-tight mb-4">{t("home.free.title")}</h2>
+                <p className="text-gray-600 max-w-2xl mx-auto text-lg leading-relaxed">
+                    {t("home.free.subtitle")}
+                </p>
+            </div>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-6xl mx-auto">
                 {chapters.map((c) => (
                     <Link

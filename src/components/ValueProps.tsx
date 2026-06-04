@@ -1,27 +1,34 @@
 import { useI18n } from "@/contexts/I18nProvider";
+import { FaLightbulb, FaUserGraduate, FaComments } from "react-icons/fa";
 
 export default function ValueProps() {
     const { t } = useI18n();
 
     const props = [
         {
-            icon: "🤔",
+            icon: <FaLightbulb size={24} />,
             title: t("home.valueProps.props.why.title"),
             desc: t("home.valueProps.props.why.desc"),
-            color: "bg-blue-50 text-blue-600"
+            color: "bg-amber-50 text-amber-500"
         },
         {
-            icon: "🎯",
+            icon: <FaUserGraduate size={24} />,
             title: t("home.valueProps.props.personalized.title"),
             desc: t("home.valueProps.props.personalized.desc"),
-            color: "bg-green-50 text-green-600"
+            color: "bg-primary-50 text-primary-600"
         },
         {
-            icon: "🤝",
+            icon: <FaComments size={24} />,
             title: t("home.valueProps.props.reciprocal.title"),
             desc: t("home.valueProps.props.reciprocal.desc"),
-            color: "bg-purple-50 text-purple-600"
+            color: "bg-blue-50 text-blue-500"
         }
+    ];
+
+    const comparisonRows = [
+        { left: t("home.valueProps.comparison.row1.left"), right: t("home.valueProps.comparison.row1.right") },
+        { left: t("home.valueProps.comparison.row2.left"), right: t("home.valueProps.comparison.row2.right") },
+        { left: t("home.valueProps.comparison.row3.left"), right: t("home.valueProps.comparison.row3.right") },
     ];
 
     return (
@@ -44,13 +51,46 @@ export default function ValueProps() {
                                 key={p.title}
                                 className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
                             >
-                                <div className={`w-16 h-16 ${p.color} rounded-2xl flex items-center justify-center text-3xl mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                                <div className={`w-14 h-14 ${p.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
                                     {p.icon}
                                 </div>
                                 <h3 className="text-xl font-bold text-gray-900 mb-3">{p.title}</h3>
                                 <p className="text-gray-600 leading-relaxed text-sm">
                                     {p.desc}
                                 </p>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                {/* Comparison Table */}
+                <div className="mt-16 max-w-3xl mx-auto">
+                    <h3 className="text-center text-2xl font-bold text-gray-900 mb-8">
+                        What sets us apart
+                    </h3>
+                    <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
+                        {/* Header */}
+                        <div className="grid grid-cols-2">
+                            <div className="px-8 py-5 border-b border-r border-gray-200">
+                                <h3 className="font-bold text-gray-900 text-sm md:text-base">
+                                    {t("home.valueProps.comparison.conventional")}
+                                </h3>
+                            </div>
+                            <div className="px-8 py-5 border-b border-gray-200 bg-primary-50/40">
+                                <h3 className="font-bold text-gray-900 text-sm md:text-base">
+                                    {t("home.valueProps.comparison.montola")}
+                                </h3>
+                            </div>
+                        </div>
+                        {/* Rows */}
+                        {comparisonRows.map((row, i) => (
+                            <div key={i} className={`grid grid-cols-2 ${i < comparisonRows.length - 1 ? 'border-b border-gray-100' : ''}`}>
+                                <div className="px-8 py-6 border-r border-gray-200">
+                                    <p className="text-gray-500 text-sm leading-relaxed">{row.left}</p>
+                                </div>
+                                <div className="px-8 py-6 bg-primary-50/20">
+                                    <p className="text-gray-700 text-sm leading-relaxed font-medium">{row.right}</p>
+                                </div>
                             </div>
                         ))}
                     </div>

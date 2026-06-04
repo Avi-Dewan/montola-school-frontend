@@ -375,7 +375,9 @@ export default function ContentPlayerPage() {
                                                                 )}
                                                             </div>
                                                             <div className="flex-grow">
-                                                                <h3 className="text-lg font-medium text-gray-900 mb-1">{q.questionText}</h3>
+                                                                {q.type !== QuizQuestionType.FILL_IN_THE_BLANK && (
+                                                                    <h3 className="text-lg font-medium text-gray-900 mb-1">{q.questionText}</h3>
+                                                                )}
                                                                 <p className="text-xs font-bold text-gray-400 uppercase">{q.marks} {t("student.contentPlayer.marks")} • {t(`student.contentPlayer.questionTypes.${q.type}`)}</p>
                                                             </div>
                                                         </div>
@@ -451,69 +453,123 @@ export default function ContentPlayerPage() {
 
                                                         {/* Table Matching Rendering */}
                                                         {q.type === QuizQuestionType.MATCHING && (
-                                                            <div className="pl-12 space-y-3">
-                                                                {q.tableMatchings.map((tm) => (
-                                                                    <div key={tm.id} className="flex flex-col md:flex-row md:items-center gap-4">
-                                                                        <div className="flex-1 p-3 bg-gray-50 rounded-lg border border-gray-200 font-medium">
-                                                                            {tm.leftItem}
-                                                                        </div>
-                                                                        <div className="hidden md:block text-gray-300">
-                                                                            <FiChevronRight />
-                                                                        </div>
+                                                            <div className="pl-12">
+                                                                {/* Column Headers */}
+                                                                <div className="grid grid-cols-[1fr_auto_1fr] gap-3 mb-3 px-1">
+                                                                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Item</span>
+                                                                    <span></span>
+                                                                    <span className="text-xs font-bold text-gray-400 uppercase tracking-wider">Match with</span>
+                                                                </div>
+                                                                {/* Rows */}
+                                                                <div className="space-y-2">
+                                                                    {q.tableMatchings.map((tm, tmIdx) => {
+                                                                        const isCorrect = quizAnswers[q.id]?.[tm.id] === tm.rightItem;
+                                                                        // Shuffle options deterministically based on question id
+                                                                        const shuffledOptions = [...q.tableMatchings]
+                                                                            .sort((a, b) => {
+                                                                                const hashA = (a.id * 2654435761) >>> 0;
+                                                                                const hashB = (b.id * 2654435761) >>> 0;
+                                                                                return hashA - hashB;
+                                                                            });
 
-                                                                        <select
-                                                                            disabled={quizSubmitted}
-                                                                            value={quizAnswers[q.id]?.[tm.id] || ""}
-                                                                            onChange={(e) => setQuizAnswers({
-                                                                                ...quizAnswers,
-                                                                                [q.id]: { ...(quizAnswers[q.id] || {}), [tm.id]: e.target.value }
-                                                                            })}
-                                                                            className={`flex-1 p-3 rounded-lg border-2 bg-white appearance-none transition-all ${quizSubmitted
-                                                                                ? quizAnswers[q.id]?.[tm.id] === tm.rightItem
-                                                                                    ? "border-green-500 bg-green-50 text-green-900"
-                                                                                    : "border-red-500 bg-red-50 text-red-900"
-                                                                                : "border-gray-100 focus:border-primary-500 outline-none"
+                                                                        return (
+                                                                            <div
+                                                                                key={tm.id}
+                                                                                className={`grid grid-cols-[1fr_auto_1fr] gap-3 items-center p-3 rounded-xl transition-all ${
+                                                                                    quizSubmitted
+                                                                                        ? isCorrect
+                                                                                            ? 'bg-green-50 border border-green-200'
+                                                                                            : 'bg-red-50 border border-red-200'
+                                                                                        : 'bg-gray-50 border border-gray-100 hover:border-gray-200'
                                                                                 }`}
-                                                                        >
-                                                                            <option value="">{t("student.contentPlayer.selectMatch")}</option>
-                                                                            {q.tableMatchings.map(item => (
-                                                                                <option key={item.id} value={item.rightItem}>{item.rightItem}</option>
-                                                                            ))}
-                                                                        </select>
-                                                                        {quizSubmitted && (
-                                                                            <div className="text-xs font-bold whitespace-nowrap">
-                                                                                {quizAnswers[q.id]?.[tm.id] === tm.rightItem
-                                                                                    ? <span className="text-green-600">{t("student.contentPlayer.correct")}</span>
-                                                                                    : isPassed
-                                                                                        ? <span className="text-red-600 font-bold bg-red-50 px-2 py-1 rounded">{t("student.contentPlayer.correct")}: {tm.rightItem}</span>
-                                                                                        : <span className="text-red-600 font-bold">{t("student.contentPlayer.incorrect")}</span>
-                                                                                }
+                                                                            >
+                                                                                <div className="flex items-center gap-3">
+                                                                                    <span className="font-medium text-gray-900 text-sm">{tm.leftItem}</span>
+                                                                                </div>
+
+                                                                                <div className="text-gray-300">
+                                                                                    <FiChevronRight size={16} />
+                                                                                </div>
+
+                                                                                <div className="flex items-center gap-2">
+                                                                                    <div className="relative flex-1">
+                                                                                        <select
+                                                                                            disabled={quizSubmitted}
+                                                                                            value={quizAnswers[q.id]?.[tm.id] || ""}
+                                                                                            onChange={(e) => setQuizAnswers({
+                                                                                                ...quizAnswers,
+                                                                                                [q.id]: { ...(quizAnswers[q.id] || {}), [tm.id]: e.target.value }
+                                                                                            })}
+                                                                                            className={`w-full p-2.5 pr-8 rounded-lg border-2 bg-white text-sm font-medium transition-all cursor-pointer outline-none appearance-none ${quizSubmitted
+                                                                                                ? isCorrect
+                                                                                                    ? "border-green-400 text-green-800"
+                                                                                                    : "border-red-400 text-red-800"
+                                                                                                : quizAnswers[q.id]?.[tm.id]
+                                                                                                    ? "border-primary-300 text-gray-900"
+                                                                                                    : "border-gray-200 text-gray-500 focus:border-primary-400"
+                                                                                            }`}
+                                                                                        >
+                                                                                            <option value="">{t("student.contentPlayer.selectMatch")}</option>
+                                                                                            {shuffledOptions.map(item => (
+                                                                                                <option key={item.id} value={item.rightItem}>{item.rightItem}</option>
+                                                                                            ))}
+                                                                                        </select>
+                                                                                        {!quizSubmitted && (
+                                                                                            <div className="absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                                                                                                <svg width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M3 4.5L6 7.5L9 4.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/></svg>
+                                                                                            </div>
+                                                                                        )}
+                                                                                    </div>
+                                                                                    {quizSubmitted && (
+                                                                                        <div className="flex-shrink-0">
+                                                                                            {isCorrect
+                                                                                                ? <FiCheckCircle size={18} className="text-green-500" />
+                                                                                                : <FiXCircle size={18} className="text-red-500" />
+                                                                                            }
+                                                                                        </div>
+                                                                                    )}
+                                                                                </div>
                                                                             </div>
-                                                                        )}
+                                                                        );
+                                                                    })}
+                                                                </div>
+                                                                {/* Show correct answers after submission if failed */}
+                                                                {quizSubmitted && !isQuestionCorrect && isPassed && (
+                                                                    <div className="mt-3 p-3 bg-blue-50 rounded-lg border border-blue-100">
+                                                                        <p className="text-xs font-bold text-blue-700 mb-2">{t("student.contentPlayer.correctAnswers")}:</p>
+                                                                        <div className="space-y-1">
+                                                                            {q.tableMatchings.map((tm) => (
+                                                                                <p key={tm.id} className="text-sm text-blue-800">
+                                                                                    <span className="font-medium">{tm.leftItem}</span>
+                                                                                    <span className="mx-2 text-blue-400">→</span>
+                                                                                    <span className="font-bold">{tm.rightItem}</span>
+                                                                                </p>
+                                                                            ))}
+                                                                        </div>
                                                                     </div>
-                                                                ))}
+                                                                )}
                                                             </div>
                                                         )}
 
                                                         {/* Fill in the Blanks Rendering */}
                                                         {q.type === QuizQuestionType.FILL_IN_THE_BLANK && (
                                                             <div className="pl-12">
-                                                                <div className="leading-loose text-lg text-gray-800 p-6 bg-gray-50 rounded-xl border border-gray-100 flex flex-wrap items-center">
+                                                                <div className="text-lg text-gray-800 p-6 bg-gray-50 rounded-xl border border-gray-100" style={{ lineHeight: '2.5' }}>
                                                                     {q.questionText.split('__BLANK__').map((part, i, arr) => (
-                                                                        <span key={i} className="inline-flex items-center">
+                                                                        <span key={i}>
                                                                             {part}
                                                                             {i < arr.length - 1 && (
-                                                                                <span className="inline-block mx-2 relative group min-w-[120px]">
+                                                                                <span className="inline-block relative align-baseline" style={{ width: '100px' }}>
                                                                                     <input
                                                                                         type="text"
                                                                                         disabled={quizSubmitted}
-                                                                                        placeholder={t("student.contentPlayer.typeAnswer")}
+                                                                                        placeholder="..."
                                                                                         value={quizAnswers[q.id]?.[i + 1] || ""}
                                                                                         onChange={(e) => setQuizAnswers({
                                                                                             ...quizAnswers,
                                                                                             [q.id]: { ...(quizAnswers[q.id] || {}), [i + 1]: e.target.value }
                                                                                         })}
-                                                                                        className={`w-full px-2 py-1 border-b-2 text-center bg-white rounded-t transition-all ${quizSubmitted
+                                                                                        className={`w-full px-1 py-0 border-b-2 text-center bg-transparent text-base transition-all outline-none ${quizSubmitted
                                                                                             ? quizAnswers[q.id]?.[i + 1]?.trim().toLowerCase() === q.fillBlanks.find(fb => fb.blankPosition === i + 1)?.correctAnswer.trim().toLowerCase()
                                                                                                 ? "border-green-500 text-green-700 bg-green-50/30"
                                                                                                 : "border-red-500 text-red-700 bg-red-50/30"

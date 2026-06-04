@@ -58,7 +58,7 @@ export default function ClassesListSection() {
                         className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group border border-gray-100"
                     >
                         <div className="aspect-video relative overflow-hidden bg-gray-100 block">
-                            <ChapterPlaceholder title={c.name} className="!p-4" />
+                            <ChapterPlaceholder title={c.name} type="class" className="!p-4" />
                             <div className="absolute inset-0 bg-black/5 group-hover:bg-black/0 transition-colors" />
                         </div>
                         <div className="p-6 flex flex-col flex-grow text-center">

@@ -47,6 +47,17 @@ export default function QuizForm({
     });
     const [errors, setErrors] = useState<{ title?: string }>({});
 
+    // Map QuizType to QuestionType
+    const quizTypeToQuestionType = (qt: QuizType): QuizQuestionType => {
+        switch (qt) {
+            case QuizType.MCQ: return QuizQuestionType.MULTIPLE_CHOICE;
+            case QuizType.WRITTEN: return QuizQuestionType.WRITTEN;
+            case QuizType.FILL_BLANK: return QuizQuestionType.FILL_IN_THE_BLANK;
+            case QuizType.TABLE_MATCHING: return QuizQuestionType.MATCHING;
+            default: return QuizQuestionType.MULTIPLE_CHOICE;
+        }
+    };
+
     useEffect(() => {
         if (initialData) {
             setFormData({
@@ -70,6 +81,52 @@ export default function QuizForm({
             newErrors.title = "Quiz title is required";
         } else if (formData.title.length > 200) {
             newErrors.title = "Quiz title must be less than 200 characters";
+        }
+
+        // Validate each question
+        if (formData.questions && formData.questions.length > 0) {
+            for (let i = 0; i < formData.questions.length; i++) {
+                const q = formData.questions[i];
+
+                if (!q.questionText || q.questionText.trim().length === 0) {
+                    toast.error(`Question ${i + 1}: Question text is required.`);
+                    setErrors(newErrors);
+                    return false;
+                }
+
+                // MCQ: must have at least one correct option
+                if (q.type === QuizQuestionType.MULTIPLE_CHOICE) {
+                    if (!q.options || q.options.length < 2) {
+                        toast.error(`Question ${i + 1}: Must have at least 2 options.`);
+                        setErrors(newErrors);
+                        return false;
+                    }
+                    const hasCorrect = q.options.some(o => !!o.isCorrect);
+                    if (!hasCorrect) {
+                        toast.error(`Question ${i + 1}: You must select at least one correct option.`);
+                        setErrors(newErrors);
+                        return false;
+                    }
+                }
+
+                // Fill in the blank: must have at least one blank answer
+                if (q.type === QuizQuestionType.FILL_IN_THE_BLANK) {
+                    if (!q.fillBlanks || q.fillBlanks.length === 0) {
+                        toast.error(`Question ${i + 1}: Must have at least one blank answer.`);
+                        setErrors(newErrors);
+                        return false;
+                    }
+                }
+
+                // Matching: must have at least one pair
+                if (q.type === QuizQuestionType.MATCHING) {
+                    if (!q.tableMatchings || q.tableMatchings.length === 0) {
+                        toast.error(`Question ${i + 1}: Must have at least one matching pair.`);
+                        setErrors(newErrors);
+                        return false;
+                    }
+                }
+            }
         }
 
         setErrors(newErrors);
@@ -103,12 +160,15 @@ export default function QuizForm({
     };
 
     const addQuestion = () => {
+        const derivedType = formData.quizType === QuizType.MIXED
+            ? QuizQuestionType.MULTIPLE_CHOICE
+            : quizTypeToQuestionType(formData.quizType);
         const newQuestion: QuizQuestionRequestDto = {
             questionText: "",
-            type: QuizQuestionType.MULTIPLE_CHOICE,
+            type: derivedType,
             orderIndex: (formData.questions?.length || 0) + 1,
             marks: 1,
-            options: [{ optionText: "", isCorrect: false }],
+            options: derivedType === QuizQuestionType.MULTIPLE_CHOICE ? [{ optionText: "", isCorrect: false }] : [],
         };
         setFormData({
             ...formData,
@@ -235,11 +295,27 @@ export default function QuizForm({
         setFormData({ ...formData, questions: newQuestions });
     };
 
+
+    const isMixed = formData.quizType === QuizType.MIXED;
+
+    const handleQuizTypeChange = (newType: QuizType) => {
+        const updatedData: any = { ...formData, quizType: newType };
+        // If not mixed, auto-set all existing questions to the corresponding type
+        if (newType !== QuizType.MIXED && formData.questions && formData.questions.length > 0) {
+            updatedData.questions = formData.questions.map(q => ({
+                ...q,
+                type: quizTypeToQuestionType(newType),
+            }));
+        }
+        setFormData(updatedData);
+    };
+
     const quizTypeOptions = [
         { value: QuizType.MCQ, label: "Multiple Choice (MCQ)" },
         { value: QuizType.WRITTEN, label: "Written" },
         { value: QuizType.FILL_BLANK, label: "Fill in the Blank" },
         { value: QuizType.TABLE_MATCHING, label: "Table Matching" },
+        { value: QuizType.MIXED, label: "Mixed (multiple types)" },
     ];
 
     const questionTypeOptions = [
@@ -265,7 +341,7 @@ export default function QuizForm({
                 label="Quiz Type"
                 required
                 value={formData.quizType}
-                onChange={(e) => setFormData({ ...formData, quizType: e.target.value as QuizType })}
+                onChange={(e) => handleQuizTypeChange(e.target.value as QuizType)}
                 options={quizTypeOptions}
             />
 
@@ -340,18 +416,7 @@ export default function QuizForm({
 
             {/* Questions Section */}
             <div className="border-t border-gray-200 pt-6">
-                <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-semibold text-gray-800">Questions</h3>
-                    <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={addQuestion}
-                    >
-                        <HiPlus className="w-4 h-4 inline-block mr-1" />
-                        Add Question
-                    </Button>
-                </div>
+                <h3 className="text-lg font-semibold text-gray-800 mb-4">Questions</h3>
 
                 {formData.questions && formData.questions.length > 0 ? (
                     <div className="space-y-6">
@@ -394,19 +459,28 @@ export default function QuizForm({
                                     </div>
 
                                     <div className="grid grid-cols-2 gap-4">
-                                        <Select
-                                            label="Question Type"
-                                            required
-                                            value={question.type}
-                                            onChange={(e) =>
-                                                updateQuestion(
-                                                    qIndex,
-                                                    "type",
-                                                    e.target.value as QuizQuestionType
-                                                )
-                                            }
-                                            options={questionTypeOptions}
-                                        />
+                                        {isMixed ? (
+                                            <Select
+                                                label="Question Type"
+                                                required
+                                                value={question.type}
+                                                onChange={(e) =>
+                                                    updateQuestion(
+                                                        qIndex,
+                                                        "type",
+                                                        e.target.value as QuizQuestionType
+                                                    )
+                                                }
+                                                options={questionTypeOptions}
+                                            />
+                                        ) : (
+                                            <div>
+                                                <label className="block mb-1 text-sm font-semibold text-gray-700">Question Type</label>
+                                                <p className="px-3 py-2 bg-gray-100 border border-gray-200 rounded-lg text-gray-600 text-sm">
+                                                    {questionTypeOptions.find(o => o.value === question.type)?.label || question.type}
+                                                </p>
+                                            </div>
+                                        )}
 
                                         <Input
                                             label="Marks"
@@ -594,6 +668,18 @@ export default function QuizForm({
                         No questions added yet. Click &quot;Add Question&quot; to get started.
                     </p>
                 )}
+
+                {/* Add Question button at the bottom */}
+                <div className="mt-4 flex justify-center">
+                    <Button
+                        type="button"
+                        variant="outline"
+                        onClick={addQuestion}
+                    >
+                        <HiPlus className="w-4 h-4 inline-block mr-1" />
+                        Add Question
+                    </Button>
+                </div>
             </div>
 
             <div className="flex justify-end space-x-3 pt-4 border-t border-gray-200">

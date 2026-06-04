@@ -22,6 +22,8 @@ export default function SubjectForm({
     onCancel,
     isLoading = false,
 }: SubjectFormProps) {
+    const isEditing = !!initialData;
+
     const [formData, setFormData] = useState<SubjectRequestDto>({
         classId: initialData?.classId || 0,
         name: initialData?.name || "",
@@ -29,11 +31,11 @@ export default function SubjectForm({
         orderIndex: initialData?.orderIndex || 0,
     });
     const [classes, setClasses] = useState<ClassResponseDto[]>([]);
-    const [loadingClasses, setLoadingClasses] = useState(true);
+    const [loadingClasses, setLoadingClasses] = useState(!isEditing);
     const [errors, setErrors] = useState<{ name?: string; classId?: string }>({});
 
     useEffect(() => {
-        fetchClasses();
+        if (!isEditing) fetchClasses();
     }, []);
 
     const fetchClasses = async () => {
@@ -51,7 +53,7 @@ export default function SubjectForm({
     const validate = (): boolean => {
         const newErrors: { name?: string; classId?: string } = {};
 
-        if (!formData.classId || formData.classId === 0) {
+        if (!isEditing && (!formData.classId || formData.classId === 0)) {
             newErrors.classId = "Please select a class";
         }
 
@@ -80,24 +82,34 @@ export default function SubjectForm({
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
-            <Select
-                label="Class"
-                required
-                value={formData.classId}
-                onChange={(e) =>
-                    setFormData({
-                        ...formData,
-                        classId: Number(e.target.value),
-                    })
-                }
-                options={classes.map((cls) => ({
-                    value: cls.id,
-                    label: cls.name,
-                }))}
-                error={errors.classId}
-                placeholder="Select a class"
-                disabled={loadingClasses}
-            />
+            {isEditing ? (
+                <div>
+                    <label className="block mb-1 font-semibold text-gray-700 text-sm">Class</label>
+                    <p className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 text-sm">
+                        {initialData?.className || `Class #${initialData?.classId}`}
+                        <span className="text-xs text-gray-400 ml-2">(cannot be changed)</span>
+                    </p>
+                </div>
+            ) : (
+                <Select
+                    label="Class"
+                    required
+                    value={formData.classId}
+                    onChange={(e) =>
+                        setFormData({
+                            ...formData,
+                            classId: Number(e.target.value),
+                        })
+                    }
+                    options={classes.map((cls) => ({
+                        value: cls.id,
+                        label: cls.name,
+                    }))}
+                    error={errors.classId}
+                    placeholder="Select a class"
+                    disabled={loadingClasses}
+                />
+            )}
 
             <Input
                 label="Subject Name"

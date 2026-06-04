@@ -77,7 +77,10 @@ export interface SubjectResponseDto {
 export interface SubjectStructureResponseDto {
     id: number;
     name: string;
+    description?: string;
     orderIndex?: number;
+    classId?: number;
+    className?: string;
     chapters: ChapterStructureResponseDto[];
 }
 
@@ -126,6 +129,10 @@ export interface ChapterStructureResponseDto {
     title: string;
     status: ChapterStatus;
     orderIndex?: number;
+    subjectId?: number;
+    subjectName?: string;
+    classId?: number;
+    className?: string;
     topics: TopicStructureResponseDto[];
 }
 
@@ -292,7 +299,8 @@ export enum QuizType {
     MCQ = "MCQ",
     WRITTEN = "WRITTEN",
     FILL_BLANK = "FILL_BLANK",
-    TABLE_MATCHING = "TABLE_MATCHING"
+    TABLE_MATCHING = "TABLE_MATCHING",
+    MIXED = "MIXED"
 }
 
 export enum QuizQuestionType {
