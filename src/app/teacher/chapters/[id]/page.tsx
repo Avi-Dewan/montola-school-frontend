@@ -275,7 +275,7 @@ export default function TeacherChapterDetailPage() {
     const tabs = [
         { id: "details", label: "Details" },
         { id: "image", label: "Cover Image" },
-        { id: "structure", label: "Structure" },
+        { id: "structure", label: "Content" },
     ];
 
     const getStatusBadge = (status: string) => {

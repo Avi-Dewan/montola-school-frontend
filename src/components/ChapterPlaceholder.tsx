@@ -1,76 +1,110 @@
 import React from 'react';
+import { FaGraduationCap, FaBookOpen, FaLayerGroup, FaVideo, FaQuestionCircle, FaFilePdf } from 'react-icons/fa';
+
+type PlaceholderType = 'class' | 'subject' | 'chapter' | 'lecture' | 'quiz' | 'pdf';
 
 interface ChapterPlaceholderProps {
-    title: string;
+    title?: string;
     subjectName?: string;
     className?: string;
     variant?: 'full' | 'thumbnail';
+    /** Icon type — determines which icon and accent color is shown.
+     *  Defaults to 'chapter' for backward compatibility. */
+    type?: PlaceholderType;
 }
 
-const gradients = [
-    'from-indigo-600 to-blue-700',
-    'from-slate-700 to-indigo-900',
-    'from-blue-600 to-cyan-700',
-    'from-indigo-500 to-purple-600',
-    'from-slate-600 to-blue-800',
-    'from-cyan-600 to-indigo-700',
-];
+const typeConfig: Record<PlaceholderType, {
+    icon: React.ReactNode;
+    smallIcon: React.ReactNode;
+    accent: string;
+    iconColor: string;
+    bg: string;
+    pattern: string;
+}> = {
+    class: {
+        icon: <FaGraduationCap size={28} />,
+        smallIcon: <FaGraduationCap size={14} />,
+        accent: 'bg-primary-100',
+        iconColor: 'text-primary-500',
+        bg: 'bg-gradient-to-br from-white to-primary-50',
+        pattern: 'bg-primary-100/60',
+    },
+    subject: {
+        icon: <FaBookOpen size={26} />,
+        smallIcon: <FaBookOpen size={14} />,
+        accent: 'bg-primary-100',
+        iconColor: 'text-primary-500',
+        bg: 'bg-gradient-to-br from-white to-primary-50',
+        pattern: 'bg-primary-100/60',
+    },
+    chapter: {
+        icon: <FaLayerGroup size={26} />,
+        smallIcon: <FaLayerGroup size={14} />,
+        accent: 'bg-primary-100',
+        iconColor: 'text-primary-500',
+        bg: 'bg-gradient-to-br from-white to-primary-50',
+        pattern: 'bg-primary-100/60',
+    },
+    lecture: {
+        icon: <FaVideo size={24} />,
+        smallIcon: <FaVideo size={12} />,
+        accent: 'bg-blue-100',
+        iconColor: 'text-blue-500',
+        bg: 'bg-gradient-to-br from-white to-blue-50',
+        pattern: 'bg-blue-100/60',
+    },
+    quiz: {
+        icon: <FaQuestionCircle size={26} />,
+        smallIcon: <FaQuestionCircle size={14} />,
+        accent: 'bg-amber-100',
+        iconColor: 'text-amber-500',
+        bg: 'bg-gradient-to-br from-white to-amber-50',
+        pattern: 'bg-amber-100/60',
+    },
+    pdf: {
+        icon: <FaFilePdf size={24} />,
+        smallIcon: <FaFilePdf size={12} />,
+        accent: 'bg-red-100',
+        iconColor: 'text-red-400',
+        bg: 'bg-gradient-to-br from-white to-red-50',
+        pattern: 'bg-red-100/60',
+    },
+};
 
 const ChapterPlaceholder: React.FC<ChapterPlaceholderProps> = ({
-    title,
-    subjectName,
     className = "",
-    variant = "full"
+    variant = "full",
+    type = "chapter",
 }) => {
-    // Stable "random" index based on title length and character codes
-    const index = (title.length + title.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)) % gradients.length;
-    const gradient = gradients[index];
+    const config = typeConfig[type];
 
     if (variant === 'thumbnail') {
-        const initials = title
-            .split(' ')
-            .map(word => word[0])
-            .join('')
-            .slice(0, 2)
-            .toUpperCase();
-
         return (
-            <div className={`w-full h-full flex items-center justify-center bg-gradient-to-br ${gradient} text-white font-black select-none ${className}`}>
-                <span className="text-[10px] tracking-tighter transform scale-90">
-                    {initials}
-                </span>
-                <div className="absolute inset-0 bg-black/10"></div>
+            <div className={`w-full h-full flex items-center justify-center ${config.bg} select-none ${className}`}>
+                <div className={`w-8 h-8 rounded-lg ${config.accent} flex items-center justify-center ${config.iconColor}`}>
+                    {config.smallIcon}
+                </div>
             </div>
         );
     }
 
     return (
-        <div className={`w-full h-full flex flex-col items-center justify-center p-8 bg-gradient-to-br ${gradient} text-white selection:bg-white/20 ${className}`}>
-            <div className="text-center transform transition-transform group-hover:scale-105 duration-500">
-                {subjectName && (
-                    <p className="text-white/70 text-[10px] sm:text-xs font-black uppercase tracking-[0.2em] mb-3 drop-shadow-sm">
-                        {subjectName}
-                    </p>
-                )}
-                <h3 className="text-2xl md:text-4xl font-black uppercase leading-[1.1] tracking-tighter drop-shadow-md">
-                    {title}
-                </h3>
+        <div className={`w-full h-full flex items-center justify-center ${config.bg} select-none relative overflow-hidden ${className}`}>
+            {/* Decorative dots pattern */}
+            <div className="absolute inset-0 opacity-40" style={{
+                backgroundImage: `radial-gradient(circle, currentColor 1px, transparent 1px)`,
+                backgroundSize: '24px 24px',
+                color: 'rgb(var(--color-primary-200, 187 247 208) / 0.5)',
+            }} />
+
+            {/* Center icon */}
+            <div className={`relative z-10 w-16 h-16 rounded-2xl ${config.accent} flex items-center justify-center ${config.iconColor} shadow-sm transition-transform duration-500 group-hover:scale-110`}>
+                {config.icon}
             </div>
 
-            <div className="absolute bottom-0 left-0 w-full h-1.5 bg-black/10">
-                <div className="w-1/3 h-full bg-white/30 animate-pulse"></div>
-            </div>
-
-            {/* Abstract Decorative Elements */}
-            <div className="absolute top-4 right-4 w-20 h-20 bg-white/5 rounded-full blur-2xl"></div>
-            <div className="absolute -bottom-8 -left-8 w-32 h-32 bg-black/5 rounded-full blur-3xl"></div>
-
-            {/* Subtle Brand Watermark */}
-            <img
-                src="/montola-logo.png"
-                alt=""
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-32 h-32 md:w-48 md:h-48 object-contain opacity-[0.04] pointer-events-none grayscale invert contrast-150 transition-transform duration-700 group-hover:scale-110"
-            />
+            {/* Corner accents */}
+            <div className={`absolute top-3 right-3 w-2 h-2 rounded-full ${config.pattern}`} />
+            <div className={`absolute bottom-3 left-3 w-3 h-3 rounded-full ${config.pattern}`} />
         </div>
     );
 };

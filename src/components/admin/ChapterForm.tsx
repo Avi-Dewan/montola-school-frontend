@@ -24,6 +24,8 @@ export default function ChapterForm({
     isLoading = false,
     hideStatus = false,
 }: ChapterFormProps) {
+    const isEditing = !!initialData;
+
     const [formData, setFormData] = useState<ChapterRequestDto>({
         subjectId: initialData?.subjectId || 0,
         title: initialData?.title || "",
@@ -35,11 +37,11 @@ export default function ChapterForm({
         free: initialData?.free || false,
     });
     const [subjects, setSubjects] = useState<SubjectResponseDto[]>([]);
-    const [loadingSubjects, setLoadingSubjects] = useState(true);
+    const [loadingSubjects, setLoadingSubjects] = useState(!isEditing);
     const [errors, setErrors] = useState<{ title?: string; subjectId?: string }>({});
 
     useEffect(() => {
-        fetchSubjects();
+        if (!isEditing) fetchSubjects();
     }, []);
 
     const fetchSubjects = async () => {
@@ -57,7 +59,7 @@ export default function ChapterForm({
     const validate = (): boolean => {
         const newErrors: { title?: string; subjectId?: string } = {};
 
-        if (!formData.subjectId || formData.subjectId === 0) {
+        if (!isEditing && (!formData.subjectId || formData.subjectId === 0)) {
             newErrors.subjectId = "Please select a subject";
         }
 
@@ -92,24 +94,34 @@ export default function ChapterForm({
 
     return (
         <form onSubmit={handleSubmit} className="space-y-4">
-            <Select
-                label="Subject"
-                required
-                value={formData.subjectId}
-                onChange={(e) =>
-                    setFormData({
-                        ...formData,
-                        subjectId: Number(e.target.value),
-                    })
-                }
-                options={subjects.map((subject) => ({
-                    value: subject.id,
-                    label: `${subject.name} ${subject.className ? `(${subject.className})` : ""}`,
-                }))}
-                error={errors.subjectId}
-                placeholder="Select a subject"
-                disabled={loadingSubjects}
-            />
+            {isEditing ? (
+                <div>
+                    <label className="block mb-1 font-semibold text-gray-700 text-sm">Subject</label>
+                    <p className="px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 text-sm">
+                        {initialData?.subjectName || `Subject #${initialData?.subjectId}`}
+                        <span className="text-xs text-gray-400 ml-2">(cannot be changed)</span>
+                    </p>
+                </div>
+            ) : (
+                <Select
+                    label="Subject"
+                    required
+                    value={formData.subjectId}
+                    onChange={(e) =>
+                        setFormData({
+                            ...formData,
+                            subjectId: Number(e.target.value),
+                        })
+                    }
+                    options={subjects.map((subject) => ({
+                        value: subject.id,
+                        label: `${subject.name} ${subject.className ? `(${subject.className})` : ""}`,
+                    }))}
+                    error={errors.subjectId}
+                    placeholder="Select a subject"
+                    disabled={loadingSubjects}
+                />
+            )}
 
             <Input
                 label="Chapter Title"

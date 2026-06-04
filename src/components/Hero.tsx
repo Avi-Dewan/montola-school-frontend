@@ -5,7 +5,7 @@ export default function Hero() {
     const { t } = useI18n();
 
     return (
-        <section className="bg-gradient-to-r from-primary-400 to-primary-500 text-white py-32 px-6 text-center">
+        <section className="bg-gradient-to-br from-primary-600 to-primary-700 text-white py-32 px-6 text-center">
             {/* White container for brand visibility on green background */}
             <div className="w-24 h-24 mx-auto mb-8 bg-white rounded-full flex items-center justify-center shadow-2xl p-4 animate-in fade-in zoom-in duration-700 ring-4 ring-white/30">
                 <img

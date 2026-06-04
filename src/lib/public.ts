@@ -3,7 +3,8 @@ import {
     FeaturedChapterResponseDto,
     ChapterResponseDto,
     ClassResponseDto,
-    ClassStructureResponseDto
+    ClassStructureResponseDto,
+    SubjectStructureResponseDto
 } from "@/types";
 
 export const getFeaturedChapters = async () => {
@@ -23,6 +24,11 @@ export const getAllClasses = async () => {
 
 export const getClassPublicStructure = async (id: number) => {
     const response = await api.get<ClassStructureResponseDto>(`/v1/classes/${id}/public-structure`);
+    return response.data;
+};
+
+export const getSubjectPublicStructure = async (id: number) => {
+    const response = await api.get<SubjectStructureResponseDto>(`/v1/subjects/${id}/public-structure`);
     return response.data;
 };
 
