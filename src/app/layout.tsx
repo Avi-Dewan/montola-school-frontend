@@ -7,6 +7,7 @@ import "react-toastify/dist/ReactToastify.css";
 import AppChrome from "@/components/AppChrome";
 import NextTopLoader from "nextjs-toploader";
 import { Poppins } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 
 const poppins = Poppins({
   subsets: ["latin"],
@@ -58,6 +59,7 @@ export default function RootLayout({
 
           </I18nProvider>
         </AuthProvider>
+        <Analytics />
       </body>
     </html>
   );
