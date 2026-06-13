@@ -157,6 +157,7 @@ export enum ContentItemType {
     ASSIGNMENT = "ASSIGNMENT"
 }
 
+
 // Teacher types
 export interface TeacherDto {
     id: number;

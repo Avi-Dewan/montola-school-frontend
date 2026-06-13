@@ -47,6 +47,7 @@ export default function Footer() {
                                 <li><Link href="/classes" className="text-white hover:text-blue-200 transition-colors">{t("nav.classes")}</Link></li>
                                 <li><Link href="/featured-chapters" className="text-white hover:text-blue-200 transition-colors">{t("nav.featuredChapters")}</Link></li>
                                 <li><Link href="/free-chapters" className="text-white hover:text-blue-200 transition-colors">{t("nav.freeChapters")}</Link></li>
+                                <li><Link href="/resources" className="text-white hover:text-blue-200 transition-colors">{t("nav.resources")}</Link></li>
                             </>
                         )}
 
