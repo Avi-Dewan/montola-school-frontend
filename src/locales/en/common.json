@@ -416,5 +416,22 @@
         }
       }
     }
+  },
+  "notices": {
+    "label": "Notice",
+    "viewMore": "View more",
+    "type": {
+      "INFO": "Info",
+      "IMPORTANT": "Important",
+      "URGENT": "Urgent"
+    }
+  },
+  "whatsNew": {
+    "badge": "What's new",
+    "title": "Latest chapters & materials",
+    "new": "New",
+    "kindChapter": "Chapter",
+    "kindProduct": "Shop",
+    "free": "Free"
   }
 }

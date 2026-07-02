@@ -15,7 +15,8 @@ import {
     HiUserGroup,
     HiShoppingCart,
     HiShoppingBag,
-    HiCollection
+    HiCollection,
+    HiSpeakerphone
 } from "react-icons/hi";
 
 interface NavItem {
@@ -40,6 +41,7 @@ export default function AdminSidebar({ isMobileOpen, onMobileToggle }: AdminSide
         { href: "/admin/subjects", labelKey: "admin.nav.subjects", icon: HiLibrary },
         { href: "/admin/chapters", labelKey: "admin.nav.chapters", icon: HiDocumentText },
         { href: "/admin/featured", labelKey: "admin.nav.featuredChapters", icon: HiStar },
+        { href: "/admin/notices", labelKey: "Notices", icon: HiSpeakerphone },
         { href: "/admin/payments", labelKey: "admin.nav.purchaseVerification", icon: HiCash },
         { href: "/admin/shop-products", labelKey: "Shop products", icon: HiShoppingBag },
         { href: "/admin/shop-bundles", labelKey: "Shop bundles", icon: HiCollection },
