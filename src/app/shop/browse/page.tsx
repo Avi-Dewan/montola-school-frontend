@@ -107,13 +107,15 @@ function BrowseInner() {
                         {levels.map((l) => <option key={l.id} value={l.id}>{l.name}</option>)}
                     </select>
                 </div>
-                <div className="flex items-center gap-2">
-                    <span className="text-sm text-gray-500">Class</span>
-                    <select value={classId ?? ""} onChange={(e) => onClassChange(e.target.value)} className="text-sm border border-gray-300 rounded-lg px-3 py-1.5">
-                        <option value="">All</option>
-                        {classOptions.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-                    </select>
-                </div>
+                {classOptions.length > 0 && (
+                    <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-500">Class</span>
+                        <select value={classId ?? ""} onChange={(e) => onClassChange(e.target.value)} className="text-sm border border-gray-300 rounded-lg px-3 py-1.5">
+                            <option value="">All</option>
+                            {classOptions.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+                        </select>
+                    </div>
+                )}
             </div>
 
             {loading ? (

@@ -61,29 +61,44 @@ export default function ShopLandingPage() {
                         <div className="space-y-8">
                             {levels.map((lvl) => {
                                 const lvlClasses = classes.filter((c) => c.levelId === lvl.id);
-                                if (lvlClasses.length === 0) return null;
                                 return (
                                     <div key={lvl.id}>
                                         <div className="flex items-center gap-3 mb-3">
                                             <span className="text-xs font-bold uppercase tracking-widest text-primary-700 bg-primary-50 px-2.5 py-1 rounded-full">
                                                 {lvl.name}
                                             </span>
-                                            <Link href={`/shop/browse?levelId=${lvl.id}`} className="text-xs font-medium text-gray-400 hover:text-primary-600">
-                                                All {lvl.name} →
-                                            </Link>
-                                        </div>
-                                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                                            {lvlClasses.map((c) => (
-                                                <Link
-                                                    key={c.id}
-                                                    href={`/shop/browse?classId=${c.id}`}
-                                                    className="group bg-white rounded-xl border border-gray-200 px-4 py-4 hover:shadow-md hover:border-primary-300 transition flex items-center justify-between"
-                                                >
-                                                    <span className="font-bold text-gray-900 group-hover:text-primary-700">{c.name}</span>
-                                                    <LuArrowRight className="text-gray-300 group-hover:text-primary-500 transition" size={16} />
+                                            {lvlClasses.length > 0 && (
+                                                <Link href={`/shop/browse?levelId=${lvl.id}`} className="text-xs font-medium text-gray-400 hover:text-primary-600">
+                                                    All {lvl.name} →
                                                 </Link>
-                                            ))}
+                                            )}
                                         </div>
+
+                                        {lvlClasses.length > 0 ? (
+                                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                                                {lvlClasses.map((c) => (
+                                                    <Link
+                                                        key={c.id}
+                                                        href={`/shop/browse?classId=${c.id}`}
+                                                        className="group bg-white rounded-xl border border-gray-200 px-4 py-4 hover:shadow-md hover:border-primary-300 transition flex items-center justify-between"
+                                                    >
+                                                        <span className="font-bold text-gray-900 group-hover:text-primary-700">{c.name}</span>
+                                                        <LuArrowRight className="text-gray-300 group-hover:text-primary-500 transition" size={16} />
+                                                    </Link>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <Link
+                                                href={`/shop/browse?levelId=${lvl.id}`}
+                                                className="group block bg-white rounded-xl border border-gray-200 px-5 py-4 hover:shadow-md hover:border-primary-300 transition flex items-center justify-between"
+                                            >
+                                                <span>
+                                                    <span className="font-bold text-gray-900 group-hover:text-primary-700">All {lvl.name} materials</span>
+                                                    <span className="block text-xs text-gray-500 mt-0.5">Notes, solutions, worksheets and more</span>
+                                                </span>
+                                                <LuArrowRight className="text-gray-300 group-hover:text-primary-500 transition" size={18} />
+                                            </Link>
+                                        )}
                                     </div>
                                 );
                             })}
