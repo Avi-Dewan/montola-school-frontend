@@ -110,14 +110,14 @@ export default function FreeChaptersPage() {
                                 </div>
                                 <div className="p-8 flex flex-col flex-grow">
                                     <div className="flex items-center gap-2 mb-4">
-                                        <span className="text-[10px] font-black text-green-600 uppercase tracking-widest bg-green-50 px-2 py-1 rounded">
+                                        <span className="text-[10px] font-bold text-green-600 uppercase tracking-widest bg-green-50 px-2 py-1 rounded">
                                             {t("freeChapters.freeAccess")}
                                         </span>
-                                        <span className="text-[10px] font-black text-gray-400 tracking-widest uppercase">
+                                        <span className="text-[10px] font-bold text-gray-400 tracking-widest uppercase">
                                             {c.subjectName} {c.className && `[${c.className}]`}
                                         </span>
                                     </div>
-                                    <h3 className="text-2xl font-black text-gray-900 mb-3 group-hover:text-primary-600 transition-colors uppercase leading-tight tracking-tight">{c.title}</h3>
+                                    <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors uppercase leading-tight tracking-tight">{c.title}</h3>
                                     <p className="text-gray-600 mb-6 line-clamp-3 text-sm leading-relaxed">{c.description}</p>
 
                                     {enrollmentMap.has(c.id) && (
@@ -128,24 +128,24 @@ export default function FreeChaptersPage() {
                                                     style={{ width: `${enrollmentMap.get(c.id)}%` }}
                                                 />
                                             </div>
-                                            <span className="text-[10px] font-black text-green-600 uppercase tracking-widest">{Math.round(enrollmentMap.get(c.id) || 0)}% {t("student.dashboard.finished")}</span>
+                                            <span className="text-[10px] font-bold text-green-600 uppercase tracking-widest">{Math.round(enrollmentMap.get(c.id) || 0)}% {t("student.dashboard.finished")}</span>
                                         </div>
                                     )}
 
                                     <div className="mt-auto pt-6 border-t border-gray-50 flex items-center justify-between">
-                                        <div className="flex items-center gap-2 text-gray-500 text-[10px] font-black uppercase tracking-widest">
+                                        <div className="flex items-center gap-2 text-gray-500 text-[10px] font-bold uppercase tracking-widest">
                                             <FaPlayCircle className="text-primary-600" />
                                             {t("freeChapters.startLearning")}
                                         </div>
                                         {enrollmentMap.has(c.id) ? (
                                             <span
-                                                className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-xl font-black text-sm hover:bg-green-700 transition shadow-lg shadow-green-50"
+                                                className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-green-700 transition shadow-lg shadow-green-50"
                                             >
                                                 <FaPlay size={10} /> {t("student.dashboard.resume")} <FaChevronRight size={12} />
                                             </span>
                                         ) : (
                                             <span
-                                                className="inline-flex items-center gap-2 border-2 border-primary-600 text-primary-600 px-6 py-2.5 rounded-xl font-black text-sm hover:bg-primary-600 hover:text-white transition shadow-lg shadow-primary-50"
+                                                className="inline-flex items-center gap-2 border-2 border-primary-600 text-primary-600 px-6 py-2.5 rounded-xl font-bold text-sm hover:bg-primary-600 hover:text-white transition shadow-lg shadow-primary-50"
                                             >
                                                 {t("freeChapters.enrollNow")} <FaChevronRight size={12} />
                                             </span>

@@ -110,11 +110,11 @@ export default function FeaturedChaptersPage() {
                                 </div>
                                 <div className="p-8 flex flex-col flex-grow">
                                     <div className="flex justify-between items-start mb-4">
-                                        <span className="text-[10px] font-black tracking-widest text-primary-600 uppercase bg-primary-50 px-2 py-1 rounded">
+                                        <span className="text-[10px] font-bold tracking-widest text-primary-600 uppercase bg-primary-50 px-2 py-1 rounded">
                                             {c.subjectName} {c.className && `[${c.className}]`}
                                         </span>
                                     </div>
-                                    <h3 className="text-2xl font-black text-gray-900 mb-3 group-hover:text-primary-600 transition-colors leading-tight uppercase tracking-tight">{c.title}</h3>
+                                    <h3 className="text-2xl font-bold text-gray-900 mb-3 group-hover:text-primary-600 transition-colors leading-tight uppercase tracking-tight">{c.title}</h3>
                                     <p className="text-gray-600 mb-6 line-clamp-3 text-sm leading-relaxed">{c.description}</p>
 
                                     {enrollmentMap.has(c.chapterId) && (
@@ -125,23 +125,23 @@ export default function FeaturedChaptersPage() {
                                                     style={{ width: `${enrollmentMap.get(c.chapterId)}%` }}
                                                 />
                                             </div>
-                                            <span className="text-[10px] font-black text-green-600 uppercase tracking-widest">{Math.round(enrollmentMap.get(c.chapterId) || 0)}% {t("student.dashboard.finished")}</span>
+                                            <span className="text-[10px] font-bold text-green-600 uppercase tracking-widest">{Math.round(enrollmentMap.get(c.chapterId) || 0)}% {t("student.dashboard.finished")}</span>
                                         </div>
                                     )}
 
                                     <div className="mt-auto pt-6 border-t border-gray-50 flex items-center justify-between">
-                                        <p className="text-2xl font-black text-primary-600">
+                                        <p className="text-2xl font-bold text-primary-600">
                                             {c.free ? t("home.free.badge") : `৳${c.price}`}
                                         </p>
                                         {enrollmentMap.has(c.chapterId) ? (
                                             <span
-                                                className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-xl font-black text-sm tracking-tight group-hover:bg-green-700 transition shadow-lg shadow-green-100"
+                                                className="inline-flex items-center gap-2 bg-green-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm tracking-tight group-hover:bg-green-700 transition shadow-lg shadow-green-100"
                                             >
                                                 <FaPlay size={10} /> {t("student.dashboard.resume")}
                                             </span>
                                         ) : (
                                             <span
-                                                className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-2.5 rounded-xl font-black text-sm tracking-tight group-hover:bg-primary-700 transition shadow-lg shadow-primary-100"
+                                                className="inline-flex items-center gap-2 bg-primary-600 text-white px-6 py-2.5 rounded-xl font-bold text-sm tracking-tight group-hover:bg-primary-700 transition shadow-lg shadow-primary-100"
                                             >
                                                 {t("home.featured.preview")} <FaChevronRight size={12} />
                                             </span>

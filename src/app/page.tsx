@@ -8,8 +8,8 @@ import { getHighestPriorityRole, getRouteForRole } from "@/lib/roles";
 import Hero from "@/components/Hero";
 import ValueProps from "@/components/ValueProps";
 import FeaturedCourses from "@/components/FeaturedCourses";
-import FreeChapterList from "@/components/FreeChapterList";
 import ClassesListSection from "@/components/ClassesListSection";
+import ShopHomeSection from "@/components/shop/ShopHomeSection";
 
 export default function HomePage() {
     const router = useRouter();
@@ -62,12 +62,10 @@ export default function HomePage() {
         <main className="overflow-x-hidden">
             <Hero />
             <ClassesListSection />
-            <div id="free">
-                <FreeChapterList />
-            </div>
             <div id="featured">
                 <FeaturedCourses />
             </div>
+            <ShopHomeSection />
             <ValueProps />
         </main>
     );

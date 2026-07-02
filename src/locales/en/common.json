@@ -18,7 +18,7 @@
     "phone": "Phone",
     "address": "Address",
     "rights": "All rights reserved.",
-    "description": "Eco-friendly EdTech for Chittagong Hill Tracts & beyond."
+    "description": "Redefining how true learning happens."
   },
   "classes": {
     "title": "Available Classes",
@@ -43,7 +43,9 @@
     "subjectContentError": "Failed to load subject content.",
     "subjectNotFound": "Subject not found",
     "noChapters": "No chapters available yet.",
-    "noChaptersSub": "We're still preparing the chapters for this subject."
+    "noChaptersSub": "We're still preparing the chapters for this subject.",
+    "freeInClass": "Try it free — chapters in this class",
+    "startFree": "Start free"
   },
   "featuredChapters": {
     "title": "Featured Chapters",
@@ -93,7 +95,8 @@
     "paymentFailed": "Failed to submit payment details.",
     "enrollToAccess": "You need to enroll to access this content.",
     "buyToAccess": "You need to purchase this chapter to access this content.",
-    "whatYouWillLearn": "What you'll learn",    "fallbackDescription": "Master this topic with our expert-led chapter tutorials, exclusive resources, and interactive quizzes.",
+    "whatYouWillLearn": "What you'll learn",
+    "fallbackDescription": "Master this topic with our expert-led chapter tutorials, exclusive resources, and interactive quizzes.",
     "noGeneral": "General",
     "features": {
       "live": "Live classes",
@@ -102,7 +105,8 @@
       "notice": "Exclusive notice board feature",
       "exams": "World class exam system"
     }
-  },  "paymentModal": {
+  },
+  "paymentModal": {
     "title": "Complete Your Payment",
     "chapterHeader": "Chapter",
     "totalAmount": "Total Amount:",
@@ -354,7 +358,7 @@
   "home": {
     "hero": {
       "title": "Redefining how true learning happens.",
-      "subtitle": "In a world of memorized answers, we are building a home for curious minds. At Montola School, we don't just teach the 'How'—we empower every child to demand the 'Why’.",
+      "subtitle": "In a world that rewards memorized answers, Montola School builds curious minds. We don't just teach the How — we teach every student to ask Why.",
       "startLearning": "Start Learning",
       "exploreClasses": "Explore Classes"
     },
@@ -373,14 +377,14 @@
     },
     "classes": {
       "title": "Available Classes",
-      "subtitle": "Select a Class you want to explore",
+      "subtitle": "Select your class to explore its subjects and chapters. Every class includes free chapters — try them first, judge our teaching, then decide.",
       "loading": "Arranging our class catalog..."
     },
     "valueProps": {
       "titlePart1": "Why we started ",
       "titlePart2": "Montola School?",
-      "descriptionPart1": "There is a story behind every initiative. Behind Montola School lies a journey born from the landscapes and spirit of the Chittagong Hill Tracts —it’s about ",
-      "descriptionPart2": "redefining how true learning happens.",
+      "descriptionPart1": "Too many students in the Chittagong Hill Tracts are falling behind — not because they lack ability, but because the system was never built for them. Montola School exists to change that — ",
+      "descriptionPart2": "redefining how true learning happens in the hills.",
       "props": {
         "why": {
           "title": "Start With Why",
