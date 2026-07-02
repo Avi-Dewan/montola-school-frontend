@@ -402,5 +402,22 @@
         }
       }
     }
+  },
+  "notices": {
+    "label": "নোটিশ",
+    "viewMore": "বিস্তারিত দেখুন",
+    "type": {
+      "INFO": "তথ্য",
+      "IMPORTANT": "গুরুত্বপূর্ণ",
+      "URGENT": "জরুরি"
+    }
+  },
+  "whatsNew": {
+    "badge": "নতুন যা এলো",
+    "title": "সর্বশেষ অধ্যায় ও উপকরণ",
+    "new": "নতুন",
+    "kindChapter": "অধ্যায়",
+    "kindProduct": "শপ",
+    "free": "ফ্রি"
   }
 }
