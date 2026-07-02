@@ -1,99 +1,100 @@
-import { useI18n } from "@/contexts/I18nProvider";
-import { FaLightbulb, FaUserGraduate, FaComments } from "react-icons/fa";
+import {
+    LuLightbulb,
+    LuBrain,
+    LuCalendarClock,
+    LuUsers,
+    LuMessageSquare,
+    LuTrendingUp,
+} from "react-icons/lu";
+
+// Six teaching principles shown on the homepage ("How we actually teach").
+// Text is intentionally kept here (not in i18n) so it's easy to find and edit.
+const principles = [
+    {
+        icon: <LuLightbulb size={20} />,
+        title: "Start with why",
+        desc: "We don’t just tell you the answer — we guide you to see why it’s the only logical conclusion. Understanding beats memorising every time.",
+        tag: "Conceptual depth",
+        iconClass: "bg-amber-100 text-amber-600",
+        tagClass: "bg-amber-50 text-amber-700",
+    },
+    {
+        icon: <LuBrain size={20} />,
+        title: "Active recall",
+        desc: "Every session ends with retrieval, not re-reading. Pulling information from memory is what makes it stick — passive review barely works.",
+        tag: "Cognitive science",
+        iconClass: "bg-emerald-100 text-emerald-600",
+        tagClass: "bg-emerald-50 text-emerald-700",
+    },
+    {
+        icon: <LuCalendarClock size={20} />,
+        title: "Spaced repetition",
+        desc: "We revisit material at calculated intervals — Day 1, Day 3, Day 7, Day 21 — so knowledge transfers into long-term memory before exams arrive.",
+        tag: "Memory science",
+        iconClass: "bg-teal-100 text-teal-600",
+        tagClass: "bg-teal-50 text-teal-700",
+    },
+    {
+        icon: <LuUsers size={20} />,
+        title: "Personalised learning",
+        desc: "No two students have the same gaps. We diagnose where each learner stands and adapt the pace, depth, and examples accordingly.",
+        tag: "Adaptive teaching",
+        iconClass: "bg-blue-100 text-blue-600",
+        tagClass: "bg-blue-50 text-blue-700",
+    },
+    {
+        icon: <LuMessageSquare size={20} />,
+        title: "Reciprocal teaching",
+        desc: "When you explain a concept to someone else, your brain reorganises it clearly. We build this into the classroom — teaching peers cements understanding.",
+        tag: "Peer learning",
+        iconClass: "bg-indigo-100 text-indigo-600",
+        tagClass: "bg-indigo-50 text-indigo-700",
+    },
+    {
+        icon: <LuTrendingUp size={20} />,
+        title: "Visible progress",
+        desc: "Students track their own performance week by week. Seeing growth builds the confidence that struggling learners often lack — and confidence compounds.",
+        tag: "Growth mindset",
+        iconClass: "bg-rose-100 text-rose-600",
+        tagClass: "bg-rose-50 text-rose-700",
+    },
+];
 
 export default function ValueProps() {
-    const { t } = useI18n();
-
-    const props = [
-        {
-            icon: <FaLightbulb size={24} />,
-            title: t("home.valueProps.props.why.title"),
-            desc: t("home.valueProps.props.why.desc"),
-            color: "bg-amber-50 text-amber-500"
-        },
-        {
-            icon: <FaUserGraduate size={24} />,
-            title: t("home.valueProps.props.personalized.title"),
-            desc: t("home.valueProps.props.personalized.desc"),
-            color: "bg-primary-50 text-primary-600"
-        },
-        {
-            icon: <FaComments size={24} />,
-            title: t("home.valueProps.props.reciprocal.title"),
-            desc: t("home.valueProps.props.reciprocal.desc"),
-            color: "bg-blue-50 text-blue-500"
-        }
-    ];
-
-    const comparisonRows = [
-        { left: t("home.valueProps.comparison.row1.left"), right: t("home.valueProps.comparison.row1.right") },
-        { left: t("home.valueProps.comparison.row2.left"), right: t("home.valueProps.comparison.row2.right") },
-        { left: t("home.valueProps.comparison.row3.left"), right: t("home.valueProps.comparison.row3.right") },
-    ];
-
     return (
-        <section className="py-24 px-6 bg-gradient-to-b from-white to-gray-50">
+        <section className="py-24 px-6 bg-gray-50">
             <div className="max-w-6xl mx-auto">
-                <div className="text-center mb-16">
-                    <h2 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">
-                        {t("home.valueProps.titlePart1")}<span className="text-primary-600">{t("home.valueProps.titlePart2")}</span>
+                {/* Header */}
+                <div className="mb-12">
+                    <span className="inline-block px-3 py-1 rounded-full bg-primary-50 text-primary-700 text-xs font-semibold uppercase tracking-wider mb-5">
+                        Our Approach
+                    </span>
+                    <h2 className="font-serif text-4xl md:text-5xl text-gray-900 mb-4">
+                        How we actually teach
                     </h2>
-                    <p className="text-gray-600 max-w-3xl mx-auto text-lg leading-relaxed">
-                        {t("home.valueProps.descriptionPart1")}
-                        <span className="font-bold text-gray-900">{t("home.valueProps.descriptionPart2")}</span>
+                    <p className="text-gray-600 text-lg leading-relaxed max-w-2xl">
+                        Six principles that shape every class at Montola &mdash; grounded in
+                        cognitive science, built for students who need to go further.
                     </p>
                 </div>
 
-                <div className="flex justify-center">
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-4xl">
-                        {props.map((p) => (
-                            <div
-                                key={p.title}
-                                className="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group"
-                            >
-                                <div className={`w-14 h-14 ${p.color} rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300`}>
-                                    {p.icon}
-                                </div>
-                                <h3 className="text-xl font-bold text-gray-900 mb-3">{p.title}</h3>
-                                <p className="text-gray-600 leading-relaxed text-sm">
-                                    {p.desc}
-                                </p>
+                {/* Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {principles.map((p) => (
+                        <div
+                            key={p.title}
+                            className="flex flex-col bg-white p-7 rounded-2xl border border-gray-200 shadow-sm hover:shadow-md hover:border-primary-300 transition-all duration-300"
+                        >
+                            <div className={`w-11 h-11 ${p.iconClass} rounded-xl flex items-center justify-center mb-5`}>
+                                {p.icon}
                             </div>
-                        ))}
-                    </div>
-                </div>
-
-                {/* Comparison Table */}
-                <div className="mt-16 max-w-3xl mx-auto">
-                    <h3 className="text-center text-2xl font-bold text-gray-900 mb-8">
-                        What sets us apart
-                    </h3>
-                    <div className="bg-white rounded-2xl border border-gray-200 overflow-hidden shadow-sm">
-                        {/* Header */}
-                        <div className="grid grid-cols-2">
-                            <div className="px-8 py-5 border-b border-r border-gray-200">
-                                <h3 className="font-bold text-gray-900 text-sm md:text-base">
-                                    {t("home.valueProps.comparison.conventional")}
-                                </h3>
-                            </div>
-                            <div className="px-8 py-5 border-b border-gray-200 bg-primary-50/40">
-                                <h3 className="font-bold text-gray-900 text-sm md:text-base">
-                                    {t("home.valueProps.comparison.montola")}
-                                </h3>
-                            </div>
+                            <h3 className="text-lg font-bold text-gray-900 mb-2">{p.title}</h3>
+                            <p className="text-gray-600 text-sm leading-relaxed mb-6">{p.desc}</p>
+                            <span className={`inline-block self-start mt-auto px-3 py-1 rounded-full text-xs font-medium ${p.tagClass}`}>
+                                {p.tag}
+                            </span>
                         </div>
-                        {/* Rows */}
-                        {comparisonRows.map((row, i) => (
-                            <div key={i} className={`grid grid-cols-2 ${i < comparisonRows.length - 1 ? 'border-b border-gray-100' : ''}`}>
-                                <div className="px-8 py-6 border-r border-gray-200">
-                                    <p className="text-gray-500 text-sm leading-relaxed">{row.left}</p>
-                                </div>
-                                <div className="px-8 py-6 bg-primary-50/20">
-                                    <p className="text-gray-700 text-sm leading-relaxed font-medium">{row.right}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+                    ))}
                 </div>
             </div>
         </section>
