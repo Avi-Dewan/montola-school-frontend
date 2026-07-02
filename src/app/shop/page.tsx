@@ -3,30 +3,25 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { LuShoppingBag, LuArrowRight } from "react-icons/lu";
-import { getFeaturedProducts, getBundles, getLevels } from "@/lib/shop";
+import { getFeaturedProducts, getBundles, getLevels, getShopClasses } from "@/lib/shop";
 import { PRODUCT_TYPE_META, TYPE_FAMILIES, formatTaka } from "@/lib/shopMeta";
-import type { ShopProductCard, ShopBundle, ShopProductType, ShopLevel } from "@/types/shop";
+import type { ShopProductCard, ShopBundle, ShopProductType, ShopLevel, ShopClass } from "@/types/shop";
 import ProductCard from "@/components/shop/ProductCard";
-
-// Short descriptions for each exam level shown on the "browse by class" cards.
-const LEVEL_DESC: Record<string, string> = {
-    JSC: "Class 6 – 8",
-    SSC: "Class 9 – 10",
-    HSC: "Class 11 – 12",
-};
 
 export default function ShopLandingPage() {
     const [featured, setFeatured] = useState<ShopProductCard[]>([]);
     const [bundles, setBundles] = useState<ShopBundle[]>([]);
     const [levels, setLevels] = useState<ShopLevel[]>([]);
+    const [classes, setClasses] = useState<ShopClass[]>([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        Promise.all([getFeaturedProducts(), getBundles(), getLevels()])
-            .then(([f, b, l]) => {
+        Promise.all([getFeaturedProducts(), getBundles(), getLevels(), getShopClasses()])
+            .then(([f, b, l, c]) => {
                 setFeatured(f);
                 setBundles(b);
                 setLevels(l);
+                setClasses(c);
             })
             .catch(() => {})
             .finally(() => setLoading(false));
@@ -56,28 +51,42 @@ export default function ShopLandingPage() {
                 </div>
             </section>
 
-            {/* Browse by class / level */}
-            {levels.length > 0 && (
+            {/* Browse by class (grouped under level) */}
+            {classes.length > 0 && (
                 <section className="py-16 px-6">
                     <div className="max-w-6xl mx-auto">
                         <h2 className="text-2xl font-bold text-gray-900 mb-2">Browse by class</h2>
-                        <p className="text-gray-500 mb-6 text-sm">Find everything for your exam level.</p>
-                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-                            {levels.map((l) => (
-                                <Link
-                                    key={l.id}
-                                    href={`/shop/browse?levelId=${l.id}`}
-                                    className="group bg-white rounded-2xl border border-gray-200 p-6 hover:shadow-md hover:border-primary-300 transition flex items-center justify-between"
-                                >
-                                    <div>
-                                        <h3 className="text-xl font-bold text-gray-900">{l.name}</h3>
-                                        <p className="text-sm text-gray-500">{LEVEL_DESC[l.name] ?? "All materials"}</p>
+                        <p className="text-gray-500 mb-8 text-sm">Pick your class to see materials made just for it.</p>
+
+                        <div className="space-y-8">
+                            {levels.map((lvl) => {
+                                const lvlClasses = classes.filter((c) => c.levelId === lvl.id);
+                                if (lvlClasses.length === 0) return null;
+                                return (
+                                    <div key={lvl.id}>
+                                        <div className="flex items-center gap-3 mb-3">
+                                            <span className="text-xs font-bold uppercase tracking-widest text-primary-700 bg-primary-50 px-2.5 py-1 rounded-full">
+                                                {lvl.name}
+                                            </span>
+                                            <Link href={`/shop/browse?levelId=${lvl.id}`} className="text-xs font-medium text-gray-400 hover:text-primary-600">
+                                                All {lvl.name} →
+                                            </Link>
+                                        </div>
+                                        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                                            {lvlClasses.map((c) => (
+                                                <Link
+                                                    key={c.id}
+                                                    href={`/shop/browse?classId=${c.id}`}
+                                                    className="group bg-white rounded-xl border border-gray-200 px-4 py-4 hover:shadow-md hover:border-primary-300 transition flex items-center justify-between"
+                                                >
+                                                    <span className="font-bold text-gray-900 group-hover:text-primary-700">{c.name}</span>
+                                                    <LuArrowRight className="text-gray-300 group-hover:text-primary-500 transition" size={16} />
+                                                </Link>
+                                            ))}
+                                        </div>
                                     </div>
-                                    <span className="w-10 h-10 rounded-full bg-primary-50 text-primary-600 flex items-center justify-center group-hover:bg-primary-100 transition">
-                                        <LuArrowRight />
-                                    </span>
-                                </Link>
-                            ))}
+                                );
+                            })}
                         </div>
                     </div>
                 </section>
