@@ -24,8 +24,8 @@ export default function Hero() {
                 <Link href="/classes" className="px-6 py-3 bg-white text-primary-500 rounded-lg font-semibold hover:bg-gray-100 transition inline-block">
                     {t("home.hero.startLearning")}
                 </Link>
-                <Link href="/classes" className="px-6 py-3 border border-white rounded-lg font-semibold hover:bg-white hover:text-primary-500 transition inline-block">
-                    {t("home.hero.exploreClasses")}
+                <Link href="/shop" className="px-6 py-3 border border-white rounded-lg font-semibold hover:bg-white hover:text-primary-500 transition inline-block">
+                    {t("home.hero.studyMaterials")}
                 </Link>
             </div>
         </section>
