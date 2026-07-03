@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { LuShoppingBag, LuArrowRight, LuGraduationCap } from "react-icons/lu";
+import { LuShoppingBag, LuArrowRight, LuGraduationCap, LuSearch, LuCheck } from "react-icons/lu";
 import { getFeaturedProducts, getBundles, getLevels, getShopClasses } from "@/lib/shop";
 import { PRODUCT_TYPE_META, TYPE_FAMILIES, formatTaka } from "@/lib/shopMeta";
 import type { ShopProductCard, ShopBundle, ShopProductType, ShopLevel, ShopClass } from "@/types/shop";
 import ProductCard from "@/components/shop/ProductCard";
+import { useI18n } from "@/contexts/I18nProvider";
 
 // Class-range subtitle shown on each level card.
 const LEVEL_RANGE: Record<string, string> = {
@@ -16,11 +18,20 @@ const LEVEL_RANGE: Record<string, string> = {
 };
 
 export default function ShopLandingPage() {
+    const { t } = useI18n();
+    const router = useRouter();
     const [featured, setFeatured] = useState<ShopProductCard[]>([]);
     const [bundles, setBundles] = useState<ShopBundle[]>([]);
     const [levels, setLevels] = useState<ShopLevel[]>([]);
     const [classes, setClasses] = useState<ShopClass[]>([]);
+    const [query, setQuery] = useState("");
     const [loading, setLoading] = useState(true);
+
+    const onSearch = (e: React.FormEvent) => {
+        e.preventDefault();
+        const q = query.trim();
+        router.push(q ? `/shop/browse?q=${encodeURIComponent(q)}` : "/shop/browse");
+    };
 
     useEffect(() => {
         Promise.all([getFeaturedProducts(), getBundles(), getLevels(), getShopClasses()])
@@ -40,21 +51,40 @@ export default function ShopLandingPage() {
             <section className="bg-gradient-to-br from-primary-600 to-primary-700 text-white py-20 px-6">
                 <div className="max-w-6xl mx-auto">
                     <span className="inline-flex items-center gap-2 bg-white/15 text-white text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full mb-5">
-                        <LuShoppingBag /> Montola shop
+                        <LuShoppingBag /> {t("shopHero.badge")}
                     </span>
-                    <h1 className="font-serif text-4xl md:text-5xl mb-4 max-w-2xl">
-                        Study materials that actually help
+                    <h1 className="font-serif text-4xl md:text-5xl mb-4 max-w-3xl leading-tight">
+                        {t("shopHero.title")}
                     </h1>
                     <p className="text-white/85 text-lg max-w-xl mb-8">
-                        Notes, board analysis, solved questions, worksheets and drill sheets — by class,
-                        subject and chapter.
+                        {t("shopHero.subtitle")}
                     </p>
-                    <Link
-                        href="/shop/browse"
-                        className="inline-flex items-center gap-2 bg-white text-primary-700 font-semibold px-6 py-3 rounded-lg hover:bg-gray-100 transition"
-                    >
-                        Browse all products <LuArrowRight />
+
+                    {/* Search */}
+                    <form onSubmit={onSearch} className="flex flex-col sm:flex-row gap-2 max-w-xl">
+                        <div className="flex-1 flex items-center gap-2 bg-white rounded-xl px-4">
+                            <LuSearch className="text-gray-400 shrink-0" size={20} />
+                            <input
+                                value={query}
+                                onChange={(e) => setQuery(e.target.value)}
+                                placeholder={t("shopHero.searchPlaceholder")}
+                                className="flex-1 py-3.5 text-gray-800 bg-transparent outline-none placeholder:text-gray-400"
+                            />
+                        </div>
+                        <button type="submit" className="bg-white text-primary-700 font-semibold px-6 py-3.5 rounded-xl hover:bg-gray-100 transition shrink-0">
+                            {t("shopHero.search")}
+                        </button>
+                    </form>
+                    <Link href="/shop/browse" className="inline-flex items-center gap-1 mt-3 text-sm text-white/80 hover:text-white transition">
+                        {t("shopHero.browseAll")} <LuArrowRight size={14} />
                     </Link>
+
+                    {/* Trust strip */}
+                    <div className="flex flex-wrap gap-x-6 gap-y-2 mt-8 text-sm text-white/90">
+                        <span className="inline-flex items-center gap-2"><LuCheck size={16} /> {t("shopHero.trust1")}</span>
+                        <span className="inline-flex items-center gap-2"><LuCheck size={16} /> {t("shopHero.trust2")}</span>
+                        <span className="inline-flex items-center gap-2"><LuCheck size={16} /> {t("shopHero.trust3")}</span>
+                    </div>
                 </div>
             </section>
 

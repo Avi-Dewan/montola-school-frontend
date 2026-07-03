@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { LuSearch, LuX } from "react-icons/lu";
 import { getProducts, getLevels, getShopClasses } from "@/lib/shop";
 import { PRODUCT_TYPE_META } from "@/lib/shopMeta";
 import type { ShopProductCard, ShopLevel, ShopClass, ShopProductType, ShopFilters } from "@/types/shop";
@@ -15,10 +16,12 @@ function BrowseInner() {
     const initialType = (params.get("type") as ShopProductType) || undefined;
     const initialLevel = params.get("levelId") ? Number(params.get("levelId")) : undefined;
     const initialClass = params.get("classId") ? Number(params.get("classId")) : undefined;
+    const initialQ = params.get("q") || "";
 
     const [type, setType] = useState<ShopProductType | undefined>(initialType);
     const [levelId, setLevelId] = useState<number | undefined>(initialLevel);
     const [classId, setClassId] = useState<number | undefined>(initialClass);
+    const [query, setQuery] = useState(initialQ);
     const [levels, setLevels] = useState<ShopLevel[]>([]);
     const [classes, setClasses] = useState<ShopClass[]>([]);
     const [products, setProducts] = useState<ShopProductCard[]>([]);
@@ -47,6 +50,12 @@ function BrowseInner() {
             .catch(() => setProducts([]))
             .finally(() => setLoading(false));
     }, [type, levelId, classId]);
+
+    // text search filters the fetched products client-side (title + description)
+    const q = query.trim().toLowerCase();
+    const shown = q
+        ? products.filter((p) => `${p.title} ${p.description}`.toLowerCase().includes(q))
+        : products;
 
     // classes available for the class dropdown (narrowed to selected level)
     const classOptions = levelId ? classes.filter((c) => c.levelId === levelId) : classes;
@@ -78,6 +87,22 @@ function BrowseInner() {
             </div>
             <h1 className="text-3xl font-bold text-gray-900 mb-1">Browse products</h1>
             <p className="text-gray-500 mb-6">{heading}</p>
+
+            {/* Search */}
+            <div className="flex items-center gap-2 bg-white border border-gray-300 rounded-xl px-4 mb-6 max-w-md focus-within:border-primary-400">
+                <LuSearch className="text-gray-400 shrink-0" size={18} />
+                <input
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search notes, worksheets, class 8…"
+                    className="flex-1 py-2.5 text-sm text-gray-800 bg-transparent outline-none placeholder:text-gray-400"
+                />
+                {query && (
+                    <button onClick={() => setQuery("")} aria-label="Clear search" className="text-gray-400 hover:text-gray-600 shrink-0">
+                        <LuX size={16} />
+                    </button>
+                )}
+            </div>
 
             {/* Type chips */}
             <div className="flex flex-wrap gap-2 mb-4">
@@ -120,11 +145,11 @@ function BrowseInner() {
 
             {loading ? (
                 <p className="text-gray-500">Loading products…</p>
-            ) : products.length === 0 ? (
-                <p className="text-gray-500">No products match these filters.</p>
+            ) : shown.length === 0 ? (
+                <p className="text-gray-500">{q ? `No products match “${query.trim()}”.` : "No products match these filters."}</p>
             ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                    {products.map((p) => (
+                    {shown.map((p) => (
                         <ProductCard key={p.id} product={p} />
                     ))}
                 </div>
