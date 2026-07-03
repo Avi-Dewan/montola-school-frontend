@@ -440,5 +440,16 @@
     "kindChapter": "Chapter",
     "kindProduct": "Shop",
     "free": "Free"
+  },
+  "shopHero": {
+    "badge": "Montola shop",
+    "title": "Study materials made for you to score higher in the exam.",
+    "subtitle": "Board-focused notes, solutions, worksheets and drill sheets — matched to your class and chapter. Preview free, then buy what helps.",
+    "searchPlaceholder": "Search notes, worksheets, class 8…",
+    "search": "Search",
+    "browseAll": "Browse all materials",
+    "trust1": "Preview free before you buy",
+    "trust2": "Instant online access",
+    "trust3": "Pay with bKash / Nagad"
   }
 }
