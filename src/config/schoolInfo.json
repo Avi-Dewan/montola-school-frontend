@@ -5,5 +5,10 @@
   "copyrightYear": 2026,
   "paymentNumbers": {
     "bkashMerchant": "017XXXXXXXX"
+  },
+  "academicCare": {
+    "whatsapp": "8801787503322",
+    "address": "মোনতলা স্পেশাল একাডেমিক কেয়ার, মিলনপুর, খাগড়াছড়ি সদর।",
+    "trialDays": 7
   }
 }
