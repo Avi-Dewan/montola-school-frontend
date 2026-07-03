@@ -66,7 +66,10 @@
     "error": "Failed to load free chapters.",
     "startLearning": "Start Learning",
     "enrollNow": "Enroll Now",
-    "freeAccess": "Free Access"
+    "freeAccess": "Free Access",
+    "allLevels": "All levels",
+    "comingSoon": "Free chapters for this level are coming soon.",
+    "pickLevel": "Find free chapters for your level"
   },
   "chapterPublic": {
     "loading": "Loading chapter details...",
