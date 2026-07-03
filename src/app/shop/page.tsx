@@ -2,11 +2,18 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { LuShoppingBag, LuArrowRight } from "react-icons/lu";
+import { LuShoppingBag, LuArrowRight, LuGraduationCap } from "react-icons/lu";
 import { getFeaturedProducts, getBundles, getLevels, getShopClasses } from "@/lib/shop";
 import { PRODUCT_TYPE_META, TYPE_FAMILIES, formatTaka } from "@/lib/shopMeta";
 import type { ShopProductCard, ShopBundle, ShopProductType, ShopLevel, ShopClass } from "@/types/shop";
 import ProductCard from "@/components/shop/ProductCard";
+
+// Class-range subtitle shown on each level card.
+const LEVEL_RANGE: Record<string, string> = {
+    JSC: "Classes 6 – 8",
+    SSC: "Classes 9 – 10",
+    HSC: "Classes 11 – 12",
+};
 
 export default function ShopLandingPage() {
     const [featured, setFeatured] = useState<ShopProductCard[]>([]);
@@ -58,47 +65,54 @@ export default function ShopLandingPage() {
                         <h2 className="text-2xl font-bold text-gray-900 mb-2">Browse by class</h2>
                         <p className="text-gray-500 mb-8 text-sm">Pick your class to see materials made just for it.</p>
 
-                        {/* All levels as parallel columns: JSC | SSC | HSC */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {/* All levels as parallel, equal-height cards: JSC | SSC | HSC */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
                             {levels.map((lvl) => {
                                 const lvlClasses = classes.filter((c) => c.levelId === lvl.id);
+                                const hasClasses = lvlClasses.length > 0;
                                 return (
-                                    <div key={lvl.id}>
-                                        <div className="flex items-center gap-3 mb-3">
-                                            <span className="text-xs font-bold uppercase tracking-widest text-primary-700 bg-primary-50 px-2.5 py-1 rounded-full">
-                                                {lvl.name}
+                                    <div key={lvl.id} className="bg-white rounded-2xl border border-gray-200 shadow-sm p-6 flex flex-col">
+                                        {/* header */}
+                                        <div className="flex items-center gap-3 mb-5">
+                                            <span className="w-11 h-11 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0">
+                                                <LuGraduationCap size={22} />
                                             </span>
-                                            {lvlClasses.length > 0 && (
-                                                <Link href={`/shop/browse?levelId=${lvl.id}`} className="text-xs font-medium text-gray-400 hover:text-primary-600">
-                                                    All {lvl.name} →
-                                                </Link>
-                                            )}
+                                            <div>
+                                                <h3 className="text-lg font-bold text-gray-900 leading-none">{lvl.name}</h3>
+                                                <p className="text-xs text-gray-500 mt-1">{LEVEL_RANGE[lvl.name] ?? "All materials"}</p>
+                                            </div>
                                         </div>
 
-                                        {lvlClasses.length > 0 ? (
-                                            <div className="grid grid-cols-1 gap-3">
-                                                {lvlClasses.map((c) => (
-                                                    <Link
-                                                        key={c.id}
-                                                        href={`/shop/browse?classId=${c.id}`}
-                                                        className="group bg-white rounded-xl border border-gray-200 px-5 py-4 hover:shadow-md hover:border-primary-300 transition flex items-center justify-between"
-                                                    >
-                                                        <span className="font-bold text-gray-900 group-hover:text-primary-700">{c.name}</span>
-                                                        <LuArrowRight className="text-gray-300 group-hover:text-primary-500 transition" size={16} />
-                                                    </Link>
-                                                ))}
-                                            </div>
+                                        {hasClasses ? (
+                                            <>
+                                                <div className="space-y-2">
+                                                    {lvlClasses.map((c) => (
+                                                        <Link
+                                                            key={c.id}
+                                                            href={`/shop/browse?classId=${c.id}`}
+                                                            className="group flex items-center justify-between rounded-xl border border-gray-100 px-4 py-3 hover:border-primary-300 hover:bg-primary-50/40 transition"
+                                                        >
+                                                            <span className="font-semibold text-gray-800 group-hover:text-primary-700">{c.name}</span>
+                                                            <LuArrowRight className="text-gray-300 group-hover:text-primary-500 transition" size={16} />
+                                                        </Link>
+                                                    ))}
+                                                </div>
+                                                <Link href={`/shop/browse?levelId=${lvl.id}`} className="mt-4 inline-flex items-center gap-1 text-sm font-semibold text-primary-600 hover:text-primary-700">
+                                                    View all {lvl.name} <LuArrowRight size={14} />
+                                                </Link>
+                                            </>
                                         ) : (
-                                            <Link
-                                                href={`/shop/browse?levelId=${lvl.id}`}
-                                                className="group block bg-white rounded-xl border border-gray-200 px-5 py-4 hover:shadow-md hover:border-primary-300 transition flex items-center justify-between h-full"
-                                            >
-                                                <span>
-                                                    <span className="font-bold text-gray-900 group-hover:text-primary-700">All {lvl.name} materials</span>
-                                                    <span className="block text-xs text-gray-500 mt-0.5">Notes, solutions, worksheets and more</span>
-                                                </span>
-                                                <LuArrowRight className="text-gray-300 group-hover:text-primary-500 transition" size={18} />
-                                            </Link>
+                                            <>
+                                                <p className="text-sm text-gray-500 leading-relaxed">
+                                                    Everything for the whole {lvl.name} programme — notes, board analysis, solutions, worksheets and more, in one place.
+                                                </p>
+                                                <Link
+                                                    href={`/shop/browse?levelId=${lvl.id}`}
+                                                    className="mt-auto flex w-full items-center justify-center gap-2 bg-primary-600 text-white text-sm font-semibold px-4 py-2.5 rounded-lg hover:bg-primary-700 transition"
+                                                >
+                                                    Browse {lvl.name} materials <LuArrowRight size={16} />
+                                                </Link>
+                                            </>
                                         )}
                                     </div>
                                 );
