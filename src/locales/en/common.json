@@ -54,7 +54,10 @@
     "loading": "Collecting our best chapters...",
     "noChapters": "No featured chapters yet",
     "noChaptersSub": "Check back soon for our top picks!",
-    "error": "Failed to load featured chapters."
+    "error": "Failed to load featured chapters.",
+    "allLevels": "All levels",
+    "comingSoon": "Featured chapters for this level are coming soon.",
+    "pickLevel": "Find featured chapters for your level"
   },
   "freeChapters": {
     "title": "Free Chapters",
