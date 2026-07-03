@@ -8,6 +8,7 @@ import { getHighestPriorityRole, getRouteForRole } from "@/lib/roles";
 import Hero from "@/components/Hero";
 import NoticesSection from "@/components/NoticesSection";
 import WhatsNewSection from "@/components/WhatsNewSection";
+import AcademicCareBanner from "@/components/AcademicCareBanner";
 import ValueProps from "@/components/ValueProps";
 import FeaturedCourses from "@/components/FeaturedCourses";
 import ClassesListSection from "@/components/ClassesListSection";
@@ -64,6 +65,7 @@ export default function HomePage() {
         <main className="overflow-x-hidden">
             <Hero />
             <NoticesSection />
+            <AcademicCareBanner />
             <WhatsNewSection />
             <ClassesListSection />
             <div id="featured">
