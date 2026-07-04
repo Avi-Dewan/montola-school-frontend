@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 import { FaWhatsapp } from "react-icons/fa";
 import {
     LuBrain, LuCalendarClock, LuShuffle, LuLightbulb, LuUsers,
-    LuPencil, LuTarget, LuCheck, LuArrowRight, LuMapPin, LuMail, LuTriangleAlert,
+    LuPencil, LuTarget, LuCheck, LuArrowRight, LuMapPin, LuMail, LuTriangleAlert, LuX,
 } from "react-icons/lu";
 import schoolInfo from "@/config/schoolInfo.json";
 import { submitCareLead } from "@/lib/care";
@@ -22,6 +22,15 @@ const worries = [
     "শৃঙ্খলা ও মনোযোগের অভাব",
 ];
 
+// The wrong way learning happens in most schools & coachings
+const wrongWays = [
+    { wrong: "শুধু শুনে যাওয়া", right: "স্যার বলে যান, সন্তান শুধু শোনে। “বুঝেছ?” — “জ্বি স্যার।” কিন্তু নিজে করে দেখা হয় না।" },
+    { wrong: "বুঝে নয়, মুখস্থ", right: "তোতাপাখির মতো মুখস্থ। প্রশ্ন একটু ঘুরিয়ে দিলেই সন্তান আটকে যায়।" },
+    { wrong: "পরীক্ষার আগে রাত জেগে গেলা", right: "সারা বছর জমিয়ে রেখে এক রাতে সব পড়া — মস্তিষ্ক এভাবে ধরে রাখতে পারে না।" },
+    { wrong: "রিভিশন নেই", right: "আজ যা শেখে, কয়েকদিন পর তা মুছে যায়। কেউ ফিরে দেখায় না।" },
+    { wrong: "সবার জন্য একই নিয়ম", right: "দুর্বল-মেধাবী সবাইকে একভাবে পড়ানো। যার যেখানে সমস্যা, তা আলাদা করে দেখা হয় না।" },
+];
+
 const routine = [
     { time: "১০ মিনিট", title: "মোবাইল জমা ও দিনের লক্ষ্য", tag: "Focus", desc: "সব মোবাইল লকারে; বোর্ডে আজকের লক্ষ্য — মনোযোগের সবচেয়ে বড় শত্রু দূরে।", icon: LuTarget },
     { time: "৪০ মিনিট", title: "গতকালের মেমরি-টেস্ট", tag: "Active Recall", desc: "বই বন্ধ রেখে ১০–১৫টি দ্রুত প্রশ্ন — ঠিক ভুলে যাওয়ার আগমুহূর্তে স্মৃতি পাকা।", icon: LuBrain },
@@ -32,28 +41,58 @@ const routine = [
 ];
 
 const methods = [
-    { icon: LuBrain, name: "সক্রিয় স্মরণ", en: "Active Recall", desc: "বই না দেখে নিজে মনে করার চেষ্টা করে উত্তর বের করা। ছোট কুইজ ও মুখে প্রশ্নোত্তরে মস্তিষ্ক তথ্য ‘টেনে তোলে’ — আর তাতেই স্মৃতি পাকা হয়।", stat: "১.৫× বেশি দীর্ঘমেয়াদে মনে থাকে" },
-    { icon: LuCalendarClock, name: "বিরতিতে পুনরাবৃত্তি", en: "Spaced Repetition", desc: "একদিনে সব নয়। একই বিষয় ১ দিন → ৩ দিন → ৭ দিন পরপর পরিকল্পিতভাবে ফিরে দেখা — ঠিক ভুলে যাওয়ার আগমুহূর্তে।", stat: "ভুলে যাওয়াকে হারিয়ে স্মৃতি উঁচুতে স্থির" },
-    { icon: LuShuffle, name: "মিশ্র অনুশীলন", en: "Interleaving", desc: "একই ধরনের অঙ্ক টানা না করে বিভিন্ন ধরন মিশিয়ে অনুশীলন। কোন নিয়ম কোথায় লাগবে, সন্তান নিজেই বেছে নিতে শেখে।", stat: "গণিতে বিশেষভাবে কার্যকর" },
-    { icon: LuLightbulb, name: "নিজের ভাষায় ব্যাখ্যা", en: "Elaboration", desc: "‘কেন’ ও ‘কীভাবে’ প্রশ্ন করে নতুন বিষয়কে আগের জানার সঙ্গে জুড়ে দেওয়া। মুখস্থ নয়, তৈরি হয় প্রকৃত বোঝাপড়া।", stat: "যা ভোলা কঠিন" },
-    { icon: LuUsers, name: "শিখিয়ে শেখা", en: "The Protégé Effect", desc: "সন্তান নিজেই শিক্ষক হয়ে বন্ধু বা বোর্ডে বুঝিয়ে দেয়। ‘আমাকে পড়াতে হবে’ — এই দায়িত্ববোধেই বিষয়টা সবচেয়ে গভীরে গাঁথে।", stat: "শেখা ও স্মৃতি উল্লেখযোগ্যভাবে বাড়ায়" },
+    { icon: LuShuffle, name: "মিশ্র অনুশীলন", en: "Interleaving", desc: "একই ধরনের অঙ্ক টানা না করে বিভিন্ন ধরন মিশিয়ে অনুশীলন। কোন নিয়ম কোথায় লাগবে, সন্তান নিজেই বেছে নিতে শেখে।" },
+    { icon: LuLightbulb, name: "নিজের ভাষায় ব্যাখ্যা", en: "Elaboration", desc: "‘কেন’ ও ‘কীভাবে’ প্রশ্ন করে নতুন বিষয়কে আগের জানার সঙ্গে জুড়ে দেওয়া। মুখস্থ নয়, তৈরি হয় প্রকৃত বোঝাপড়া।" },
+    { icon: LuUsers, name: "শিখিয়ে শেখা", en: "The Protégé Effect", desc: "সন্তান নিজেই শিক্ষক হয়ে বন্ধু বা বোর্ডে বুঝিয়ে দেয়। ‘আমাকে পড়াতে হবে’ — এই দায়িত্ববোধেই বিষয়টা সবচেয়ে গভীরে গাঁথে।" },
 ];
 
-const results = [
-    "মজবুত বেসিক — উপরের ক্লাসের জন্য প্রস্তুত",
-    "মুখস্থ নয়, প্রকৃত বোঝাপড়া",
-    "সুন্দর ও পরিচ্ছন্ন হাতের লেখা",
-    "শৃঙ্খলা, একাগ্রতা ও সময় জ্ঞান",
-    "পরীক্ষায় মাপা অগ্রগতি",
-    "মোবাইল থেকে দূরে, নিরাপদ পরিবেশ",
+// The change parents will actually see (problem → outcome)
+const outcomes = [
+    { from: "কোচিংয়ের পরও বেসিক দুর্বল", to: "মজবুত বেসিক — উপরের ক্লাসের জন্য প্রস্তুত" },
+    { from: "মুখস্থ করে, পরীক্ষায় ভুলে যায়", to: "বুঝে শেখে, পরীক্ষার দিনও মনে থাকে" },
+    { from: "মোবাইলে আসক্ত, মনোযোগ নেই", to: "শৃঙ্খলা, একাগ্রতা ও সময়ের হিসাব" },
+    { from: "হাতের লেখা খারাপ", to: "পরিচ্ছন্ন, সুন্দর উপস্থাপন" },
+    { from: "ফলাফল বছরের পর বছর একই", to: "পরীক্ষায় মাপা, স্পষ্ট উন্নতি" },
+    { from: "সন্তান সত্যিই শিখছে কি না, অজানা", to: "প্রতিদিনের রিপোর্ট — সব চোখের সামনে" },
 ];
 
 const comparison = [
     ["শুধু পড়িয়ে দেওয়া (passive)", "বিজ্ঞানভিত্তিক পদ্ধতিতে বুঝিয়ে শেখানো"],
     ["মাত্র ১–২ ঘণ্টা", "পূর্ণ ৬ ঘণ্টা তত্ত্বাবধান"],
     ["সবার জন্য একই নিয়ম", "প্রতিটি শিশুর জন্য আলাদা পরিকল্পনা"],
+    ["রিভিশন নেই — ভুলে যায়", "স্পেসড রিভিশন — মনে থাকে"],
     ["ফলাফল ভাগ্যের ওপর", "নিয়মিত পরীক্ষিত অগ্রগতি"],
 ];
+
+function ForgettingCurve() {
+    return (
+        <div className="bg-white rounded-2xl border border-gray-200 p-5">
+            <svg viewBox="0 0 440 250" className="w-full h-auto" role="img" aria-label="ভুলে যাওয়ার বক্ররেখা">
+                {/* axes */}
+                <line x1="40" y1="20" x2="40" y2="210" stroke="#e5e7eb" strokeWidth="2" />
+                <line x1="40" y1="210" x2="420" y2="210" stroke="#e5e7eb" strokeWidth="2" />
+                {/* red: no revision */}
+                <path d="M40,25 C95,150 150,185 420,195" fill="none" stroke="#e11d48" strokeWidth="3" strokeLinecap="round" />
+                {/* green: with spaced revision (sawtooth recovery) */}
+                <path d="M40,25 L120,120 L120,38 L205,100 L205,32 L305,85 L305,26 L420,34" fill="none" stroke="#2ca83e" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                {/* revision dots */}
+                <circle cx="120" cy="38" r="4" fill="#2ca83e" /><circle cx="205" cy="32" r="4" fill="#2ca83e" /><circle cx="305" cy="26" r="4" fill="#2ca83e" />
+                {/* labels */}
+                <text x="30" y="20" textAnchor="end" fontSize="11" fill="#9ca3af">১০০%</text>
+                <text x="30" y="200" textAnchor="end" fontSize="11" fill="#9ca3af">০%</text>
+                <text x="120" y="228" textAnchor="middle" fontSize="11" fill="#9ca3af">দিন ১</text>
+                <text x="205" y="228" textAnchor="middle" fontSize="11" fill="#9ca3af">দিন ৩</text>
+                <text x="305" y="228" textAnchor="middle" fontSize="11" fill="#9ca3af">দিন ৭</text>
+                <text x="420" y="188" textAnchor="end" fontSize="11" fill="#e11d48" fontWeight="bold">ভুলে যায়</text>
+                <text x="335" y="20" textAnchor="start" fontSize="11" fill="#2ca83e" fontWeight="bold">মনে থাকে</text>
+            </svg>
+            <div className="flex flex-wrap justify-center gap-x-6 gap-y-1 mt-2 text-xs">
+                <span className="inline-flex items-center gap-1.5"><span className="w-3 h-1 rounded bg-rose-600" /> রিভিশন ছাড়া — যা স্কুল-কোচিংয়ে হয়</span>
+                <span className="inline-flex items-center gap-1.5"><span className="w-3 h-1 rounded bg-primary-600" /> স্পেসড রিভিশনসহ — আমাদের নিয়ম</span>
+            </div>
+        </div>
+    );
+}
 
 function LeadForm() {
     const [f, setF] = useState({ name: "", phone: "", level: "Class 6-8", area: "", message: "" });
@@ -90,9 +129,9 @@ function LeadForm() {
     }
 
     return (
-        <form onSubmit={submit} className="bg-white rounded-2xl border border-gray-200 p-6 md:p-8 space-y-4">
+        <form onSubmit={submit} className="bg-white rounded-2xl border border-gray-200 p-6 md:p-8 space-y-4 shadow-sm">
             <h3 className="text-xl font-bold text-gray-900">ফ্রি কাউন্সেলিং বুক করুন</h3>
-            <p className="text-sm text-gray-500 -mt-2">নাম ও নম্বর দিন — আমরা কল করব। কোনো খরচ নেই।</p>
+            <p className="text-sm text-gray-500 -mt-2">শুধু নাম ও নম্বর দিন — আমরা কল করব। কোনো খরচ নেই।</p>
             <input className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary-500" placeholder="আপনার নাম *" value={f.name} onChange={(e) => set("name", e.target.value)} />
             <input className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary-500" placeholder="মোবাইল নম্বর * (যেমন 01712345678)" value={f.phone} onChange={(e) => set("phone", e.target.value)} />
             <div className="grid grid-cols-2 gap-3">
@@ -124,8 +163,8 @@ export default function AcademicCarePage() {
                         স্কুল চলছে, কোচিং চলছে —<br />কিন্তু সন্তান কি সত্যিই শিখছে?
                     </h1>
                     <p className="text-white/85 text-lg max-w-2xl mx-auto mb-8">
-                        গতানুগতিক কোচিং নয় — <b className="text-white">মোনতলা একাডেমিক কেয়ার</b>-এ প্রতিদিন ৬ ঘণ্টার
-                        বিজ্ঞানভিত্তিক শেখা, অভ্যাস ও যত্ন, সবটাই একসাথে।
+                        গতানুগতিক কোচিং নয় — <b className="text-white">মোনতলা একাডেমিক কেয়ার</b>-এ প্রতিদিন ৬ ঘণ্টা,
+                        বিজ্ঞানসম্মত নিয়মে শেখা, অভ্যাস ও যত্ন — যাতে সন্তান মুখস্থ নয়, সত্যিই শেখে।
                     </p>
                     <div className="flex flex-wrap justify-center gap-3">
                         <a href="#book" className="inline-flex items-center gap-2 bg-white text-primary-700 font-semibold px-6 py-3 rounded-xl hover:bg-gray-100 transition">
@@ -138,21 +177,22 @@ export default function AcademicCarePage() {
                 </div>
             </section>
 
-            {/* Problem */}
+            {/* The question — talk to the parent */}
             <section className="py-16 px-6">
                 <div className="max-w-3xl mx-auto text-center">
                     <p className="text-lg md:text-xl text-gray-700 leading-relaxed">
-                        প্রতি মাসে টাকা যাচ্ছে, শিক্ষক আন্তরিকভাবে পড়াচ্ছেন, মাঝে মাঝে জিজ্ঞেস করছেন — “বুঝেছ?” সন্তান বলছে ‘জ্বি স্যার’।
+                        প্রতি মাসে টাকা যাচ্ছে। শিক্ষক আন্তরিকভাবে পড়াচ্ছেন। মাঝে মাঝে জিজ্ঞেস করছেন — “বুঝেছ?” সন্তান বলছে ‘জ্বি স্যার’।
                         এভাবেই চলছে বছরের পর বছর — তবু পরীক্ষার খাতা খুললে গল্পটা একই থেকে যায়।
                     </p>
-                    <p className="mt-4 font-serif italic text-xl text-primary-700">পরিশ্রমে ঘাটতি নেই, ঘাটতি পদ্ধতিতে।</p>
+                    <p className="mt-5 font-serif italic text-xl text-primary-700">দোষ আপনার সন্তানের নয়। ঘাটতি পরিশ্রমে নয় — ঘাটতি পদ্ধতিতে।</p>
                 </div>
             </section>
 
             {/* Worries */}
             <section className="py-14 px-6 bg-gray-50">
                 <div className="max-w-5xl mx-auto">
-                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-10">অভিভাবকের নীরব দুশ্চিন্তা</h2>
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-3">এই চিন্তাগুলো কি চেনা লাগছে?</h2>
+                    <p className="text-gray-500 text-center mb-10">রাতে যে ভাবনাগুলো অনেক অভিভাবকের ঘুম কাড়ে।</p>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         {worries.map((w, i) => (
                             <div key={i} className="flex items-start gap-3 bg-white rounded-xl border border-gray-200 p-4">
@@ -164,28 +204,123 @@ export default function AcademicCarePage() {
                 </div>
             </section>
 
-            {/* The real cause */}
+            {/* Why this happens — the wrong way of learning in Bangladesh */}
             <section className="py-16 px-6">
-                <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-center">
-                    <div>
-                        <p className="text-sm font-semibold uppercase tracking-widest text-primary-600 mb-3">আসল কারণ</p>
-                        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">দোষ সন্তানের মেধায় নয় — ভুলে যাওয়ায়।</h2>
-                        <p className="text-gray-600 leading-relaxed">
-                            আজ যা শেখে, পরীক্ষার দিন তার বেশিরভাগই হারিয়ে যায়। এটা অলসতা নয় — মস্তিষ্কের স্বাভাবিক নিয়ম, যাকে বলে
-                            “ভুলে যাওয়ার বক্ররেখা”। সঠিক রিভিশন ছাড়া এটা ঠেকানো যায় না।
+                <div className="max-w-4xl mx-auto">
+                    <div className="text-center mb-10">
+                        <p className="text-sm font-semibold uppercase tracking-widest text-primary-600 mb-3">কেন এমন হয়</p>
+                        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">আমাদের দেশে শেখার নিয়মটাই ভুল</h2>
+                        <p className="text-gray-600 max-w-2xl mx-auto">
+                            বেশিরভাগ স্কুল-কোচিংয়ে পড়ানো হয় পুরনো, অকার্যকর নিয়মে। যত ঘণ্টাই পড়ুক, ফল একই — কারণ ভিত্তিটাই ঠিক নেই।
                         </p>
                     </div>
-                    <div className="bg-primary-50 border border-primary-100 rounded-2xl p-8 text-center">
-                        <p className="text-6xl font-bold text-primary-700 tracking-tight">৭০%</p>
-                        <p className="text-gray-700 mt-3">শেখা বিষয়ের প্রায় ৭০% সন্তান <b>২৪ ঘণ্টার মধ্যেই</b> ভুলে যায় — যদি রিভিশন না হয়।</p>
+                    <div className="space-y-3">
+                        {wrongWays.map((w, i) => (
+                            <div key={i} className="flex items-start gap-4 bg-rose-50/50 border border-rose-100 rounded-xl p-5">
+                                <span className="w-8 h-8 rounded-full bg-white text-rose-500 flex items-center justify-center shrink-0 mt-0.5"><LuX size={16} /></span>
+                                <div>
+                                    <h3 className="font-bold text-gray-900">{w.wrong}</h3>
+                                    <p className="text-sm text-gray-600 mt-0.5">{w.right}</p>
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
 
-            {/* Solution */}
+            {/* The real cause — the forgetting curve */}
+            <section className="py-16 px-6 bg-gray-50">
+                <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-center">
+                    <div>
+                        <p className="text-sm font-semibold uppercase tracking-widest text-primary-600 mb-3">আসল কারণ</p>
+                        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">সন্তান ভুলে যায় — এটা অলসতা নয়, মস্তিষ্কের নিয়ম।</h2>
+                        <p className="text-gray-600 leading-relaxed mb-4">
+                            বিজ্ঞানীরা একে বলেন <b>“ভুলে যাওয়ার বক্ররেখা” (Forgetting Curve)</b>। রিভিশন না করলে —
+                        </p>
+                        <p className="text-gray-700 bg-white border border-gray-200 rounded-xl px-4 py-3 mb-4">
+                            শেখা বিষয়ের প্রায় <b className="text-rose-600">৭০% সন্তান ২৪ ঘণ্টার মধ্যেই ভুলে যায়।</b>
+                        </p>
+                        <p className="text-gray-600 leading-relaxed">
+                            তাই আজ যা শেখে, পরীক্ষার দিন তার বেশিরভাগই হারিয়ে যায়। নিচের লাল রেখা দেখুন — এভাবেই স্কুল-কোচিংয়ে
+                            পড়া মুছে যায়। কিন্তু সবুজ রেখা বলছে — সঠিক নিয়মে রিভিশন করলে স্মৃতি উঁচুতে স্থির থাকে।
+                        </p>
+                    </div>
+                    <ForgettingCurve />
+                </div>
+            </section>
+
+            {/* The science that fixes it — Active Recall + Spaced Repetition */}
+            <section className="py-16 px-6">
+                <div className="max-w-5xl mx-auto">
+                    <div className="text-center mb-10">
+                        <p className="text-sm font-semibold uppercase tracking-widest text-primary-600 mb-3">সমাধান বিজ্ঞানে আছে</p>
+                        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">আমরা অনুমানে পড়াই না।</h2>
+                        <p className="text-gray-600 max-w-2xl mx-auto">
+                            বিশ্বের শীর্ষ বিশ্ববিদ্যালয়ের গবেষণায় প্রমাণিত পদ্ধতিতে পড়াই। এর মধ্যে <b>দুটি</b> সবচেয়ে শক্তিশালী —
+                            যা সরাসরি ভুলে যাওয়াকে হারায়।
+                        </p>
+                        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mt-3">KENT STATE · DUKE · WASHINGTON UNIVERSITY</p>
+                    </div>
+
+                    {/* The two hero methods */}
+                    <div className="grid md:grid-cols-2 gap-6 mb-6">
+                        <div className="bg-primary-50 border border-primary-100 rounded-2xl p-7">
+                            <div className="flex items-center gap-3 mb-4">
+                                <span className="w-12 h-12 rounded-xl bg-white text-primary-600 flex items-center justify-center"><LuBrain size={24} /></span>
+                                <div>
+                                    <h3 className="text-lg font-bold text-gray-900">সক্রিয় স্মরণ</h3>
+                                    <p className="text-xs font-semibold uppercase tracking-wider text-primary-700">Active Recall</p>
+                                </div>
+                            </div>
+                            <p className="text-gray-700 leading-relaxed">
+                                পড়া মানে শুধু বই খুলে বসে থাকা নয়। বই বন্ধ রেখে নিজে মনে করার চেষ্টা করা — এভাবেই মস্তিষ্ক তথ্য
+                                “টেনে তোলে”, আর স্মৃতি পাকা হয়। আমরা প্রতিদিন ছোট কুইজ ও মুখে প্রশ্নোত্তর করাই।
+                            </p>
+                            <p className="mt-4 text-sm font-semibold text-primary-800 bg-white rounded-lg px-3 py-2">
+                                শুধু বারবার পড়ার চেয়ে দীর্ঘমেয়াদে প্রায় <b>১.৫× বেশি</b> মনে থাকে।
+                            </p>
+                        </div>
+
+                        <div className="bg-primary-50 border border-primary-100 rounded-2xl p-7">
+                            <div className="flex items-center gap-3 mb-4">
+                                <span className="w-12 h-12 rounded-xl bg-white text-primary-600 flex items-center justify-center"><LuCalendarClock size={24} /></span>
+                                <div>
+                                    <h3 className="text-lg font-bold text-gray-900">বিরতিতে পুনরাবৃত্তি</h3>
+                                    <p className="text-xs font-semibold uppercase tracking-wider text-primary-700">Spaced Repetition</p>
+                                </div>
+                            </div>
+                            <p className="text-gray-700 leading-relaxed">
+                                একদিনে সব গিলে ফেলা নয়। একই বিষয় <b>১ দিন → ৩ দিন → ৭ দিন</b> পরপর পরিকল্পিতভাবে ফিরে দেখা —
+                                ঠিক ভুলে যাওয়ার আগমুহূর্তে। তাই পরীক্ষার দিনও সব মনে থাকে।
+                            </p>
+                            <p className="mt-4 text-sm font-semibold text-primary-800 bg-white rounded-lg px-3 py-2">
+                                লাল রেখা নয় — সবুজ রেখা। ভুলে যাওয়াকে হারিয়ে স্মৃতি উঁচুতে স্থির থাকে।
+                            </p>
+                        </div>
+                    </div>
+
+                    {/* Supporting 3 methods */}
+                    <p className="text-center text-sm text-gray-500 mb-4">এর সঙ্গে আরও ৩টি প্রমাণিত কৌশল বোঝাপড়া গভীর করে —</p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+                        {methods.map((m, i) => {
+                            const Icon = m.icon;
+                            return (
+                                <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6">
+                                    <span className="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center mb-4"><Icon size={20} /></span>
+                                    <h3 className="font-bold text-gray-900">{m.name}</h3>
+                                    <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">{m.en}</p>
+                                    <p className="text-sm text-gray-600 leading-relaxed">{m.desc}</p>
+                                </div>
+                            );
+                        })}
+                    </div>
+                </div>
+            </section>
+
+            {/* The solution */}
             <section className="py-16 px-6 bg-primary-700 text-white">
                 <div className="max-w-3xl mx-auto text-center">
-                    <p className="text-sm font-semibold uppercase tracking-widest text-white/70 mb-3">সমাধান</p>
+                    <p className="text-sm font-semibold uppercase tracking-widest text-white/70 mb-3">আমরা যা করি</p>
                     <h2 className="font-serif text-3xl md:text-4xl font-medium mb-5">এটি কোচিং নয় — এটি সন্তানের সম্পূর্ণ একাডেমিক যত্ন।</h2>
                     <p className="text-white/85 text-lg leading-relaxed">
                         স্কুলের পর প্রতিদিন ৬ ঘণ্টা — আমাদের শিক্ষকদের সরাসরি তত্ত্বাবধানে সন্তান শুধু পড়ে না; শেখে কীভাবে সঠিকভাবে
@@ -199,7 +334,7 @@ export default function AcademicCarePage() {
                 <div className="max-w-4xl mx-auto">
                     <div className="text-center mb-10">
                         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">একটি দিন — প্রতিটি মিনিট পরিকল্পিত</h2>
-                        <p className="text-gray-500">এলোমেলো পড়া নয় — দিনের প্রতিটি ধাপ একটি প্রমাণিত পদ্ধতির ওপর সাজানো।</p>
+                        <p className="text-gray-500">এলোমেলো পড়া নয় — দিনের প্রতিটি ধাপ ওপরের বিজ্ঞানের ওপর সাজানো।</p>
                     </div>
                     <div className="space-y-3">
                         {routine.map((r, i) => {
@@ -222,46 +357,34 @@ export default function AcademicCarePage() {
                 </div>
             </section>
 
-            {/* The science */}
+            {/* True outcomes — problem → result */}
             <section className="py-16 px-6 bg-gray-50">
-                <div className="max-w-5xl mx-auto">
-                    <div className="text-center mb-4">
-                        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">আমরা অনুমানে পড়াই না।</h2>
-                        <p className="text-gray-600 max-w-2xl mx-auto">পড়াই বিশ্বের শীর্ষ বিশ্ববিদ্যালয়ের গবেষণায় প্রমাণিত ৫টি পদ্ধতিতে — যা সব বয়স ও সব বিষয়ে কাজ করে।</p>
-                        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mt-3">KENT STATE · DUKE · WASHINGTON UNIVERSITY</p>
+                <div className="max-w-4xl mx-auto">
+                    <div className="text-center mb-10">
+                        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">সমস্যা সমাধানের পর যা আপনি দেখবেন</h2>
+                        <p className="text-gray-500">প্রতিটি চিন্তার জায়গায় একটি সত্যিকারের পরিবর্তন।</p>
                     </div>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-8">
-                        {methods.map((m, i) => {
-                            const Icon = m.icon;
-                            return (
-                                <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 flex flex-col">
-                                    <span className="w-11 h-11 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center mb-4"><Icon size={22} /></span>
-                                    <h3 className="font-bold text-gray-900">{m.name}</h3>
-                                    <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">{m.en}</p>
-                                    <p className="text-sm text-gray-600 leading-relaxed flex-1">{m.desc}</p>
-                                    <p className="mt-4 text-sm font-semibold text-primary-700 bg-primary-50 rounded-lg px-3 py-2">{m.stat}</p>
+                    <div className="space-y-3">
+                        {outcomes.map((o, i) => (
+                            <div key={i} className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 bg-white rounded-xl border border-gray-200 p-4">
+                                <div className="flex items-center gap-2 text-gray-400 text-sm sm:w-1/2">
+                                    <LuX className="text-rose-400 shrink-0" size={16} /> <span className="line-through">{o.from}</span>
                                 </div>
-                            );
-                        })}
+                                <LuArrowRight className="hidden sm:block text-gray-300 shrink-0" size={18} />
+                                <div className="flex items-center gap-2 text-gray-900 font-medium sm:w-1/2">
+                                    <LuCheck className="text-primary-600 shrink-0" size={16} /> {o.to}
+                                </div>
+                            </div>
+                        ))}
                     </div>
                 </div>
             </section>
 
-            {/* Results + comparison */}
+            {/* Comparison */}
             <section className="py-16 px-6">
-                <div className="max-w-5xl mx-auto">
-                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-10">যে পরিবর্তন আপনি চোখে দেখবেন</h2>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-14">
-                        {results.map((r, i) => (
-                            <div key={i} className="flex items-start gap-3 bg-white rounded-xl border border-gray-200 p-4">
-                                <span className="w-7 h-7 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center shrink-0"><LuCheck size={15} /></span>
-                                <span className="text-gray-700 text-sm">{r}</span>
-                            </div>
-                        ))}
-                    </div>
-
-                    <h3 className="text-xl font-bold text-gray-900 text-center mb-6">কেন গতানুগতিক কোচিং থেকে আলাদা</h3>
-                    <div className="max-w-3xl mx-auto rounded-2xl border border-gray-200 overflow-hidden">
+                <div className="max-w-3xl mx-auto">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-8">কেন গতানুগতিক কোচিং থেকে আলাদা</h2>
+                    <div className="rounded-2xl border border-gray-200 overflow-hidden">
                         <div className="grid grid-cols-2 bg-gray-50 text-sm font-bold text-gray-700">
                             <div className="px-5 py-3 border-r border-gray-200">সাধারণ কোচিং</div>
                             <div className="px-5 py-3 bg-primary-50/50 text-primary-800">মোনতলা একাডেমিক কেয়ার</div>
@@ -276,8 +399,30 @@ export default function AcademicCarePage() {
                 </div>
             </section>
 
+            {/* Proof, not guesswork */}
+            <section className="py-14 px-6 bg-gray-50">
+                <div className="max-w-4xl mx-auto text-center">
+                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">প্রমাণ, অনুমান নয়</h2>
+                    <p className="text-gray-500 mb-8">“কাজ হচ্ছে কি না” — আন্দাজ নয়, পরীক্ষিত।</p>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5 text-left">
+                        <div className="bg-white rounded-xl border border-gray-200 p-5">
+                            <h3 className="font-bold text-gray-900 mb-1">নিয়মিত পরীক্ষা</h3>
+                            <p className="text-sm text-gray-600">প্রতিটি অধ্যায় শেষে মূল্যায়ন — দুর্বলতা সঙ্গে সঙ্গে ধরা পড়ে।</p>
+                        </div>
+                        <div className="bg-white rounded-xl border border-gray-200 p-5">
+                            <h3 className="font-bold text-gray-900 mb-1">অভিভাবকের কাছে রিপোর্ট</h3>
+                            <p className="text-sm text-gray-600">সন্তানের অগ্রগতির নিয়মিত আপডেট সরাসরি আপনার কাছে।</p>
+                        </div>
+                        <div className="bg-white rounded-xl border border-gray-200 p-5">
+                            <h3 className="font-bold text-gray-900 mb-1">স্টুডেন্টভেদে পরিকল্পনা</h3>
+                            <p className="text-sm text-gray-600">দুর্বল ও মেধাবী — প্রত্যেকের জন্য আলাদা কাউন্সেলিং।</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
             {/* Offer + pricing */}
-            <section className="py-16 px-6 bg-gray-50">
+            <section className="py-16 px-6">
                 <div className="max-w-4xl mx-auto text-center">
                     <span className="inline-block bg-primary-100 text-primary-800 text-sm font-bold px-4 py-1.5 rounded-full mb-4">পরিচিতি অফার</span>
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">আগে দেখুন — তারপর সিদ্ধান্ত নিন</h2>
@@ -297,7 +442,7 @@ export default function AcademicCarePage() {
             </section>
 
             {/* Booking / contact */}
-            <section id="book" className="py-16 px-6">
+            <section id="book" className="py-16 px-6 bg-gray-50">
                 <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-start">
                     <div>
                         <h2 className="font-serif text-3xl md:text-4xl font-medium text-gray-900 mb-4">সন্তানের ভবিষ্যৎ — আর পিছিয়ে নয়।</h2>
