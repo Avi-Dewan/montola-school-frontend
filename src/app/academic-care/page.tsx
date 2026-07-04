@@ -15,10 +15,13 @@ const waLink = (text: string) => `https://wa.me/${WA}?text=${encodeURIComponent(
 
 const worries = [
     "সারাদিন কাজের ব্যস্ততায় সন্তানকে সময় দিতে পারছি না",
-    "কোচিংয়ের পরও বেসিক দুর্বল — বিশেষত Class 6–8",
-    "মোবাইল ও খারাপ সঙ্গে হারিয়ে যাওয়ার ভয়",
+    "কোচিংয়ের পরও বেসিক দুর্বল",
+    "বিজ্ঞান ও গণিতে ভয়",
+    "বাংলা ও ইংরেজিতে নিজের মতো গুছিয়ে লিখতে পারে না",
     "পড়া মুখস্থ থাকছে না, ফলাফল বদলাচ্ছে না",
-    "হাতের লেখা খারাপ, বাংলা–ইংরেজিতে দুর্বল",
+    "মোবাইল ও খারাপ সঙ্গে হারিয়ে যাওয়ার ভয়",
+    "বাবা-মায়ের কথার অবাধ্য",
+    "হাতের লেখা খারাপ ও অগোছালো",
     "শৃঙ্খলা ও মনোযোগের অভাব",
 ];
 
@@ -193,7 +196,7 @@ export default function AcademicCarePage() {
                 <div className="max-w-5xl mx-auto">
                     <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-3">এই চিন্তাগুলো কি চেনা লাগছে?</h2>
                     <p className="text-gray-500 text-center mb-10">রাতে যে ভাবনাগুলো অনেক অভিভাবকের ঘুম কাড়ে।</p>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                         {worries.map((w, i) => (
                             <div key={i} className="flex items-start gap-3 bg-white rounded-xl border border-gray-200 p-4">
                                 <span className="w-8 h-8 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center shrink-0"><LuTriangleAlert size={16} /></span>
