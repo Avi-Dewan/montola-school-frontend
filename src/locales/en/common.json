@@ -20,7 +20,10 @@
     "address": "Address",
     "rights": "All rights reserved.",
     "description": "Redefining how true learning happens.",
-    "craftedFor": "Crafted with care for the Chittagong Hill Tracts · Made in Bangladesh"
+    "craftedFor": "Crafted with care for the Chittagong Hill Tracts · Made in Bangladesh",
+    "explore": "Explore",
+    "account": "Account",
+    "blurb": "An online learning platform for the students of the Chittagong Hill Tracts and beyond."
   },
   "classes": {
     "title": "Available Classes",
