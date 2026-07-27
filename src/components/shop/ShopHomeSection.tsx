@@ -6,8 +6,10 @@ import { LuShoppingBag, LuArrowRight } from "react-icons/lu";
 import { getFeaturedProducts } from "@/lib/shop";
 import type { ShopProductCard } from "@/types/shop";
 import ProductCardComponent from "@/components/shop/ProductCard";
+import { useI18n } from "@/contexts/I18nProvider";
 
 export default function ShopHomeSection() {
+    const { t } = useI18n();
     const [products, setProducts] = useState<ShopProductCard[]>([]);
     const [loaded, setLoaded] = useState(false);
 
@@ -27,20 +29,20 @@ export default function ShopHomeSection() {
                 <div className="flex items-end justify-between flex-wrap gap-4 mb-8">
                     <div>
                         <span className="inline-flex items-center gap-2 bg-primary-50 text-primary-700 text-xs font-semibold uppercase tracking-wider px-3 py-1 rounded-full mb-4">
-                            <LuShoppingBag /> Montola shop
+                            <LuShoppingBag /> {t("shopHome.badge")}
                         </span>
                         <h2 className="font-serif text-3xl md:text-4xl text-gray-900 mb-2">
-                            Study materials, ready to use
+                            {t("shopHome.title")}
                         </h2>
                         <p className="text-gray-600 max-w-xl">
-                            Notes, board analysis, worksheets and more — by class, subject and chapter.
+                            {t("shopHome.subtitle")}
                         </p>
                     </div>
                     <Link
                         href="/shop"
                         className="inline-flex items-center gap-2 bg-primary-600 text-white font-semibold px-5 py-3 rounded-lg hover:bg-primary-700 transition shrink-0"
                     >
-                        Visit the shop <LuArrowRight />
+                        {t("shopHome.cta")} <LuArrowRight />
                     </Link>
                 </div>
 
