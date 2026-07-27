@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getFeaturedChapters } from "@/lib/public";
 import { getMyChaptersProgress } from "@/lib/student";
 import { FeaturedChapterResponseDto, ChapterProgressResponseDto } from "@/types";
@@ -37,8 +37,24 @@ export default function FeaturedCourses() {
     const [chapters, setChapters] = useState<FeaturedChapterResponseDto[]>([]);
     const [enrollmentMap, setEnrollmentMap] = useState<Map<number, number>>(new Map());
     const [loading, setLoading] = useState(true);
+    const [active, setActive] = useState(0);
+    const scroller = useRef<HTMLDivElement>(null);
 
     const isStudent = user?.roles?.includes("STUDENT");
+
+    // mobile carousel position tracking (for the dots)
+    const onScroll = () => {
+        const el = scroller.current;
+        const first = el?.firstElementChild as HTMLElement | null;
+        if (!el || !first) return;
+        setActive(Math.round(el.scrollLeft / (first.offsetWidth + 24)));
+    };
+    const scrollTo = (i: number) => {
+        const el = scroller.current;
+        const first = el?.firstElementChild as HTMLElement | null;
+        if (!el || !first) return;
+        el.scrollTo({ left: i * (first.offsetWidth + 24), behavior: "smooth" });
+    };
 
     useEffect(() => {
         const fetchChapters = async () => {
@@ -76,14 +92,19 @@ export default function FeaturedCourses() {
     }
 
     return (
-        <section className="py-20 px-6 bg-gray-50">
-            <h2 className="text-3xl font-bold text-center mb-12 tracking-tight">{t("home.featured.title")}</h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+        <section className="py-16 md:py-20 px-6 bg-gray-50">
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-8 md:mb-12 tracking-tight">{t("home.featured.title")}</h2>
+            <div className="relative max-w-6xl mx-auto">
+            <div
+                ref={scroller}
+                onScroll={onScroll}
+                className="flex md:grid md:grid-cols-3 gap-6 md:gap-8 overflow-x-auto md:overflow-visible snap-x snap-mandatory pb-3 md:pb-0 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+            >
                 {chapters.map((c) => (
                     <Link
                         key={c.id}
                         href={enrollmentMap.has(c.chapterId) ? `/student/chapters/${c.chapterId}` : `/chapters/${c.chapterId}`}
-                        className="bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group border border-gray-100"
+                        className="snap-start shrink-0 w-[82%] max-w-[320px] md:w-auto md:max-w-none bg-white rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col overflow-hidden group border border-gray-100"
                     >
                         <div className="aspect-video relative overflow-hidden bg-gray-100 block">
                             <ChapterImage chapter={c} />
@@ -135,6 +156,20 @@ export default function FeaturedCourses() {
                     </Link>
                 ))}
             </div>
+            <div className="pointer-events-none absolute top-0 right-0 h-full w-12 bg-gradient-to-l from-gray-50 to-transparent md:hidden" />
+            </div>
+            {chapters.length > 1 && (
+                <div className="flex md:hidden justify-center gap-1.5 mt-4">
+                    {chapters.map((_, i) => (
+                        <button
+                            key={i}
+                            aria-label={`Go to featured ${i + 1}`}
+                            onClick={() => scrollTo(i)}
+                            className={`h-1.5 rounded-full transition-all ${i === active ? "w-5 bg-primary-600" : "w-1.5 bg-gray-300"}`}
+                        />
+                    ))}
+                </div>
+            )}
         </section>
     );
 }
