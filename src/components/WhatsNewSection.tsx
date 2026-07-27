@@ -21,6 +21,7 @@ interface NewItem {
 export default function WhatsNewSection() {
     const { t } = useI18n();
     const [items, setItems] = useState<NewItem[]>([]);
+    const [active, setActive] = useState(0);
     const scroller = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
@@ -46,7 +47,6 @@ export default function WhatsNewSection() {
                 free: p.price === 0,
                 href: `/shop/products/${p.id}`,
             }));
-            // interleave so both content types show up early
             const merged: NewItem[] = [];
             const max = Math.max(ch.length, pr.length);
             for (let k = 0; k < max; k++) {
@@ -57,11 +57,22 @@ export default function WhatsNewSection() {
         });
     }, []);
 
-    if (items.length === 0) return null;
-
-    const scroll = (dir: number) => {
-        scroller.current?.scrollBy({ left: dir * 300, behavior: "smooth" });
+    const onScroll = () => {
+        const el = scroller.current;
+        const first = el?.firstElementChild as HTMLElement | null;
+        if (!el || !first) return;
+        const step = first.offsetWidth + 20; // card width + gap
+        setActive(Math.round(el.scrollLeft / step));
     };
+
+    const scrollTo = (i: number) => {
+        const el = scroller.current;
+        const first = el?.firstElementChild as HTMLElement | null;
+        if (!el || !first) return;
+        el.scrollTo({ left: i * (first.offsetWidth + 20), behavior: "smooth" });
+    };
+
+    if (items.length === 0) return null;
 
     return (
         <section className="py-16 px-6">
@@ -74,43 +85,65 @@ export default function WhatsNewSection() {
                         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight">{t("whatsNew.title")}</h2>
                     </div>
                     <div className="hidden sm:flex gap-2">
-                        <button aria-label="Scroll left" onClick={() => scroll(-1)} className="w-9 h-9 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-50 flex items-center justify-center">
+                        <button aria-label="Scroll left" onClick={() => scrollTo(Math.max(0, active - 1))} className="w-9 h-9 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-50 flex items-center justify-center">
                             <LuChevronLeft size={18} />
                         </button>
-                        <button aria-label="Scroll right" onClick={() => scroll(1)} className="w-9 h-9 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-50 flex items-center justify-center">
+                        <button aria-label="Scroll right" onClick={() => scrollTo(Math.min(items.length - 1, active + 1))} className="w-9 h-9 rounded-full border border-gray-300 text-gray-600 hover:bg-gray-50 flex items-center justify-center">
                             <LuChevronRight size={18} />
                         </button>
                     </div>
                 </div>
 
-                <div ref={scroller} className="flex gap-5 overflow-x-auto pb-3 snap-x scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden">
-                    {items.map((it) => (
-                        <Link
-                            key={it.key}
-                            href={it.href}
-                            className="snap-start shrink-0 w-64 bg-white rounded-2xl border border-gray-200 p-5 hover:shadow-md hover:border-primary-300 transition flex flex-col"
-                        >
-                            <div className="flex items-center justify-between mb-4">
-                                <span className="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center">
-                                    {it.kind === "chapter" ? <LuBookOpen size={18} /> : <LuShoppingBag size={18} />}
-                                </span>
-                                <span className="text-[10px] font-semibold uppercase tracking-wider text-primary-700 bg-primary-50 px-2 py-0.5 rounded-full">
-                                    {t("whatsNew.new")}
-                                </span>
-                            </div>
-                            <h3 className="font-bold text-gray-900 leading-snug line-clamp-2 mb-1">{it.title}</h3>
-                            <p className="text-xs text-gray-500 mb-4">{it.subtitle}</p>
-                            <div className="mt-auto flex items-center justify-between">
-                                <span className="text-xs text-gray-400 uppercase tracking-wider">
-                                    {it.kind === "chapter" ? t("whatsNew.kindChapter") : t("whatsNew.kindProduct")}
-                                </span>
-                                <span className="font-bold text-gray-900 text-sm">
-                                    {it.free ? t("whatsNew.free") : formatTaka(it.price)}
-                                </span>
-                            </div>
-                        </Link>
-                    ))}
+                {/* carousel with a right-edge fade hinting more content */}
+                <div className="relative">
+                    <div
+                        ref={scroller}
+                        onScroll={onScroll}
+                        className="flex gap-5 overflow-x-auto pb-3 snap-x snap-mandatory scroll-smooth [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+                    >
+                        {items.map((it) => (
+                            <Link
+                                key={it.key}
+                                href={it.href}
+                                className="snap-start shrink-0 w-[78%] max-w-[280px] sm:w-64 bg-white rounded-2xl border border-gray-200 p-5 hover:shadow-md hover:border-primary-300 transition flex flex-col"
+                            >
+                                <div className="flex items-center justify-between mb-4">
+                                    <span className="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center">
+                                        {it.kind === "chapter" ? <LuBookOpen size={18} /> : <LuShoppingBag size={18} />}
+                                    </span>
+                                    <span className="text-[10px] font-semibold uppercase tracking-wider text-primary-700 bg-primary-50 px-2 py-0.5 rounded-full">
+                                        {t("whatsNew.new")}
+                                    </span>
+                                </div>
+                                <h3 className="font-bold text-gray-900 leading-snug line-clamp-2 mb-1">{it.title}</h3>
+                                <p className="text-xs text-gray-500 mb-4">{it.subtitle}</p>
+                                <div className="mt-auto flex items-center justify-between">
+                                    <span className="text-xs text-gray-400 uppercase tracking-wider">
+                                        {it.kind === "chapter" ? t("whatsNew.kindChapter") : t("whatsNew.kindProduct")}
+                                    </span>
+                                    <span className="font-bold text-gray-900 text-sm">
+                                        {it.free ? t("whatsNew.free") : formatTaka(it.price)}
+                                    </span>
+                                </div>
+                            </Link>
+                        ))}
+                    </div>
+                    <div className="pointer-events-none absolute top-0 right-0 h-full w-12 bg-gradient-to-l from-white to-transparent sm:hidden" />
                 </div>
+
+                {/* position dots — the clear "this is a swipeable slider" cue */}
+                {items.length > 1 && (
+                    <div className="flex justify-center gap-1.5 mt-4">
+                        {items.map((_, i) => (
+                            <button
+                                key={i}
+                                aria-label={`Go to item ${i + 1}`}
+                                onClick={() => scrollTo(i)}
+                                className={`h-1.5 rounded-full transition-all ${i === active ? "w-5 bg-primary-600" : "w-1.5 bg-gray-300"}`}
+                            />
+                        ))}
+                    </div>
+                )}
             </div>
         </section>
     );
