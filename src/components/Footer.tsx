@@ -110,44 +110,14 @@ export default function Footer() {
             </div>
 
             <div className="max-w-7xl mx-auto mt-16 pt-8 border-t border-white/10">
-                <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-                    {/* Copyright + motto */}
-                    <div className="text-center md:text-left order-2 md:order-1">
-                        <p className="text-sm text-primary-200/70">© {schoolInfo.copyrightYear} Montola School. {t("footer.rights")}</p>
-                        <p className="text-xs font-serif italic text-primary-200/50 mt-1">{t("footer.description")}</p>
-                    </div>
-
-                    {/* Social buttons */}
-                    <div className="flex justify-center gap-3 order-1 md:order-2">
-                        <a
-                            href={`https://wa.me/${schoolInfo.academicCare.whatsapp}`}
-                            target="_blank"
-                            rel="noreferrer"
-                            aria-label="WhatsApp"
-                            className="w-9 h-9 rounded-full bg-white/10 text-white hover:bg-white/20 flex items-center justify-center transition-colors"
-                        >
-                            <FaWhatsapp size={17} />
-                        </a>
-                        <a
-                            href={`mailto:${schoolInfo.email}`}
-                            aria-label="Email"
-                            className="w-9 h-9 rounded-full bg-white/10 text-white hover:bg-white/20 flex items-center justify-center transition-colors"
-                        >
-                            <LuMail size={16} />
-                        </a>
-                    </div>
-
-                    {/* Legal links */}
-                    <div className="flex justify-center md:justify-end gap-6 text-sm text-primary-200/60 order-3">
+                <div className="flex flex-col sm:flex-row items-center justify-center gap-x-6 gap-y-2 text-sm text-primary-200/70">
+                    <p>© {schoolInfo.copyrightYear} Montola School. {t("footer.rights")}</p>
+                    <span className="hidden sm:inline text-primary-200/30">·</span>
+                    <div className="flex gap-6">
                         <Link href="/" className="hover:text-white transition-colors">Privacy</Link>
                         <Link href="/" className="hover:text-white transition-colors">Terms</Link>
                     </div>
                 </div>
-
-                {/* Professional sign-off */}
-                <p className="text-center text-[11px] tracking-wide text-primary-200/40 mt-8">
-                    {t("footer.craftedFor")}
-                </p>
             </div>
         </footer>
     );
