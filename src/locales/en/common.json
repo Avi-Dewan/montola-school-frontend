@@ -452,5 +452,46 @@
     "trust1": "Preview free before you buy",
     "trust2": "Instant online access",
     "trust3": "Pay with bKash / Nagad"
+  },
+  "shopHome": {
+    "badge": "Montola shop",
+    "title": "Study materials, ready to use",
+    "subtitle": "Notes, board analysis, worksheets and more — by class, subject and chapter.",
+    "cta": "Visit the shop"
+  },
+  "teachApproach": {
+    "badge": "Our Approach",
+    "title": "How we actually teach",
+    "subtitle": "Six principles that shape every class at Montola — grounded in cognitive science, built for students who need to go further.",
+    "p1": {
+      "title": "Start with why",
+      "desc": "We don’t just tell you the answer — we guide you to see why it’s the only logical conclusion. Understanding beats memorising every time.",
+      "tag": "Conceptual depth"
+    },
+    "p2": {
+      "title": "Active recall",
+      "desc": "Every session ends with retrieval, not re-reading. Pulling information from memory is what makes it stick — passive review barely works.",
+      "tag": "Cognitive science"
+    },
+    "p3": {
+      "title": "Spaced repetition",
+      "desc": "We revisit material at calculated intervals — Day 1, Day 3, Day 7, Day 21 — so knowledge transfers into long-term memory before exams arrive.",
+      "tag": "Memory science"
+    },
+    "p4": {
+      "title": "Personalised learning",
+      "desc": "No two students have the same gaps. We diagnose where each learner stands and adapt the pace, depth, and examples accordingly.",
+      "tag": "Adaptive teaching"
+    },
+    "p5": {
+      "title": "Reciprocal teaching",
+      "desc": "When you explain a concept to someone else, your brain reorganises it clearly. We build this into the classroom — teaching peers cements understanding.",
+      "tag": "Peer learning"
+    },
+    "p6": {
+      "title": "Visible progress",
+      "desc": "Students track their own performance week by week. Seeing growth builds the confidence that struggling learners often lack — and confidence compounds.",
+      "tag": "Growth mindset"
+    }
   }
 }
