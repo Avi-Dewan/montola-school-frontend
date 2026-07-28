@@ -6,7 +6,6 @@ import { FaWhatsapp } from "react-icons/fa";
 import {
     LuBrain, LuCalendarClock, LuShuffle, LuLightbulb, LuUsers,
     LuPencil, LuTarget, LuCheck, LuArrowRight, LuMapPin, LuMail, LuTriangleAlert, LuX, LuPhone,
-    LuClock, LuQuote, LuChevronDown, LuImage, LuGraduationCap,
 } from "react-icons/lu";
 import schoolInfo from "@/config/schoolInfo.json";
 import { submitCareLead } from "@/lib/care";
@@ -19,56 +18,6 @@ const waLink = (text: string) => `https://wa.me/${WA}?text=${encodeURIComponent(
 // Hindu, Christian and Muslim, and this text is sent *by the parent*.
 const WA_INFO = "আমি মোনতলা একাডেমিক কেয়ার সম্পর্কে জানতে চাই।";
 const WA_TRIAL = "আমি ফ্রি ট্রায়াল বুক করতে চাই।";
-
-/* ═══════════════════════════════════════════════════════════════════
- * ⚠️  DEMO CONTENT — NOT REAL. REPLACE BEFORE GOING LIVE.
- *
- * Everything in this block is placeholder data written to preview the
- * layout. The teacher names, testimonials, hours, batch size, food and
- * transport details are INVENTED. Publishing them as-is would mislead
- * parents making a real financial decision.
- *
- * When the real details are in, replace each block and set
- * DEMO_CONTENT = false to remove the preview banner.
- * ═══════════════════════════════════════════════════════════════════ */
-const DEMO_CONTENT = true;
-
-const quickFacts = [
-    { label: "সময়", value: "দুপুর ২:৩০ – রাত ৮:৩০", icon: LuClock },
-    { label: "ব্যাচের আকার", value: "সর্বোচ্চ ১৫ জন", icon: LuUsers },
-    { label: "সপ্তাহে", value: "৬ দিন (শুক্রবার বন্ধ)", icon: LuCalendarClock },
-    { label: "শিক্ষক অনুপাত", value: "১ জন শিক্ষকে ৮ শিক্ষার্থী", icon: LuTarget },
-];
-
-const teachers = [
-    { name: "রফিকুল ইসলাম", subject: "গণিত ও পদার্থবিজ্ঞান", qual: "বি.এসসি (সম্মান), চট্টগ্রাম বিশ্ববিদ্যালয়", years: "৮ বছর" },
-    { name: "নিপুণ চাকমা", subject: "রসায়ন ও জীববিজ্ঞান", qual: "এম.এসসি, চট্টগ্রাম বিশ্ববিদ্যালয়", years: "৬ বছর" },
-    { name: "সুস্মিতা ত্রিপুরা", subject: "ইংরেজি", qual: "বি.এ (সম্মান), ইংরেজি সাহিত্য", years: "৫ বছর" },
-    { name: "অংচিং মারমা", subject: "বাংলা ও সমাজবিজ্ঞান", qual: "এম.এ, বাংলা", years: "৭ বছর" },
-];
-
-const facility = [
-    "পড়ার কক্ষ", "মেমরি-টেস্ট সেশন", "লাইব্রেরি কর্নার", "অভিভাবক মিটিং",
-];
-
-const testimonials = [
-    { quote: "ছেলে আগে অঙ্ক দেখলেই পালাত। তিন মাসে এখন নিজে থেকে বসে। ফলাফলের চেয়ে বড় কথা — অভ্যাসটা বদলে গেছে।", name: "শাহনাজ পারভীন", role: "অভিভাবক, ক্লাস ৮" },
-    { quote: "প্রতিদিন রিপোর্ট পাই — কী পড়েছে, কোথায় আটকেছে। এতদিন কোচিংয়ে টাকা দিয়েছি, কিন্তু জানতামই না ভেতরে কী হচ্ছে।", name: "প্রীতি চাকমা", role: "অভিভাবক, ক্লাস ৯" },
-    { quote: "মেয়েকে সন্ধ্যায় বাইরে পাঠাতে ভয় হতো। এখানে নারী শিক্ষক আছেন, ছুটির সময় ফোন করে জানান — নিশ্চিন্ত থাকি।", name: "মো. জাহাঙ্গীর আলম", role: "অভিভাবক, ক্লাস ৭" },
-];
-
-const faqs = [
-    { q: "প্রতিদিন কখন থেকে কখন পর্যন্ত?", a: "দুপুর ২:৩০ থেকে রাত ৮:৩০ পর্যন্ত, সপ্তাহে ৬ দিন। স্কুলের সময়ের সঙ্গে কোনো সংঘর্ষ হয় না, আর রাত ৯টার আগেই সন্তান বাসায় পৌঁছে যায়।" },
-    { q: "৬ ঘণ্টা কি সন্তানের জন্য বেশি হয়ে যায় না?", a: "না। এর মধ্যে বিরতি, নাস্তা ও বিশ্রাম আছে; টানা পড়া কখনোই ২৫ মিনিটের বেশি নয়। এটি বাড়তি চাপ নয় — বরং বাসায় যে হোমওয়ার্ক ও পড়ার সময়টা এলোমেলোভাবে যেত, সেটাই এখানে পরিকল্পিতভাবে হয়ে যায়। বাসায় ফিরে আলাদা করে পড়ার চাপ থাকে না।" },
-    { q: "খাবারের ব্যবস্থা আছে কি?", a: "হালকা নাস্তা ও বিশুদ্ধ খাবার পানি সেন্টার থেকেই দেওয়া হয়, ফি-এর মধ্যেই অন্তর্ভুক্ত। কারও বিশেষ প্রয়োজন থাকলে বাসা থেকেও দিতে পারেন।" },
-    { q: "মেয়েদের নিরাপত্তার ব্যবস্থা কী?", a: "আলাদা বসার ব্যবস্থা, নারী শিক্ষক ও একজন নারী তত্ত্বাবধায়ক সবসময় উপস্থিত থাকেন। ছুটির সময় প্রতিটি অভিভাবককে জানানো হয়, এবং অভিভাবক না আসা পর্যন্ত কোনো শিক্ষার্থী একা বের হয় না।" },
-    { q: "এক ব্যাচে কতজন শিক্ষার্থী?", a: "সর্বোচ্চ ১৫ জন — গড়ে প্রতি ৮ জন শিক্ষার্থীর জন্য একজন শিক্ষক। এই কারণেই প্রত্যেকের দুর্বলতা আলাদাভাবে ধরা সম্ভব হয়, এবং এই কারণেই আসন সীমিত।" },
-    { q: "স্কুলের সিলেবাস অনুসরণ করা হয় কি?", a: "হ্যাঁ। সন্তানের নিজের স্কুলের সিলেবাস ও পরীক্ষার রুটিন ধরেই পড়ানো হয়। স্কুল পরীক্ষা ও বোর্ড পরীক্ষার প্রস্তুতি আলাদাভাবে নেওয়া হয়।" },
-    { q: "সন্তান পাহাড়ি — বাংলা মাধ্যমে পড়তে সমস্যা হয়। সাহায্য পাবে?", a: "অবশ্যই। আমাদের শিক্ষকদের মধ্যে চাকমা, মারমা ও ত্রিপুরা ভাষাভাষী শিক্ষক আছেন। যেসব শিক্ষার্থীর মাতৃভাষা বাংলা নয়, তাদের জন্য বাংলা ও ইংরেজিতে আলাদা সহায়তা দেওয়া হয় — এটি আমাদের বিশেষ দিক।" },
-    { q: "৭ দিনের ট্রায়ালে কি সত্যিই কোনো খরচ নেই?", a: "না, কোনো খরচ নেই — ভর্তি ফিও নয়। ৭ দিন পর আপনি সিদ্ধান্ত নেবেন। ভালো না লাগলে কোনো প্রশ্ন ছাড়াই বন্ধ করতে পারেন।" },
-    { q: "সরাসরি গিয়ে দেখে আসতে পারি?", a: "অবশ্যই, এবং আমরা সেটাই বলি। যেকোনো দিন দুপুর ২:৩০-এর পর মিলনপুরে চলে আসুন — ক্লাস চলাকালীন নিজের চোখে দেখুন।" },
-];
-/* ═══════════ END DEMO CONTENT ═══════════ */
 
 const worries = [
     "সারাদিন কাজের ব্যস্ততায় সন্তানকে সময় দিতে পারছি না",
@@ -213,11 +162,6 @@ function LeadForm() {
 export default function AcademicCarePage() {
     return (
         <main className="overflow-x-hidden pb-20 md:pb-0">
-            {DEMO_CONTENT && (
-                <div className="bg-amber-500 text-white text-center text-sm font-semibold px-4 py-2">
-                    ⚠️ প্রিভিউ — শিক্ষক, অভিভাবকের মন্তব্য, সময়সূচি ও FAQ-এর তথ্য এখনো ডেমো। লাইভ করার আগে আসল তথ্য বসাতে হবে।
-                </div>
-            )}
             {/* Hero */}
             <section className="bg-gradient-to-br from-primary-700 to-primary-800 text-white pt-28 pb-20 px-6">
                 <div className="max-w-5xl mx-auto text-center">
@@ -244,22 +188,6 @@ export default function AcademicCarePage() {
                         </a>
                     </div>
                     <p className="text-white/70 text-sm mt-5">প্রথম ৭ দিন সম্পূর্ণ ফ্রি · কোনো অগ্রিম খরচ নেই</p>
-                </div>
-            </section>
-
-            {/* At-a-glance facts — answers the first four questions every parent asks */}
-            <section className="px-6 -mt-8">
-                <div className="max-w-5xl mx-auto bg-white rounded-2xl border border-gray-200 shadow-lg grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-gray-100 overflow-hidden">
-                    {quickFacts.map((f, i) => {
-                        const Icon = f.icon;
-                        return (
-                            <div key={i} className="p-5 text-center">
-                                <Icon className="mx-auto text-primary-600 mb-2" size={20} />
-                                <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400 mb-1">{f.label}</p>
-                                <p className="text-sm font-bold text-gray-900 leading-snug">{f.value}</p>
-                            </div>
-                        );
-                    })}
                 </div>
             </section>
 
@@ -510,76 +438,6 @@ export default function AcademicCarePage() {
                 </div>
             </section>
 
-            {/* Who will actually teach your child */}
-            <section className="py-16 px-6">
-                <div className="max-w-5xl mx-auto">
-                    <div className="text-center mb-10">
-                        <p className="text-sm font-semibold uppercase tracking-widest text-primary-600 mb-3">আমাদের শিক্ষকরা</p>
-                        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-3">সন্তান কার কাছে ৬ ঘণ্টা থাকবে — জেনে নিন</h2>
-                        <p className="text-gray-600 max-w-2xl mx-auto">
-                            পাহাড়ি ও বাঙালি — দুই সম্প্রদায়ের অভিজ্ঞ শিক্ষক। চাকমা, মারমা ও ত্রিপুরা ভাষা জানা শিক্ষক থাকায়
-                            মাতৃভাষা বাংলা নয় এমন শিক্ষার্থীরাও সহজে বুঝতে পারে।
-                        </p>
-                    </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-                        {teachers.map((tch, i) => (
-                            <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 text-center">
-                                <div className="w-16 h-16 rounded-full bg-primary-50 text-primary-700 flex items-center justify-center mx-auto mb-4 text-xl font-bold">
-                                    {tch.name.charAt(0)}
-                                </div>
-                                <h3 className="font-bold text-gray-900">{tch.name}</h3>
-                                <p className="text-sm font-medium text-primary-700 mb-2">{tch.subject}</p>
-                                <p className="text-xs text-gray-500 leading-relaxed">{tch.qual}</p>
-                                <p className="inline-flex items-center gap-1 text-xs font-semibold text-gray-600 bg-gray-50 rounded-full px-3 py-1 mt-3">
-                                    <LuGraduationCap size={13} /> {tch.years} অভিজ্ঞতা
-                                </p>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* The centre itself */}
-            <section className="py-16 px-6 bg-gray-50">
-                <div className="max-w-5xl mx-auto">
-                    <div className="text-center mb-10">
-                        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">আমাদের সেন্টার</h2>
-                        <p className="text-gray-500">মিলনপুর, খাগড়াছড়ি সদর — যেকোনো দিন এসে নিজের চোখে দেখে যান।</p>
-                    </div>
-                    <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-                        {facility.map((label, i) => (
-                            <div key={i} className="aspect-[4/3] rounded-2xl bg-white border-2 border-dashed border-gray-300 flex flex-col items-center justify-center text-gray-400 gap-2">
-                                <LuImage size={26} />
-                                <span className="text-xs font-medium text-center px-2">{label}</span>
-                            </div>
-                        ))}
-                    </div>
-                    <p className="text-center text-xs text-gray-400 mt-4">* সেন্টারের আসল ছবি শীঘ্রই যুক্ত হবে</p>
-                </div>
-            </section>
-
-            {/* Parent voices */}
-            <section className="py-16 px-6">
-                <div className="max-w-5xl mx-auto">
-                    <div className="text-center mb-10">
-                        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">অভিভাবকরা যা বলছেন</h2>
-                        <p className="text-gray-500">আমাদের কথা নয় — যাঁরা সন্তান পাঠিয়েছেন, তাঁদের কথা।</p>
-                    </div>
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-                        {testimonials.map((tst, i) => (
-                            <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6 flex flex-col">
-                                <LuQuote className="text-primary-300 mb-3" size={24} />
-                                <p className="text-gray-700 leading-relaxed flex-grow">{tst.quote}</p>
-                                <div className="mt-5 pt-4 border-t border-gray-100">
-                                    <p className="font-bold text-gray-900 text-sm">{tst.name}</p>
-                                    <p className="text-xs text-gray-500">{tst.role}</p>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
             {/* Offer + pricing */}
             <section className="py-16 px-6">
                 <div className="max-w-4xl mx-auto text-center">
@@ -604,31 +462,7 @@ export default function AcademicCarePage() {
                             অথচ সময় ও যত্ন কয়েক গুণ বেশি।
                         </p>
                     </div>
-                    <p className="text-sm font-semibold text-primary-800 bg-primary-50 border border-primary-100 rounded-xl px-4 py-3 mt-5 inline-block">
-                        প্রতি ব্যাচে সর্বোচ্চ ১৫ জন — তাই আসন সীমিত।
-                    </p>
-                    <p className="text-xs text-gray-400 mt-4">* প্যাকেজ ও বিষয়ভেদে ফি ভিন্ন হতে পারে</p>
-                </div>
-            </section>
-
-            {/* FAQ — handles the objections that stop a parent from calling */}
-            <section className="py-16 px-6">
-                <div className="max-w-3xl mx-auto">
-                    <div className="text-center mb-10">
-                        <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">অভিভাবকদের সাধারণ প্রশ্ন</h2>
-                        <p className="text-gray-500">যা জানতে চান, খোলাখুলি বলা আছে।</p>
-                    </div>
-                    <div className="space-y-3">
-                        {faqs.map((item, i) => (
-                            <details key={i} className="group bg-white rounded-xl border border-gray-200 overflow-hidden">
-                                <summary className="flex items-center justify-between gap-4 px-5 py-4 cursor-pointer list-none font-semibold text-gray-900 hover:bg-gray-50">
-                                    {item.q}
-                                    <LuChevronDown className="shrink-0 text-gray-400 transition-transform group-open:rotate-180" size={18} />
-                                </summary>
-                                <p className="px-5 pb-5 text-gray-600 leading-relaxed">{item.a}</p>
-                            </details>
-                        ))}
-                    </div>
+                    <p className="text-xs text-gray-400 mt-4">* প্যাকেজ ও বিষয়ভেদে ফি ভিন্ন হতে পারে · আসন সীমিত</p>
                 </div>
             </section>
 
