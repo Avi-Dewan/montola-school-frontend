@@ -5,13 +5,19 @@ import { toast } from "react-toastify";
 import { FaWhatsapp } from "react-icons/fa";
 import {
     LuBrain, LuCalendarClock, LuShuffle, LuLightbulb, LuUsers,
-    LuPencil, LuTarget, LuCheck, LuArrowRight, LuMapPin, LuMail, LuTriangleAlert, LuX,
+    LuPencil, LuTarget, LuCheck, LuArrowRight, LuMapPin, LuMail, LuTriangleAlert, LuX, LuPhone,
 } from "react-icons/lu";
 import schoolInfo from "@/config/schoolInfo.json";
 import { submitCareLead } from "@/lib/care";
 
 const WA = schoolInfo.academicCare.whatsapp;
+const PHONE = schoolInfo.phone;
 const waLink = (text: string) => `https://wa.me/${WA}?text=${encodeURIComponent(text)}`;
+
+// Kept religion-neutral on purpose — Khagrachari families are Buddhist,
+// Hindu, Christian and Muslim, and this text is sent *by the parent*.
+const WA_INFO = "আমি মোনতলা একাডেমিক কেয়ার সম্পর্কে জানতে চাই।";
+const WA_TRIAL = "আমি ফ্রি ট্রায়াল বুক করতে চাই।";
 
 const worries = [
     "সারাদিন কাজের ব্যস্ততায় সন্তানকে সময় দিতে পারছি না",
@@ -91,7 +97,7 @@ function ForgettingCurve() {
             </svg>
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-1 mt-2 text-xs">
                 <span className="inline-flex items-center gap-1.5"><span className="w-3 h-1 rounded bg-rose-600" /> রিভিশন ছাড়া — যা স্কুল-কোচিংয়ে হয়</span>
-                <span className="inline-flex items-center gap-1.5"><span className="w-3 h-1 rounded bg-primary-600" /> স্পেসড রিভিশনসহ — আমাদের নিয়ম</span>
+                <span className="inline-flex items-center gap-1.5"><span className="w-3 h-1 rounded bg-primary-500" /> স্পেসড রিভিশনসহ — আমাদের নিয়ম</span>
             </div>
         </div>
     );
@@ -124,7 +130,7 @@ function LeadForm() {
                 <div className="w-14 h-14 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center mx-auto mb-4"><LuCheck size={28} /></div>
                 <h3 className="text-xl font-bold text-gray-900 mb-2">ধন্যবাদ! আপনার অনুরোধ পেয়েছি।</h3>
                 <p className="text-gray-600 mb-5">আমরা শীঘ্রই আপনাকে ফোন করব। দ্রুত কথা বলতে চাইলে সরাসরি WhatsApp করুন।</p>
-                <a href={waLink("আসসালামু আলাইকুম, আমি মোনতলা একাডেমিক কেয়ার সম্পর্কে জানতে চাই।")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-[#25D366] text-white font-semibold px-6 py-3 rounded-xl hover:brightness-95">
+                <a href={waLink(WA_INFO)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-[#25D366] text-white font-semibold px-6 py-3 rounded-xl hover:brightness-95">
                     <FaWhatsapp size={20} /> WhatsApp করুন
                 </a>
             </div>
@@ -133,8 +139,8 @@ function LeadForm() {
 
     return (
         <form onSubmit={submit} className="bg-white rounded-2xl border border-gray-200 p-6 md:p-8 space-y-4 shadow-sm">
-            <h3 className="text-xl font-bold text-gray-900">ফ্রি কাউন্সেলিং বুক করুন</h3>
-            <p className="text-sm text-gray-500 -mt-2">শুধু নাম ও নম্বর দিন — আমরা কল করব। কোনো খরচ নেই।</p>
+            <h3 className="text-xl font-bold text-gray-900">ফ্রি ৭ দিনের ট্রায়াল বুক করুন</h3>
+            <p className="text-sm text-gray-500 -mt-2">শুধু নাম ও নম্বর দিন — আমরা কল করে বিস্তারিত জানাব। কোনো খরচ নেই।</p>
             <input className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary-500" placeholder="আপনার নাম *" value={f.name} onChange={(e) => set("name", e.target.value)} />
             <input className="w-full p-3 border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-primary-500" placeholder="মোবাইল নম্বর * (যেমন 01712345678)" value={f.phone} onChange={(e) => set("phone", e.target.value)} />
             <div className="grid grid-cols-2 gap-3">
@@ -155,7 +161,7 @@ function LeadForm() {
 
 export default function AcademicCarePage() {
     return (
-        <main className="overflow-x-hidden">
+        <main className="overflow-x-hidden pb-20 md:pb-0">
             {/* Hero */}
             <section className="bg-gradient-to-br from-primary-700 to-primary-800 text-white pt-28 pb-20 px-6">
                 <div className="max-w-5xl mx-auto text-center">
@@ -171,12 +177,17 @@ export default function AcademicCarePage() {
                     </p>
                     <div className="flex flex-wrap justify-center gap-3">
                         <a href="#book" className="inline-flex items-center gap-2 bg-white text-primary-700 font-semibold px-6 py-3 rounded-xl hover:bg-gray-100 transition">
-                            ফ্রি ৭ দিনের ট্রায়াল বুক করুন <LuArrowRight size={18} />
+                            ফ্রি ট্রায়াল বুক করুন <LuArrowRight size={18} />
                         </a>
-                        <a href={waLink("আসসালামু আলাইকুম, আমি মোনতলা একাডেমিক কেয়ার সম্পর্কে জানতে চাই।")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-[#25D366] text-white font-semibold px-6 py-3 rounded-xl hover:brightness-95 transition">
+                        {/* On mobile the sticky bottom bar already offers call + WhatsApp */}
+                        <a href={`tel:${PHONE}`} className="hidden md:inline-flex items-center gap-2 bg-white/15 text-white font-semibold px-6 py-3 rounded-xl hover:bg-white/25 transition ring-1 ring-white/30">
+                            <LuPhone size={19} /> সরাসরি কল করুন
+                        </a>
+                        <a href={waLink(WA_INFO)} target="_blank" rel="noreferrer" className="hidden md:inline-flex items-center gap-2 bg-[#25D366] text-white font-semibold px-6 py-3 rounded-xl hover:brightness-95 transition">
                             <FaWhatsapp size={20} /> WhatsApp
                         </a>
                     </div>
+                    <p className="text-white/70 text-sm mt-5">প্রথম ৭ দিন সম্পূর্ণ ফ্রি · কোনো অগ্রিম খরচ নেই</p>
                 </div>
             </section>
 
@@ -241,7 +252,7 @@ export default function AcademicCarePage() {
                             বিজ্ঞানীরা একে বলেন <b>“ভুলে যাওয়ার বক্ররেখা” (Forgetting Curve)</b>। রিভিশন না করলে —
                         </p>
                         <p className="text-gray-700 bg-white border border-gray-200 rounded-xl px-4 py-3 mb-4">
-                            শেখা বিষয়ের প্রায় <b className="text-rose-600">৭০% সন্তান ২৪ ঘণ্টার মধ্যেই ভুলে যায়।</b>
+                            গবেষণায় দেখা গেছে, শেখা বিষয়ের <b className="text-rose-600">অর্ধেকেরও বেশি ২৪ ঘণ্টার মধ্যে ঝাপসা হয়ে যায়।</b>
                         </p>
                         <p className="text-gray-600 leading-relaxed">
                             তাই আজ যা শেখে, পরীক্ষার দিন তার বেশিরভাগই হারিয়ে যায়। নিচের লাল রেখা দেখুন — এভাবেই স্কুল-কোচিংয়ে
@@ -262,7 +273,7 @@ export default function AcademicCarePage() {
                             বিশ্বের শীর্ষ বিশ্ববিদ্যালয়ের গবেষণায় প্রমাণিত পদ্ধতিতে পড়াই। এর মধ্যে <b>দুটি</b> সবচেয়ে শক্তিশালী —
                             যা সরাসরি ভুলে যাওয়াকে হারায়।
                         </p>
-                        <p className="text-xs font-semibold uppercase tracking-widest text-gray-400 mt-3">KENT STATE · DUKE · WASHINGTON UNIVERSITY</p>
+                        <p className="text-xs text-gray-400 mt-3">শিখন-বিজ্ঞানের স্বীকৃত গবেষণা অনুসরণে · Dunlosky, Roediger ও Karpicke</p>
                     </div>
 
                     {/* The two hero methods */}
@@ -280,7 +291,7 @@ export default function AcademicCarePage() {
                                 “টেনে তোলে”, আর স্মৃতি পাকা হয়। আমরা প্রতিদিন ছোট কুইজ ও মুখে প্রশ্নোত্তর করাই।
                             </p>
                             <p className="mt-4 text-sm font-semibold text-primary-800 bg-white rounded-lg px-3 py-2">
-                                শুধু বারবার পড়ার চেয়ে দীর্ঘমেয়াদে প্রায় <b>১.৫× বেশি</b> মনে থাকে।
+                                শুধু বারবার পড়ার চেয়ে দীর্ঘমেয়াদে <b>অনেক বেশি</b> মনে থাকে — গবেষণায় প্রমাণিত।
                             </p>
                         </div>
 
@@ -357,6 +368,9 @@ export default function AcademicCarePage() {
                             );
                         })}
                     </div>
+                    <p className="text-center text-sm text-gray-500 mt-6">
+                        সরাসরি পাঠ ৪ ঘণ্টা ৪০ মিনিট — সঙ্গে বিরতি ও বিশ্রাম মিলিয়ে প্রতিদিন মোট <b className="text-gray-700">৬ ঘণ্টা</b>।
+                    </p>
                 </div>
             </section>
 
@@ -440,6 +454,14 @@ export default function AcademicCarePage() {
                             <p className="text-3xl font-bold text-gray-900">১০,০০০৳ <span className="text-base font-medium text-gray-500">থেকে / মাস</span></p>
                         </div>
                     </div>
+                    <div className="max-w-2xl mx-auto mt-6 bg-primary-50 border border-primary-100 rounded-2xl p-5 text-left">
+                        <p className="text-gray-800 font-semibold mb-2">হিসাবটা একবার দেখুন —</p>
+                        <p className="text-gray-700 text-sm leading-relaxed">
+                            মাসে ৬ ঘণ্টা × ২৬ দিন = <b>প্রায় ১৫৬ ঘণ্টা</b> তত্ত্বাবধানে পড়া। অর্থাৎ ঘণ্টাপ্রতি খরচ পড়ে
+                            <b className="text-primary-800"> ৫০৳-এরও কম</b> — একজন প্রাইভেট টিউটরের ঘণ্টাপ্রতি খরচের প্রায় অর্ধেক,
+                            অথচ সময় ও যত্ন কয়েক গুণ বেশি।
+                        </p>
+                    </div>
                     <p className="text-xs text-gray-400 mt-4">* প্যাকেজ ও বিষয়ভেদে ফি ভিন্ন হতে পারে · আসন সীমিত</p>
                 </div>
             </section>
@@ -449,10 +471,15 @@ export default function AcademicCarePage() {
                 <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-10 items-start">
                     <div>
                         <h2 className="font-serif text-3xl md:text-4xl font-medium text-gray-900 mb-4">সন্তানের ভবিষ্যৎ — আর পিছিয়ে নয়।</h2>
-                        <p className="text-gray-600 mb-6">আজই ফ্রি কাউন্সেলিং বুক করুন বা সরাসরি ভিজিট করুন।</p>
-                        <a href={waLink("আসসালামু আলাইকুম, আমি ফ্রি ট্রায়াল বুক করতে চাই।")} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-[#25D366] text-white font-semibold px-6 py-3 rounded-xl hover:brightness-95 transition mb-8">
-                            <FaWhatsapp size={20} /> WhatsApp: +{WA}
-                        </a>
+                        <p className="text-gray-600 mb-6">আজই ফ্রি ট্রায়াল বুক করুন, কল করুন — অথবা সরাসরি সেন্টার ঘুরে দেখুন।</p>
+                        <div className="flex flex-wrap gap-3 mb-8">
+                            <a href={`tel:${PHONE}`} className="inline-flex items-center gap-2 bg-primary-600 text-white font-semibold px-6 py-3 rounded-xl hover:bg-primary-700 transition">
+                                <LuPhone size={19} /> কল করুন: {PHONE}
+                            </a>
+                            <a href={waLink(WA_TRIAL)} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 bg-[#25D366] text-white font-semibold px-6 py-3 rounded-xl hover:brightness-95 transition">
+                                <FaWhatsapp size={20} /> WhatsApp
+                            </a>
+                        </div>
                         <div className="space-y-3 text-gray-700">
                             <p className="flex items-start gap-3"><LuMapPin className="text-primary-600 mt-1 shrink-0" size={18} /> {schoolInfo.academicCare.address}</p>
                             <p className="flex items-center gap-3"><LuMail className="text-primary-600 shrink-0" size={18} /> {schoolInfo.email}</p>
@@ -461,6 +488,16 @@ export default function AcademicCarePage() {
                     <LeadForm />
                 </div>
             </section>
+
+            {/* Sticky mobile action bar — the page is long; keep calling one tap away */}
+            <div className="md:hidden fixed bottom-0 inset-x-0 z-40 bg-white/95 backdrop-blur border-t border-gray-200 px-3 py-2.5 flex gap-2">
+                <a href={`tel:${PHONE}`} className="flex-1 inline-flex items-center justify-center gap-2 bg-primary-600 text-white font-semibold py-3 rounded-xl">
+                    <LuPhone size={18} /> কল করুন
+                </a>
+                <a href={waLink(WA_INFO)} target="_blank" rel="noreferrer" className="flex-1 inline-flex items-center justify-center gap-2 bg-[#25D366] text-white font-semibold py-3 rounded-xl">
+                    <FaWhatsapp size={19} /> WhatsApp
+                </a>
+            </div>
         </main>
     );
 }
