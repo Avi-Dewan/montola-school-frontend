@@ -53,7 +53,10 @@
         "startFree": "Start free",
         "subjects": "Subjects",
         "complete": "complete",
-        "chaptersShort": "Chapters"
+        "chaptersShort": "Chapters",
+        "tapPrompt": "Tap to see which classes are available",
+        "availableCount": "{{n}} classes available",
+        "hideList": "Hide classes"
     },
     "featuredChapters": {
         "title": "Featured Chapters",
@@ -499,6 +502,9 @@
             "title": "Visible progress",
             "desc": "Students track their own performance week by week. Seeing growth builds the confidence that struggling learners often lack — and confidence compounds.",
             "tag": "Growth mindset"
-        }
+        },
+        "revealCta": "Tap to reveal how we teach",
+        "principlesLabel": "6 principles",
+        "hideCta": "Hide"
     }
 }
