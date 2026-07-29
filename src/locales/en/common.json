@@ -56,7 +56,25 @@
         "chaptersShort": "Chapters",
         "tapPrompt": "Tap to see which classes are available",
         "availableCount": "{{n}} classes available",
-        "hideList": "Hide classes"
+        "hideList": "Hide classes",
+        "levels": {
+            "jsc": {
+                "label": "Junior Secondary",
+                "note": "JSC foundation years"
+            },
+            "ssc": {
+                "label": "Secondary",
+                "note": "SSC board preparation"
+            },
+            "hsc": {
+                "label": "Higher Secondary",
+                "note": "HSC board preparation"
+            },
+            "other": {
+                "label": "Other",
+                "note": ""
+            }
+        }
     },
     "featuredChapters": {
         "title": "Featured Chapters",
