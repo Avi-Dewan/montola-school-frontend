@@ -5,6 +5,9 @@ const config: Config = {
         "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
         "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
         "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+        // lib holds class-name lookup tables (e.g. the per-class colour
+        // palette in classGroups.ts) — without this they get purged.
+        "./src/lib/**/*.{js,ts,jsx,tsx,mdx}",
     ],
     theme: {
         extend: {
