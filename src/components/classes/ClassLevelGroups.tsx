@@ -13,15 +13,24 @@ export function ClassCard({ c, m }: { c: ClassResponseDto; m?: ClassMeta }) {
     return (
         <Link
             href={`/classes/${c.id}`}
-            /* Mobile: a compact row. Desktop: a square tile. */
-            className="group bg-white rounded-2xl border border-gray-200 p-4 md:p-6 transition-all duration-300 hover:border-gray-900 hover:shadow-lg
+            /* Mobile: a compact row. Tablet and up: a golden-ratio rectangle. */
+            className="group bg-white rounded-2xl border border-gray-200 p-4 md:p-5 transition-all duration-300
+                       hover:border-primary-600 hover:shadow-lg hover:shadow-primary-100
                        flex items-center gap-4
-                       md:aspect-square md:flex-col md:items-stretch md:justify-between md:gap-0"
+                       md:aspect-[1.618/1] md:flex-col md:items-stretch md:justify-between md:gap-0"
         >
-            <span
-                className={`w-12 h-12 md:w-16 md:h-16 rounded-xl ${accentFor(n)} text-white flex items-center justify-center text-xl md:text-3xl font-extrabold shrink-0 md:self-start`}
-            >
-                {n !== null ? localeNum(n, lang) : "•"}
+            {/* On desktop this row spans the top: numeral left, arrow in the
+                otherwise-dead top-right corner. */}
+            <span className="flex items-center justify-between shrink-0 md:w-full">
+                <span
+                    className={`w-12 h-12 md:w-14 md:h-14 rounded-xl ${accentFor(n)} text-white flex items-center justify-center text-xl md:text-2xl font-extrabold shrink-0`}
+                >
+                    {n !== null ? localeNum(n, lang) : "•"}
+                </span>
+                <LuArrowRight
+                    className="hidden md:block text-gray-300 group-hover:text-primary-600 group-hover:translate-x-1 transition-all"
+                    size={20}
+                />
             </span>
 
             <span className="min-w-0 flex-1 md:flex-none md:w-full">
@@ -37,29 +46,22 @@ export function ClassCard({ c, m }: { c: ClassResponseDto; m?: ClassMeta }) {
                     <span className="block h-4 mt-1.5 w-28 bg-gray-100 rounded animate-pulse" />
                 )}
 
+                {/* Percentage sits inline with the bar so the card keeps its ratio */}
                 {m && m.progress !== null && (
-                    <span className="block mt-2">
-                        <span className="block h-1.5 w-full bg-gray-100 rounded-full overflow-hidden">
+                    <span className="flex items-center gap-2 mt-2">
+                        <span className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
                             <span
                                 className={`block h-full ${accentFor(n)} rounded-full transition-all duration-500`}
                                 style={{ width: `${m.progress}%` }}
                             />
                         </span>
-                        <span className="block text-[11px] text-gray-500 mt-1">
-                            {localeNum(m.progress, lang)}% {t("classes.complete")}
-                        </span>
+                        <span className="text-[11px] text-gray-500 shrink-0">{localeNum(m.progress, lang)}%</span>
                     </span>
                 )}
-
-                {/* Desktop gets a written call to action instead of a bare arrow */}
-                <span className="hidden md:flex items-center gap-1.5 text-sm font-semibold text-gray-900 mt-3">
-                    {t("classes.viewChapters")}
-                    <LuArrowRight className="group-hover:translate-x-1 transition-transform" size={16} />
-                </span>
             </span>
 
             <LuArrowRight
-                className="md:hidden text-gray-300 group-hover:text-gray-900 group-hover:translate-x-1 transition-all shrink-0"
+                className="md:hidden text-gray-300 group-hover:text-primary-600 group-hover:translate-x-1 transition-all shrink-0"
                 size={20}
             />
         </Link>
@@ -91,7 +93,7 @@ export default function ClassLevelGroups({
                         )}
                         <div className="flex-1 h-px bg-gray-200" />
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
                         {g.items.map((c) => (
                             <ClassCard key={c.id} c={c} m={meta[c.id]} />
                         ))}
