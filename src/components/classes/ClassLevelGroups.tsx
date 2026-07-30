@@ -14,7 +14,7 @@ export function ClassCard({ c, m }: { c: ClassResponseDto; m?: ClassMeta }) {
         <Link
             href={`/classes/${c.id}`}
             /* Mobile: a compact row. Tablet and up: a golden-ratio rectangle. */
-            className="group bg-white rounded-2xl border border-gray-200 p-4 md:p-5 transition-all duration-300
+            className="group bg-white rounded-2xl border border-gray-200 p-4 md:p-5 xl:p-4 transition-all duration-300
                        hover:border-primary-600 hover:shadow-lg hover:shadow-primary-100
                        flex items-center gap-4
                        md:aspect-[1.618/1] md:flex-col md:items-stretch md:justify-between md:gap-0"
@@ -23,7 +23,7 @@ export function ClassCard({ c, m }: { c: ClassResponseDto; m?: ClassMeta }) {
                 otherwise-dead top-right corner. */}
             <span className="flex items-center justify-between shrink-0 md:w-full">
                 <span
-                    className={`w-12 h-12 md:w-14 md:h-14 rounded-xl ${accentFor(n)} text-white flex items-center justify-center text-xl md:text-2xl font-extrabold shrink-0`}
+                    className={`w-12 h-12 md:w-11 md:h-11 rounded-xl ${accentFor(n)} text-white flex items-center justify-center text-xl md:text-lg font-extrabold shrink-0`}
                 >
                     {n !== null ? localeNum(n, lang) : "•"}
                 </span>
@@ -34,28 +34,33 @@ export function ClassCard({ c, m }: { c: ClassResponseDto; m?: ClassMeta }) {
             </span>
 
             <span className="min-w-0 flex-1 md:flex-none md:w-full">
-                <span className="block font-bold text-gray-900 md:text-xl leading-tight truncate">{c.name}</span>
+                <span className="block font-bold text-gray-900 md:text-base leading-tight truncate">{c.name}</span>
 
+                {/* The percentage rides along on this line rather than getting its
+                    own row — a second text line box is tall enough in Bengali to
+                    push the card past its aspect ratio. */}
                 {m ? (
-                    <span className="block text-xs md:text-sm text-gray-500 mt-0.5">
+                    <span className="block text-xs md:text-sm text-gray-500 mt-0.5 truncate">
                         {localeNum(m.chapters, lang)} {t(m.chapters === 1 ? "classes.chapter" : "classes.chaptersShort")}
                         <span className="mx-1.5 text-gray-300">·</span>
                         {localeNum(m.subjects, lang)} {t(m.subjects === 1 ? "classes.subject" : "classes.subjects")}
+                        {m.progress !== null && (
+                            <>
+                                <span className="mx-1.5 text-gray-300">·</span>
+                                {localeNum(m.progress, lang)}%
+                            </>
+                        )}
                     </span>
                 ) : (
                     <span className="block h-4 mt-1.5 w-28 bg-gray-100 rounded animate-pulse" />
                 )}
 
-                {/* Percentage sits inline with the bar so the card keeps its ratio */}
                 {m && m.progress !== null && (
-                    <span className="flex items-center gap-2 mt-2">
-                        <span className="flex-1 h-1.5 bg-gray-100 rounded-full overflow-hidden">
-                            <span
-                                className={`block h-full ${accentFor(n)} rounded-full transition-all duration-500`}
-                                style={{ width: `${m.progress}%` }}
-                            />
-                        </span>
-                        <span className="text-[11px] text-gray-500 shrink-0">{localeNum(m.progress, lang)}%</span>
+                    <span className="block h-1.5 bg-gray-100 rounded-full overflow-hidden mt-2 md:mt-1.5">
+                        <span
+                            className={`block h-full ${accentFor(n)} rounded-full transition-all duration-500`}
+                            style={{ width: `${m.progress}%` }}
+                        />
                     </span>
                 )}
             </span>
@@ -93,7 +98,7 @@ export default function ClassLevelGroups({
                         )}
                         <div className="flex-1 h-px bg-gray-200" />
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-5">
                         {g.items.map((c) => (
                             <ClassCard key={c.id} c={c} m={meta[c.id]} />
                         ))}
