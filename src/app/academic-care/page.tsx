@@ -19,6 +19,8 @@ const waLink = (text: string) => `https://wa.me/${WA}?text=${encodeURIComponent(
 const WA_INFO = "আমি মোনতলা একাডেমিক কেয়ার সম্পর্কে জানতে চাই।";
 const WA_TRIAL = "আমি ফ্রি ট্রায়াল বুক করতে চাই।";
 
+const bnIndex = ["০১", "০২", "০৩", "০৪", "০৫", "০৬"];
+
 const worries = [
     "সারাদিন কাজের ব্যস্ততায় সন্তানকে সময় দিতে পারছি না",
     "কোচিংয়ের পরও বেসিক দুর্বল",
@@ -220,13 +222,23 @@ export default function AcademicCarePage() {
                             বেশিরভাগ স্কুল-কোচিংয়ে পড়ানো হয় পুরনো, অকার্যকর নিয়মে। যত ঘণ্টাই পড়ুক, ফল একই — কারণ ভিত্তিটাই ঠিক নেই।
                         </p>
                     </div>
-                    <div className="space-y-3">
+                    {/* Two columns so the lines stay readable and the block reads
+                        tight rather than as five identical full-width bars. */}
+                    <div className="grid md:grid-cols-2 gap-4">
                         {wrongWays.map((w, i) => (
-                            <div key={i} className="flex items-start gap-4 bg-rose-50/50 border border-rose-100 rounded-xl p-5">
-                                <span className="w-8 h-8 rounded-full bg-white text-rose-500 flex items-center justify-center shrink-0 mt-0.5"><LuX size={16} /></span>
-                                <div>
-                                    <h3 className="font-bold text-gray-900">{w.wrong}</h3>
-                                    <p className="text-sm text-gray-600 mt-0.5">{w.right}</p>
+                            <div
+                                key={i}
+                                className="relative bg-white rounded-xl border border-gray-200 p-5 pl-6 overflow-hidden hover:border-rose-200 transition-colors"
+                            >
+                                <span className="absolute left-0 inset-y-0 w-1 bg-rose-400" aria-hidden />
+                                <div className="flex items-start gap-3.5">
+                                    <span className="text-base font-extrabold text-rose-300 leading-none shrink-0 mt-0.5">
+                                        {bnIndex[i]}
+                                    </span>
+                                    <div className="min-w-0">
+                                        <h3 className="font-bold text-gray-900 leading-snug">{w.wrong}</h3>
+                                        <p className="text-sm text-gray-600 mt-1 leading-relaxed">{w.right}</p>
+                                    </div>
                                 </div>
                             </div>
                         ))}
@@ -269,40 +281,74 @@ export default function AcademicCarePage() {
                     </div>
 
                     {/* The two hero methods */}
-                    <div className="grid md:grid-cols-2 gap-6 mb-6">
-                        <div className="bg-primary-50 border border-primary-100 rounded-2xl p-7">
-                            <div className="flex items-center gap-3 mb-4">
-                                <span className="w-12 h-12 rounded-xl bg-white text-primary-600 flex items-center justify-center"><LuBrain size={24} /></span>
-                                <div>
-                                    <h3 className="text-lg font-bold text-gray-900">সক্রিয় স্মরণ</h3>
-                                    <p className="text-xs font-semibold uppercase tracking-wider text-primary-700">Active Recall</p>
-                                </div>
-                            </div>
-                            <p className="text-gray-700 leading-relaxed">
-                                পড়া মানে শুধু বই খুলে বসে থাকা নয়। বই বন্ধ রেখে নিজে মনে করার চেষ্টা করা — এভাবেই মস্তিষ্ক তথ্য
-                                “টেনে তোলে”, আর স্মৃতি পাকা হয়। আমরা প্রতিদিন ছোট কুইজ ও মুখে প্রশ্নোত্তর করাই।
-                            </p>
-                            <p className="mt-4 text-sm font-semibold text-primary-800 bg-white rounded-lg px-3 py-2">
-                                শুধু বারবার পড়ার চেয়ে দীর্ঘমেয়াদে <b>অনেক বেশি</b> মনে থাকে — গবেষণায় প্রমাণিত।
-                            </p>
-                        </div>
+                    <div className="grid md:grid-cols-2 gap-5 mb-8">
+                        {[
+                            {
+                                Icon: LuBrain,
+                                name: "সক্রিয় স্মরণ",
+                                en: "Active Recall",
+                                body: (
+                                    <>
+                                        পড়া মানে শুধু বই খুলে বসে থাকা নয়। বই বন্ধ রেখে নিজে মনে করার চেষ্টা করা — এভাবেই মস্তিষ্ক তথ্য
+                                        “টেনে তোলে”, আর স্মৃতি পাকা হয়। আমরা প্রতিদিন ছোট কুইজ ও মুখে প্রশ্নোত্তর করাই।
+                                    </>
+                                ),
+                                proof: (
+                                    <>
+                                        শুধু বারবার পড়ার চেয়ে দীর্ঘমেয়াদে <b>অনেক বেশি</b> মনে থাকে — গবেষণায় প্রমাণিত।
+                                    </>
+                                ),
+                            },
+                            {
+                                Icon: LuCalendarClock,
+                                name: "বিরতিতে পুনরাবৃত্তি",
+                                en: "Spaced Repetition",
+                                body: (
+                                    <>
+                                        একদিনে সব গিলে ফেলা নয়। একই বিষয় <b>১ দিন → ৩ দিন → ৭ দিন</b> পরপর পরিকল্পিতভাবে ফিরে দেখা —
+                                        ঠিক ভুলে যাওয়ার আগমুহূর্তে। তাই পরীক্ষার দিনও সব মনে থাকে।
+                                    </>
+                                ),
+                                proof: <>লাল রেখা নয় — সবুজ রেখা। ভুলে যাওয়াকে হারিয়ে স্মৃতি উঁচুতে স্থির থাকে।</>,
+                            },
+                        ].map((m, i) => {
+                            const Icon = m.Icon;
+                            return (
+                                <div
+                                    key={i}
+                                    className="relative bg-white border-2 border-primary-100 rounded-2xl p-6 md:p-7 overflow-hidden hover:border-primary-300 transition-colors"
+                                >
+                                    {/* Oversized index, kept faint — signals "these are the two" */}
+                                    <span
+                                        className="absolute -top-3 right-3 text-6xl font-extrabold text-primary-50 select-none pointer-events-none"
+                                        aria-hidden
+                                    >
+                                        {bnIndex[i]}
+                                    </span>
 
-                        <div className="bg-primary-50 border border-primary-100 rounded-2xl p-7">
-                            <div className="flex items-center gap-3 mb-4">
-                                <span className="w-12 h-12 rounded-xl bg-white text-primary-600 flex items-center justify-center"><LuCalendarClock size={24} /></span>
-                                <div>
-                                    <h3 className="text-lg font-bold text-gray-900">বিরতিতে পুনরাবৃত্তি</h3>
-                                    <p className="text-xs font-semibold uppercase tracking-wider text-primary-700">Spaced Repetition</p>
+                                    <div className="relative">
+                                        <div className="flex items-center gap-3 mb-4">
+                                            <span className="w-12 h-12 rounded-xl bg-primary-600 text-white flex items-center justify-center shrink-0">
+                                                <Icon size={24} />
+                                            </span>
+                                            <div className="min-w-0">
+                                                <h3 className="text-lg font-bold text-gray-900 leading-tight">{m.name}</h3>
+                                                <p className="text-[11px] font-semibold uppercase tracking-wider text-primary-600">{m.en}</p>
+                                            </div>
+                                        </div>
+
+                                        <p className="text-gray-600 leading-relaxed">{m.body}</p>
+
+                                        <div className="mt-5 pt-4 border-t border-gray-100 flex items-start gap-2.5">
+                                            <span className="w-5 h-5 rounded-full bg-primary-100 text-primary-700 flex items-center justify-center shrink-0 mt-0.5">
+                                                <LuCheck size={12} />
+                                            </span>
+                                            <p className="text-sm font-medium text-gray-800 leading-relaxed">{m.proof}</p>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <p className="text-gray-700 leading-relaxed">
-                                একদিনে সব গিলে ফেলা নয়। একই বিষয় <b>১ দিন → ৩ দিন → ৭ দিন</b> পরপর পরিকল্পিতভাবে ফিরে দেখা —
-                                ঠিক ভুলে যাওয়ার আগমুহূর্তে। তাই পরীক্ষার দিনও সব মনে থাকে।
-                            </p>
-                            <p className="mt-4 text-sm font-semibold text-primary-800 bg-white rounded-lg px-3 py-2">
-                                লাল রেখা নয় — সবুজ রেখা। ভুলে যাওয়াকে হারিয়ে স্মৃতি উঁচুতে স্থির থাকে।
-                            </p>
-                        </div>
+                            );
+                        })}
                     </div>
 
                     {/* Supporting 3 methods */}
@@ -311,10 +357,14 @@ export default function AcademicCarePage() {
                         {methods.map((m, i) => {
                             const Icon = m.icon;
                             return (
-                                <div key={i} className="bg-white rounded-2xl border border-gray-200 p-6">
-                                    <span className="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center mb-4"><Icon size={20} /></span>
-                                    <h3 className="font-bold text-gray-900">{m.name}</h3>
-                                    <p className="text-xs font-semibold uppercase tracking-wider text-gray-400 mb-2">{m.en}</p>
+                                <div key={i} className="bg-white rounded-2xl border border-gray-200 p-5 hover:border-primary-200 transition-colors">
+                                    <div className="flex items-center gap-3 mb-3">
+                                        <span className="w-10 h-10 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0"><Icon size={20} /></span>
+                                        <div className="min-w-0">
+                                            <h3 className="font-bold text-gray-900 leading-tight">{m.name}</h3>
+                                            <p className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">{m.en}</p>
+                                        </div>
+                                    </div>
                                     <p className="text-sm text-gray-600 leading-relaxed">{m.desc}</p>
                                 </div>
                             );
