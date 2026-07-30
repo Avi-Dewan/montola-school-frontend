@@ -454,8 +454,8 @@ export default function AcademicCarePage() {
                                     <span className="sm:hidden w-10 h-10 rounded-full bg-white text-primary-600 border-2 border-dashed border-primary-200 flex items-center justify-center shrink-0">
                                         <LuCalendarClock size={18} />
                                     </span>
-                                    <p className="text-sm text-gray-600 flex-1">বিরতি, বিশ্রাম ও গোছানো — দিনজুড়ে ছড়ানো</p>
-                                    <span className="text-sm font-bold text-gray-500 shrink-0 whitespace-nowrap">৮০ মিনিট</span>
+                                    <p className="text-sm text-gray-600 flex-1">বিরতি ও বিশ্রাম — দুই দফায়, ২৫ মিনিট ও ১৫–২০ মিনিট</p>
+                                    <span className="text-sm font-bold text-gray-500 shrink-0 whitespace-nowrap">৪৫ মিনিট</span>
                                 </div>
                             </div>
                         </div>
@@ -465,7 +465,7 @@ export default function AcademicCarePage() {
                     <div className="mt-6 bg-primary-50 border border-primary-100 rounded-2xl p-5 flex items-center justify-between gap-4">
                         <div>
                             <p className="font-bold text-gray-900">সব মিলিয়ে প্রতিদিন</p>
-                            <p className="text-sm text-gray-600 mt-0.5">সরাসরি পাঠ ৪ ঘণ্টা ৪০ মিনিট + বিরতি ৮০ মিনিট</p>
+                            <p className="text-sm text-gray-600 mt-0.5">এর মধ্যে বিরতি মাত্র ৪৫ মিনিট — বাকি পুরো সময়টাই পড়ায়</p>
                         </div>
                         <p className="text-2xl md:text-3xl font-extrabold text-primary-700 shrink-0 whitespace-nowrap">৬ ঘণ্টা</p>
                     </div>
