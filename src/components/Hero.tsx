@@ -20,7 +20,9 @@ export default function Hero() {
             <p className="text-base md:text-xl mb-8 md:mb-10 text-white/85 max-w-2xl mx-auto leading-relaxed">
                 {t("home.hero.subtitle")}
             </p>
-            <div className="flex flex-col sm:flex-row sm:justify-center gap-3 sm:gap-4 max-w-sm sm:max-w-none mx-auto">
+            {/* Narrow stack on mobile so the buttons read as buttons rather than
+                full-width bars — matches the Academic Care hero. */}
+            <div className="flex flex-col sm:flex-row sm:justify-center gap-3 sm:gap-4 max-w-[240px] sm:max-w-none mx-auto">
                 <Link href="/classes" className="px-6 py-3 bg-white text-primary-500 rounded-lg font-semibold hover:bg-gray-100 transition">
                     {t("home.hero.startLearning")}
                 </Link>
