@@ -41,12 +41,12 @@ const wrongWays = [
 ];
 
 const routine = [
-    { time: "১০ মিনিট", title: "মোবাইল জমা ও দিনের লক্ষ্য", tag: "Focus", desc: "সব মোবাইল লকারে; বোর্ডে আজকের লক্ষ্য — মনোযোগের সবচেয়ে বড় শত্রু দূরে।", icon: LuTarget },
-    { time: "৪০ মিনিট", title: "গতকালের মেমরি-টেস্ট", tag: "Active Recall", desc: "বই বন্ধ রেখে ১০–১৫টি দ্রুত প্রশ্ন — ঠিক ভুলে যাওয়ার আগমুহূর্তে স্মৃতি পাকা।", icon: LuBrain },
-    { time: "৯০ মিনিট", title: "নতুন অধ্যায়, ২৫+৫ ছন্দে", tag: "Elaboration", desc: "২৫ মিনিট গভীর পড়া + ৫ মিনিট বিরতি; ‘কেন/কীভাবে’ প্রশ্নে বুঝিয়ে শেখানো।", icon: LuLightbulb },
-    { time: "৬০ মিনিট", title: "তত্ত্বাবধানে মিশ্র অনুশীলন", tag: "Interleaving", desc: "বিভিন্ন ধরনের ১৫–২০টি সমস্যা মিশিয়ে; প্রতিটি ভুল সঙ্গে সঙ্গে শোধরানো।", icon: LuShuffle },
-    { time: "৫০ মিনিট", title: "শিখিয়ে শেখা ও দুর্বলতা মেরামত", tag: "Protégé Effect", desc: "শিক্ষার্থী নিজেই বোর্ডে বোঝায়; যে যেখানে আটকে, তার জন্য আলাদা যত্ন।", icon: LuUsers },
-    { time: "৩০ মিনিট", title: "হাতের লেখা, রিভিশন কার্ড ও রিপোর্ট", tag: "Report", desc: "পরিচ্ছন্ন লেখার চর্চা; মূল পয়েন্ট রিভিশন কার্ডে; অভিভাবকের কাছে দিনের রিপোর্ট।", icon: LuPencil },
+    { mins: 10, time: "১০ মিনিট", title: "মোবাইল জমা ও দিনের লক্ষ্য", tag: "Focus", desc: "সব মোবাইল লকারে; বোর্ডে আজকের লক্ষ্য — মনোযোগের সবচেয়ে বড় শত্রু দূরে।", icon: LuTarget },
+    { mins: 40, time: "৪০ মিনিট", title: "গতকালের মেমরি-টেস্ট", tag: "Active Recall", desc: "বই বন্ধ রেখে ১০–১৫টি দ্রুত প্রশ্ন — ঠিক ভুলে যাওয়ার আগমুহূর্তে স্মৃতি পাকা।", icon: LuBrain },
+    { mins: 90, time: "৯০ মিনিট", title: "নতুন অধ্যায়, ২৫+৫ ছন্দে", tag: "Elaboration", desc: "২৫ মিনিট গভীর পড়া + ৫ মিনিট বিরতি; ‘কেন/কীভাবে’ প্রশ্নে বুঝিয়ে শেখানো।", icon: LuLightbulb },
+    { mins: 60, time: "৬০ মিনিট", title: "তত্ত্বাবধানে মিশ্র অনুশীলন", tag: "Interleaving", desc: "বিভিন্ন ধরনের ১৫–২০টি সমস্যা মিশিয়ে; প্রতিটি ভুল সঙ্গে সঙ্গে শোধরানো।", icon: LuShuffle },
+    { mins: 50, time: "৫০ মিনিট", title: "শিখিয়ে শেখা ও দুর্বলতা মেরামত", tag: "Protégé Effect", desc: "শিক্ষার্থী নিজেই বোর্ডে বোঝায়; যে যেখানে আটকে, তার জন্য আলাদা যত্ন।", icon: LuUsers },
+    { mins: 30, time: "৩০ মিনিট", title: "হাতের লেখা, রিভিশন কার্ড ও রিপোর্ট", tag: "Report", desc: "পরিচ্ছন্ন লেখার চর্চা; মূল পয়েন্ট রিভিশন কার্ডে; অভিভাবকের কাছে দিনের রিপোর্ট।", icon: LuPencil },
 ];
 
 const methods = [
@@ -63,14 +63,6 @@ const outcomes = [
     { from: "হাতের লেখা খারাপ", to: "পরিচ্ছন্ন, সুন্দর উপস্থাপন" },
     { from: "ফলাফল বছরের পর বছর একই", to: "পরীক্ষায় মাপা, স্পষ্ট উন্নতি" },
     { from: "সন্তান সত্যিই শিখছে কি না, অজানা", to: "প্রতিদিনের রিপোর্ট — সব চোখের সামনে" },
-];
-
-const comparison = [
-    ["শুধু পড়িয়ে দেওয়া (passive)", "বিজ্ঞানভিত্তিক পদ্ধতিতে বুঝিয়ে শেখানো"],
-    ["মাত্র ১–২ ঘণ্টা", "পূর্ণ ৬ ঘণ্টা তত্ত্বাবধান"],
-    ["সবার জন্য একই নিয়ম", "প্রতিটি শিশুর জন্য আলাদা পরিকল্পনা"],
-    ["রিভিশন নেই — ভুলে যায়", "স্পেসড রিভিশন — মনে থাকে"],
-    ["ফলাফল ভাগ্যের ওপর", "নিয়মিত পরীক্ষিত অগ্রগতি"],
 ];
 
 function ForgettingCurve() {
@@ -350,27 +342,83 @@ export default function AcademicCarePage() {
                         <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">একটি দিন — প্রতিটি মিনিট পরিকল্পিত</h2>
                         <p className="text-gray-500">এলোমেলো পড়া নয় — দিনের প্রতিটি ধাপ ওপরের বিজ্ঞানের ওপর সাজানো।</p>
                     </div>
-                    <div className="space-y-3">
-                        {routine.map((r, i) => {
-                            const Icon = r.icon;
-                            return (
-                                <div key={i} className="flex items-start gap-4 bg-white rounded-2xl border border-gray-200 p-5">
-                                    <span className="w-11 h-11 rounded-xl bg-primary-50 text-primary-600 flex items-center justify-center shrink-0"><Icon size={20} /></span>
-                                    <div className="min-w-0 flex-1">
-                                        <div className="flex flex-wrap items-center gap-2 mb-1">
-                                            <span className="text-sm font-bold text-primary-700 bg-primary-50 px-2 py-0.5 rounded">{r.time}</span>
-                                            <span className="text-[11px] font-semibold uppercase tracking-wider text-gray-400">{r.tag}</span>
-                                        </div>
-                                        <h3 className="font-bold text-gray-900">{r.title}</h3>
-                                        <p className="text-sm text-gray-600 mt-0.5">{r.desc}</p>
-                                    </div>
-                                </div>
-                            );
-                        })}
+                    {/* The volume, up front — this is the number that lands */}
+                    <div className="grid grid-cols-3 gap-3 md:gap-5 mb-10">
+                        {[
+                            { n: "৬", u: "ঘণ্টা", l: "প্রতিদিন" },
+                            { n: "২৬", u: "দিন", l: "প্রতি মাসে" },
+                            { n: "১৫৬", u: "ঘণ্টা", l: "প্রতি মাসে" },
+                        ].map((s, i) => (
+                            <div key={i} className="bg-primary-700 text-white rounded-2xl p-4 md:p-5 text-center">
+                                <p className="text-3xl md:text-4xl font-extrabold leading-none">{s.n}</p>
+                                <p className="text-xs md:text-sm font-semibold text-white/80 mt-1">{s.u}</p>
+                                <p className="text-[10px] md:text-xs uppercase tracking-wider text-white/50 mt-2">{s.l}</p>
+                            </div>
+                        ))}
                     </div>
-                    <p className="text-center text-sm text-gray-500 mt-6">
-                        সরাসরি পাঠ ৪ ঘণ্টা ৪০ মিনিট — সঙ্গে বিরতি ও বিশ্রাম মিলিয়ে প্রতিদিন মোট <b className="text-gray-700">৬ ঘণ্টা</b>।
-                    </p>
+
+                    {/* Timeline: the connecting rail plus a bar per block makes the
+                        day read as one continuous, filled stretch. */}
+                    <div className="relative">
+                        <span className="absolute left-5 top-4 bottom-4 w-0.5 bg-primary-100 hidden sm:block" aria-hidden />
+
+                        <div className="space-y-3">
+                            {routine.map((r, i) => {
+                                const Icon = r.icon;
+                                const share = Math.round((r.mins / 90) * 100);
+                                return (
+                                    <div key={i} className="relative sm:pl-16">
+                                        <span className="hidden sm:flex absolute left-0 top-5 w-10 h-10 rounded-full bg-primary-600 text-white items-center justify-center ring-4 ring-gray-50 z-10">
+                                            <Icon size={18} />
+                                        </span>
+
+                                        <div className="bg-white rounded-2xl border border-gray-200 p-5 hover:border-primary-300 transition-colors">
+                                            <div className="flex items-start gap-3 mb-3">
+                                                <span className="sm:hidden w-10 h-10 rounded-full bg-primary-600 text-white flex items-center justify-center shrink-0">
+                                                    <Icon size={18} />
+                                                </span>
+                                                <div className="min-w-0 flex-1">
+                                                    <span className="text-[11px] font-semibold uppercase tracking-wider text-primary-600">{r.tag}</span>
+                                                    <h3 className="font-bold text-gray-900 leading-tight">{r.title}</h3>
+                                                </div>
+                                                <span className="text-sm font-extrabold text-primary-700 shrink-0 whitespace-nowrap">{r.time}</span>
+                                            </div>
+
+                                            {/* Duration drawn to scale — the 90-minute block visibly dominates */}
+                                            <div className="h-2 bg-gray-100 rounded-full overflow-hidden mb-3">
+                                                <div className="h-full bg-primary-500 rounded-full" style={{ width: `${share}%` }} />
+                                            </div>
+
+                                            <p className="text-sm text-gray-600 leading-relaxed">{r.desc}</p>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+
+                            {/* Breaks close the gap between 4h40m of lessons and the 6-hour day */}
+                            <div className="relative sm:pl-16">
+                                <span className="hidden sm:flex absolute left-0 top-5 w-10 h-10 rounded-full bg-white text-primary-600 border-2 border-dashed border-primary-200 items-center justify-center ring-4 ring-gray-50 z-10">
+                                    <LuCalendarClock size={18} />
+                                </span>
+                                <div className="bg-white/60 rounded-2xl border border-dashed border-gray-300 p-5 flex items-center gap-3">
+                                    <span className="sm:hidden w-10 h-10 rounded-full bg-white text-primary-600 border-2 border-dashed border-primary-200 flex items-center justify-center shrink-0">
+                                        <LuCalendarClock size={18} />
+                                    </span>
+                                    <p className="text-sm text-gray-600 flex-1">বিরতি, বিশ্রাম ও গোছানো — দিনজুড়ে ছড়ানো</p>
+                                    <span className="text-sm font-bold text-gray-500 shrink-0 whitespace-nowrap">৮০ মিনিট</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Total */}
+                    <div className="mt-6 bg-primary-50 border border-primary-100 rounded-2xl p-5 flex items-center justify-between gap-4">
+                        <div>
+                            <p className="font-bold text-gray-900">সব মিলিয়ে প্রতিদিন</p>
+                            <p className="text-sm text-gray-600 mt-0.5">সরাসরি পাঠ ৪ ঘণ্টা ৪০ মিনিট + বিরতি ৮০ মিনিট</p>
+                        </div>
+                        <p className="text-2xl md:text-3xl font-extrabold text-primary-700 shrink-0 whitespace-nowrap">৬ ঘণ্টা</p>
+                    </div>
                 </div>
             </section>
 
@@ -391,25 +439,6 @@ export default function AcademicCarePage() {
                                 <div className="flex items-center gap-2 text-gray-900 font-medium sm:w-1/2">
                                     <LuCheck className="text-primary-600 shrink-0" size={16} /> {o.to}
                                 </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            </section>
-
-            {/* Comparison */}
-            <section className="py-16 px-6">
-                <div className="max-w-3xl mx-auto">
-                    <h2 className="text-2xl md:text-3xl font-bold text-gray-900 text-center mb-8">কেন গতানুগতিক কোচিং থেকে আলাদা</h2>
-                    <div className="rounded-2xl border border-gray-200 overflow-hidden">
-                        <div className="grid grid-cols-2 bg-gray-50 text-sm font-bold text-gray-700">
-                            <div className="px-5 py-3 border-r border-gray-200">সাধারণ কোচিং</div>
-                            <div className="px-5 py-3 bg-primary-50/50 text-primary-800">মোনতলা একাডেমিক কেয়ার</div>
-                        </div>
-                        {comparison.map((row, i) => (
-                            <div key={i} className="grid grid-cols-2 text-sm border-t border-gray-100">
-                                <div className="px-5 py-4 border-r border-gray-200 text-gray-500">{row[0]}</div>
-                                <div className="px-5 py-4 bg-primary-50/20 text-gray-800 font-medium">{row[1]}</div>
                             </div>
                         ))}
                     </div>
