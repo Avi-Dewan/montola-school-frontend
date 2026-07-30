@@ -13,16 +13,19 @@ export function ClassCard({ c, m }: { c: ClassResponseDto; m?: ClassMeta }) {
     return (
         <Link
             href={`/classes/${c.id}`}
-            className="group bg-white rounded-2xl border border-gray-200 p-4 md:p-5 flex items-center gap-4 hover:border-gray-900 hover:shadow-lg transition-all duration-300"
+            /* Mobile: a compact row. Desktop: a square tile. */
+            className="group bg-white rounded-2xl border border-gray-200 p-4 md:p-6 transition-all duration-300 hover:border-gray-900 hover:shadow-lg
+                       flex items-center gap-4
+                       md:aspect-square md:flex-col md:items-stretch md:justify-between md:gap-0"
         >
             <span
-                className={`w-12 h-12 md:w-14 md:h-14 rounded-xl ${accentFor(n)} text-white flex items-center justify-center text-xl md:text-2xl font-extrabold shrink-0`}
+                className={`w-12 h-12 md:w-16 md:h-16 rounded-xl ${accentFor(n)} text-white flex items-center justify-center text-xl md:text-3xl font-extrabold shrink-0 md:self-start`}
             >
                 {n !== null ? localeNum(n, lang) : "•"}
             </span>
 
-            <span className="min-w-0 flex-1">
-                <span className="block font-bold text-gray-900 md:text-lg leading-tight truncate">{c.name}</span>
+            <span className="min-w-0 flex-1 md:flex-none md:w-full">
+                <span className="block font-bold text-gray-900 md:text-xl leading-tight truncate">{c.name}</span>
 
                 {m ? (
                     <span className="block text-xs md:text-sm text-gray-500 mt-0.5">
@@ -47,10 +50,16 @@ export function ClassCard({ c, m }: { c: ClassResponseDto; m?: ClassMeta }) {
                         </span>
                     </span>
                 )}
+
+                {/* Desktop gets a written call to action instead of a bare arrow */}
+                <span className="hidden md:flex items-center gap-1.5 text-sm font-semibold text-gray-900 mt-3">
+                    {t("classes.viewChapters")}
+                    <LuArrowRight className="group-hover:translate-x-1 transition-transform" size={16} />
+                </span>
             </span>
 
             <LuArrowRight
-                className="text-gray-300 group-hover:text-gray-900 group-hover:translate-x-1 transition-all shrink-0"
+                className="md:hidden text-gray-300 group-hover:text-gray-900 group-hover:translate-x-1 transition-all shrink-0"
                 size={20}
             />
         </Link>
@@ -82,7 +91,7 @@ export default function ClassLevelGroups({
                         )}
                         <div className="flex-1 h-px bg-gray-200" />
                     </div>
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-5">
                         {g.items.map((c) => (
                             <ClassCard key={c.id} c={c} m={meta[c.id]} />
                         ))}
