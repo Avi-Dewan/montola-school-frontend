@@ -23,10 +23,13 @@ export default function Hero() {
             {/* Narrow stack on mobile so the buttons read as buttons rather than
                 full-width bars — matches the Academic Care hero. */}
             <div className="flex flex-col sm:flex-row sm:justify-center gap-3 sm:gap-4 max-w-[240px] sm:max-w-none mx-auto">
-                <Link href="/classes" className="px-6 py-3 bg-white text-primary-500 rounded-lg font-semibold hover:bg-gray-100 transition">
+                {/* The mirror of Study Materials: starts filled and empties on
+                    hover, so the two buttons swap appearance. The border is
+                    always present so the shape survives the fill disappearing. */}
+                <Link href="/classes" className="px-6 py-3 bg-white text-primary-500 border border-white rounded-lg font-semibold hover:bg-transparent hover:text-white transition-colors">
                     {t("home.hero.startLearning")}
                 </Link>
-                <Link href="/shop" className="px-6 py-3 border border-white rounded-lg font-semibold hover:bg-white hover:text-primary-500 transition">
+                <Link href="/shop" className="px-6 py-3 border border-white rounded-lg font-semibold hover:bg-white hover:text-primary-500 transition-colors">
                     {t("home.hero.studyMaterials")}
                 </Link>
             </div>
