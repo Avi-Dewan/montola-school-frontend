@@ -5,27 +5,32 @@ export default function Hero() {
     const { t } = useI18n();
 
     return (
-        <section className="bg-gradient-to-br from-primary-600 to-primary-700 text-white py-32 px-6 text-center">
+        <section className="bg-gradient-to-br from-primary-600 to-primary-700 text-white py-20 md:py-32 px-6 text-center">
             {/* White container for brand visibility on green background */}
-            <div className="w-24 h-24 mx-auto mb-8 bg-white rounded-full flex items-center justify-center shadow-2xl p-4 animate-in fade-in zoom-in duration-700 ring-4 ring-white/30">
+            <div className="w-20 h-20 md:w-24 md:h-24 mx-auto mb-6 md:mb-8 bg-white rounded-full flex items-center justify-center shadow-2xl p-4 animate-in fade-in zoom-in duration-700 ring-4 ring-white/30">
                 <img
                     src="/montola-logo.png"
                     alt="Montola School Logo"
                     className="w-full h-full object-contain"
                 />
             </div>
-            <h1 className="text-3xl md:text-4xl font-semibold mb-6 tracking-tight">
+            <h1 className="font-serif text-3xl md:text-5xl font-medium mb-5 md:mb-6 tracking-tight">
                 {t("home.hero.title")}
             </h1>
-            <p className="text-xl md:text-2xl mb-10 text-white/90 max-w-3xl mx-auto">
+            <p className="text-base md:text-xl mb-8 md:mb-10 text-white/85 max-w-2xl mx-auto leading-relaxed">
                 {t("home.hero.subtitle")}
             </p>
-            <div className="flex justify-center space-x-4">
-                <Link href="/classes" className="px-6 py-3 bg-white text-primary-500 rounded-lg font-semibold hover:bg-gray-100 transition inline-block">
+            {/* Narrow stack on mobile so the buttons read as buttons rather than
+                full-width bars — matches the Academic Care hero. */}
+            <div className="flex flex-col sm:flex-row sm:justify-center gap-3 sm:gap-4 max-w-[240px] sm:max-w-none mx-auto">
+                {/* The mirror of Study Materials: starts filled and empties on
+                    hover, so the two buttons swap appearance. The border is
+                    always present so the shape survives the fill disappearing. */}
+                <Link href="/classes" className="px-6 py-3 bg-white text-primary-500 border border-white rounded-lg font-semibold hover:bg-transparent hover:text-white transition-colors">
                     {t("home.hero.startLearning")}
                 </Link>
-                <Link href="/classes" className="px-6 py-3 border border-white rounded-lg font-semibold hover:bg-white hover:text-primary-500 transition inline-block">
-                    {t("home.hero.exploreClasses")}
+                <Link href="/shop" className="px-6 py-3 border border-white rounded-lg font-semibold hover:bg-white hover:text-primary-500 transition-colors">
+                    {t("home.hero.studyMaterials")}
                 </Link>
             </div>
         </section>

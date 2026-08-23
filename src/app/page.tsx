@@ -6,10 +6,13 @@ import { useAuth } from "@/contexts/AuthContext";
 import { getHighestPriorityRole, getRouteForRole } from "@/lib/roles";
 
 import Hero from "@/components/Hero";
+import NoticesSection from "@/components/NoticesSection";
+import WhatsNewSection from "@/components/WhatsNewSection";
+import AcademicCareBanner from "@/components/AcademicCareBanner";
 import ValueProps from "@/components/ValueProps";
 import FeaturedCourses from "@/components/FeaturedCourses";
-import FreeChapterList from "@/components/FreeChapterList";
 import ClassesListSection from "@/components/ClassesListSection";
+import ShopHomeSection from "@/components/shop/ShopHomeSection";
 
 export default function HomePage() {
     const router = useRouter();
@@ -61,13 +64,14 @@ export default function HomePage() {
     return (
         <main className="overflow-x-hidden">
             <Hero />
+            <NoticesSection />
+            <AcademicCareBanner />
+            <WhatsNewSection />
             <ClassesListSection />
-            <div id="free">
-                <FreeChapterList />
-            </div>
             <div id="featured">
                 <FeaturedCourses />
             </div>
+            <ShopHomeSection />
             <ValueProps />
         </main>
     );

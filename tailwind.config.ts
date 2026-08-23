@@ -5,6 +5,9 @@ const config: Config = {
         "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
         "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
         "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
+        // lib holds class-name lookup tables (e.g. the per-class colour
+        // palette in classGroups.ts) — without this they get purged.
+        "./src/lib/**/*.{js,ts,jsx,tsx,mdx}",
     ],
     theme: {
         extend: {
@@ -26,6 +29,7 @@ const config: Config = {
             fontFamily: {
                 sans: ["var(--font-poppins)", "ui-sans-serif", "system-ui"],
                 heading: ["var(--font-poppins)", "ui-sans-serif", "system-ui"],
+                serif: ["var(--font-lora)", "Georgia", "serif"],
             },
         },
     },
