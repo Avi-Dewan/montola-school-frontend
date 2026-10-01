@@ -21,8 +21,8 @@ interface ChapterTreeViewProps {
     onTopicCreate: (data: any) => Promise<void>;
     onTopicUpdate: (id: number, data: any) => Promise<void>;
     onTopicDelete: (id: number) => Promise<void>;
-    onContentCreate: (type: ContentItemType, data: any) => Promise<void>;
-    onContentUpdate?: (id: number, type: ContentItemType, data: any) => Promise<void>;
+    onContentCreate: (type: ContentItemType, data: any, file?: File | null) => Promise<void>;
+    onContentUpdate?: (id: number, type: ContentItemType, data: any, file?: File | null) => Promise<void>;
     onContentDelete: (id: number, type: ContentItemType) => Promise<void>;
     getContentData?: (id: number) => Promise<any>;
 }
@@ -133,13 +133,13 @@ export default function ChapterTreeView({
         }
     };
 
-    const handleContentSubmit = async (data: any) => {
+    const handleContentSubmit = async (data: any, file?: File | null) => {
         setIsSubmitting(true);
         try {
             if (editingContent && selectedContentType && onContentUpdate) {
-                await onContentUpdate(editingContent.id, selectedContentType, data);
+                await onContentUpdate(editingContent.id, selectedContentType, data, file);
             } else if (selectedTopicId && selectedContentType) {
-                await onContentCreate(selectedContentType, data);
+                await onContentCreate(selectedContentType, data, file);
             }
             setIsContentModalOpen(false);
             setEditingContent(null);

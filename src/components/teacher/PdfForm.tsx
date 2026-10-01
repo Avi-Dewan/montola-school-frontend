@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 interface PdfFormProps {
     topicId: number;
     initialData?: any; // Content response from API
-    onSubmit: (data: GooglePdfContentRequestDto) => Promise<void>;
+    onSubmit: (data: GooglePdfContentRequestDto, file?: File | null) => Promise<void>;
     onCancel: () => void;
     isLoading?: boolean;
 }
@@ -29,6 +29,7 @@ export default function PdfForm({
         orderIndex: initialData?.orderIndex || 0,
     });
     const [errors, setErrors] = useState<{ title?: string; googleFileId?: string }>({});
+    const [file, setFile] = useState<File | null>(null);
     const isEditing = Boolean(initialData);
 
     useEffect(() => {
@@ -52,11 +53,13 @@ export default function PdfForm({
             newErrors.title = "PDF title must be less than 255 characters";
         }
 
-        // Editing may leave the file id blank to keep the current file.
-        if (!isEditing && (!formData.googleFileId || formData.googleFileId.trim().length === 0)) {
-            newErrors.googleFileId = "Google File ID is required";
-        } else if (formData.googleFileId && formData.googleFileId.length > 200) {
-            newErrors.googleFileId = "Google File ID must be less than 200 characters";
+        // Editing may leave the file id blank to keep the current file. A new
+        // document needs either an external id or an uploaded file.
+        const hasFileId = Boolean(formData.googleFileId && formData.googleFileId.trim().length > 0);
+        if (!file && !isEditing && !hasFileId) {
+            newErrors.googleFileId = "Provide a Google File ID or upload a file";
+        } else if (formData.googleFileId && formData.googleFileId.length > 500) {
+            newErrors.googleFileId = "Google File ID must be less than 500 characters";
         }
 
         setErrors(newErrors);
@@ -69,7 +72,7 @@ export default function PdfForm({
         if (!validate()) return;
 
         try {
-            await onSubmit(formData);
+            await onSubmit(formData, file);
         } catch (err: any) {
             console.error(err);
             toast.error(err.response?.data?.message || "Failed to save PDF");
@@ -98,9 +101,24 @@ export default function PdfForm({
                     setFormData({ ...formData, googleFileId: e.target.value })
                 }
                 error={errors.googleFileId}
-                maxLength={200}
+                maxLength={500}
                 placeholder={isEditing ? "Leave blank to keep current file" : "Enter Google Drive file ID"}
             />
+
+            <div>
+                <label className="block mb-1 font-semibold text-gray-700">
+                    Or upload a PDF
+                </label>
+                <input
+                    type="file"
+                    accept="application/pdf"
+                    onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                    className="block w-full text-sm text-gray-700 file:mr-4 file:rounded-lg file:border-0 file:bg-gray-900 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-gray-800"
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                    Uploaded files are stored privately and served with the reader&apos;s watermark.
+                </p>
+            </div>
 
             <Input
                 label="Page Count"

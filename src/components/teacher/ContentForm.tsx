@@ -9,7 +9,7 @@ interface ContentFormProps {
     contentType: ContentItemType;
     topicId: number;
     initialData?: any;
-    onSubmit: (data: any) => Promise<void>;
+    onSubmit: (data: any, file?: File | null) => Promise<void>;
     onCancel: () => void;
     isLoading?: boolean;
 }

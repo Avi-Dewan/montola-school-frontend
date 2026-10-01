@@ -9,7 +9,7 @@ import { toast } from "react-toastify";
 interface LectureFormProps {
     topicId: number;
     initialData?: any; // Content response from API
-    onSubmit: (data: LectureRequestDto) => Promise<void>;
+    onSubmit: (data: LectureRequestDto, file?: File | null) => Promise<void>;
     onCancel: () => void;
     isLoading?: boolean;
 }
@@ -29,6 +29,7 @@ export default function LectureForm({
         orderIndex: initialData?.orderIndex || 0,
     });
     const [errors, setErrors] = useState<{ title?: string; videoId?: string }>({});
+    const [file, setFile] = useState<File | null>(null);
 
     useEffect(() => {
         if (initialData) {
@@ -51,8 +52,8 @@ export default function LectureForm({
             newErrors.title = "Lecture title must be less than 200 characters";
         }
 
-        if (formData.videoId && formData.videoId.length > 50) {
-            newErrors.videoId = "Video ID must be less than 50 characters";
+        if (formData.videoId && formData.videoId.length > 500) {
+            newErrors.videoId = "Video ID must be less than 500 characters";
         }
 
         setErrors(newErrors);
@@ -65,7 +66,7 @@ export default function LectureForm({
         if (!validate()) return;
 
         try {
-            await onSubmit(formData);
+            await onSubmit(formData, file);
         } catch (err: any) {
             console.error(err);
             toast.error(err.response?.data?.message || "Failed to save lecture");
@@ -93,9 +94,24 @@ export default function LectureForm({
                     setFormData({ ...formData, videoId: e.target.value })
                 }
                 error={errors.videoId}
-                maxLength={50}
-                placeholder="Enter video ID (optional)"
+                maxLength={500}
+                placeholder={initialData ? "Leave blank to keep current video" : "YouTube video ID (optional)"}
             />
+
+            <div>
+                <label className="block mb-1 font-semibold text-gray-700">
+                    Or upload a video
+                </label>
+                <input
+                    type="file"
+                    accept="video/*"
+                    onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                    className="block w-full text-sm text-gray-700 file:mr-4 file:rounded-lg file:border-0 file:bg-gray-900 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-gray-800"
+                />
+                <p className="mt-1 text-xs text-gray-500">
+                    Uploaded videos are streamed through a short-lived signed link, not an embed.
+                </p>
+            </div>
 
             <div>
                 <label className="block mb-1 font-semibold text-gray-700">

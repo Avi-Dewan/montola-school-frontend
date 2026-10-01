@@ -99,6 +99,24 @@ export const deletePdfByContentItem = (contentItemId: number) =>
 export const deleteQuizByContentItem = (contentItemId: number) =>
     api.delete(`/v1/contents/quiz/content-item/${contentItemId}`);
 
+// Uploads move the file into the application's own storage, so it is served
+// through a watermarked/signed endpoint instead of an external link.
+export const uploadPdfFile = (contentItemId: number, file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return api.post(`/v1/contents/${contentItemId}/file`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+};
+
+export const uploadLectureVideo = (contentItemId: number, file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+    return api.post(`/v1/contents/${contentItemId}/video`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+};
+
 // ==================== Student Progress ====================
 
 export const getStudentsProgress = (chapterId: number) =>

@@ -14,6 +14,8 @@ import {
     createLecture,
     createPdf,
     createQuiz,
+    uploadPdfFile,
+    uploadLectureVideo,
     getContentById,
     updateLectureByContentItem,
     updatePdfByContentItem,
@@ -162,15 +164,23 @@ export default function TeacherChapterDetailPage() {
         await fetchStructure();
     };
 
-    const handleContentCreate = async (type: ContentItemType, data: any) => {
+    const handleContentCreate = async (type: ContentItemType, data: any, file?: File | null) => {
         try {
             switch (type) {
-                case ContentItemType.LECTURE:
-                    await createLecture(data as LectureRequestDto);
+                case ContentItemType.LECTURE: {
+                    const saved = await createLecture(data as LectureRequestDto);
+                    if (file && saved.data?.contentItemId) {
+                        await uploadLectureVideo(saved.data.contentItemId, file);
+                    }
                     break;
-                case ContentItemType.PDF:
-                    await createPdf(data as GooglePdfContentRequestDto);
+                }
+                case ContentItemType.PDF: {
+                    const saved = await createPdf(data as GooglePdfContentRequestDto);
+                    if (file && saved.data?.contentItemId) {
+                        await uploadPdfFile(saved.data.contentItemId, file);
+                    }
                     break;
+                }
                 case ContentItemType.QUIZ:
                     await createQuiz(data as QuizRequestDto);
                     break;
@@ -189,6 +199,7 @@ export default function TeacherChapterDetailPage() {
         contentId: number,
         type: ContentItemType,
         data: any,
+        file?: File | null,
     ) => {
         try {
             if (type === ContentItemType.LECTURE) {
@@ -196,11 +207,13 @@ export default function TeacherChapterDetailPage() {
                     contentId,
                     data as LectureRequestDto,
                 );
+                if (file) await uploadLectureVideo(contentId, file);
             } else if (type === ContentItemType.PDF) {
                 await updatePdfByContentItem(
                     contentId,
                     data as GooglePdfContentRequestDto,
                 );
+                if (file) await uploadPdfFile(contentId, file);
             } else if (type === ContentItemType.QUIZ) {
                 const quizData = data as QuizRequestDto;
                 // Fetch the content first to get the Quiz ID

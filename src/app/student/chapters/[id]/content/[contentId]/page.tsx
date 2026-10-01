@@ -249,7 +249,15 @@ export default function ContentPlayerPage() {
                     {isLecture && (
                         <div className="space-y-6">
                             <div className="aspect-video bg-black rounded-lg overflow-hidden shadow-lg">
-                                {content.videoId ? (
+                                {content.videoUrl ? (
+                                    <video
+                                        src={content.videoUrl}
+                                        controls
+                                        controlsList="nodownload"
+                                        disablePictureInPicture
+                                        className="w-full h-full"
+                                    />
+                                ) : content.videoId ? (
                                     <iframe
                                         src={`https://www.youtube.com/embed/${content.videoId}?modestbranding=1&rel=0&showinfo=0`}
                                         className="w-full h-full border-0"

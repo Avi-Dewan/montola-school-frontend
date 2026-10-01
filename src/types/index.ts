@@ -276,9 +276,11 @@ export interface GooglePdfContentRequestDto {
 
 export interface LectureResponseDto {
     id: number;
+    contentItemId: number;
     type: "LECTURE";
     title: string;
     videoId?: string;
+    videoUrl?: string;
     content?: string;
     topicId: number;
     topicTitle: string;
@@ -287,6 +289,7 @@ export interface LectureResponseDto {
 
 export interface GooglePdfContentResponseDto {
     id: number;
+    contentItemId: number;
     type: "PDF";
     title: string;
     pageCount: number;
