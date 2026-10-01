@@ -29,6 +29,7 @@ export default function PdfForm({
         orderIndex: initialData?.orderIndex || 0,
     });
     const [errors, setErrors] = useState<{ title?: string; googleFileId?: string }>({});
+    const isEditing = Boolean(initialData);
 
     useEffect(() => {
         if (initialData) {
@@ -51,9 +52,10 @@ export default function PdfForm({
             newErrors.title = "PDF title must be less than 255 characters";
         }
 
-        if (!formData.googleFileId || formData.googleFileId.trim().length === 0) {
+        // Editing may leave the file id blank to keep the current file.
+        if (!isEditing && (!formData.googleFileId || formData.googleFileId.trim().length === 0)) {
             newErrors.googleFileId = "Google File ID is required";
-        } else if (formData.googleFileId.length > 200) {
+        } else if (formData.googleFileId && formData.googleFileId.length > 200) {
             newErrors.googleFileId = "Google File ID must be less than 200 characters";
         }
 
@@ -90,14 +92,14 @@ export default function PdfForm({
 
             <Input
                 label="Google File ID"
-                required
+                required={!isEditing}
                 value={formData.googleFileId}
                 onChange={(e) =>
                     setFormData({ ...formData, googleFileId: e.target.value })
                 }
                 error={errors.googleFileId}
                 maxLength={200}
-                placeholder="Enter Google Drive file ID"
+                placeholder={isEditing ? "Leave blank to keep current file" : "Enter Google Drive file ID"}
             />
 
             <Input

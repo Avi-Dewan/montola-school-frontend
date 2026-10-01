@@ -60,6 +60,15 @@ export const getContentById = async (id: number) => {
     return response.data;
 };
 
+/**
+ * The PDF file itself, watermarked for the signed-in reader. The raw file id is
+ * never sent to the client, so this is the only way to obtain the document.
+ */
+export const getContentFile = async (id: number) => {
+    const response = await api.get(`/v1/contents/${id}/file`, { responseType: "blob" });
+    return response.data as Blob;
+};
+
 
 export const enrollInFreeChapter = async (chapterId: number) => {
     const response = await api.post(`/v1/enrollments/free/${chapterId}`);

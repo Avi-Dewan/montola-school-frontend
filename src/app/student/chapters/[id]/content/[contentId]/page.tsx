@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { getContentById, markContentComplete, submitQuizScore } from "@/lib/student";
+import { getContentById, getContentFile, markContentComplete, submitQuizScore } from "@/lib/student";
 import {
     LectureResponseDto,
     QuizResponseDto,
@@ -39,6 +39,7 @@ export default function ContentPlayerPage() {
 
 
     const [content, setContent] = useState<LectureResponseDto | QuizResponseDto | GooglePdfContentResponseDto | null>(null);
+    const [pdfUrl, setPdfUrl] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -76,6 +77,24 @@ export default function ContentPlayerPage() {
         setQuizSubmitted(false);
         setQuizScore(0);
     }, [fetchContent]);
+
+    // PDFs are fetched as a watermarked blob; the raw file id never reaches the client.
+    useEffect(() => {
+        if (!contentId || content?.type !== "PDF") return;
+
+        let objectUrl: string | null = null;
+        getContentFile(contentId)
+            .then((blob) => {
+                objectUrl = URL.createObjectURL(blob);
+                setPdfUrl(objectUrl);
+            })
+            .catch(() => setPdfUrl(null));
+
+        return () => {
+            if (objectUrl) URL.revokeObjectURL(objectUrl);
+            setPdfUrl(null);
+        };
+    }, [content, contentId]);
 
     const handleMarkComplete = async () => {
         if (!contentId) return;
@@ -203,9 +222,9 @@ export default function ContentPlayerPage() {
 
     if (!content) return <div className="p-8 text-center text-gray-500">{t("student.contentPlayer.contentNotFound")}</div>;
 
-    const isLecture = 'videoId' in content;
-    const isQuiz = 'questions' in content;
-    const isPdf = 'googleFileId' in content;
+    const isLecture = content.type === "LECTURE";
+    const isQuiz = content.type === "QUIZ";
+    const isPdf = content.type === "PDF";
 
     return (
         <div className="max-w-5xl mx-auto space-y-6">
@@ -257,11 +276,17 @@ export default function ContentPlayerPage() {
                     {isPdf && (
                         <div className="space-y-6 p-6 md:p-0">
                             <div className="aspect-[4/5] md:aspect-[16/10] bg-gray-100 rounded-lg overflow-hidden border border-gray-200 shadow-inner">
-                                <iframe
-                                    src={`https://drive.google.com/file/d/${content.googleFileId}/preview`}
-                                    className="w-full h-full border-0"
-                                    allow="autoplay"
-                                />
+                                {pdfUrl ? (
+                                    <iframe
+                                        src={pdfUrl}
+                                        title={content.title}
+                                        className="w-full h-full border-0"
+                                    />
+                                ) : (
+                                    <div className="w-full h-full flex items-center justify-center">
+                                        <LoadingSpinner label={t("student.contentPlayer.fetchingContent")} />
+                                    </div>
+                                )}
                             </div>
                             <div className="flex items-center justify-between bg-blue-50 p-4 rounded-lg">
                                 <div className="flex items-center gap-3">

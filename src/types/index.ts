@@ -276,6 +276,7 @@ export interface GooglePdfContentRequestDto {
 
 export interface LectureResponseDto {
     id: number;
+    type: "LECTURE";
     title: string;
     videoId?: string;
     content?: string;
@@ -286,8 +287,8 @@ export interface LectureResponseDto {
 
 export interface GooglePdfContentResponseDto {
     id: number;
+    type: "PDF";
     title: string;
-    googleFileId: string;
     pageCount: number;
     topicId: number;
     topicTitle: string;
@@ -379,6 +380,7 @@ export interface QuizQuestionResponseDto {
 
 export interface QuizResponseDto {
     id: number;
+    type: "QUIZ";
     title: string;
     quizType: QuizType;
     instruction?: string;
