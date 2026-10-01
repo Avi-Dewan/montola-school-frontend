@@ -6,10 +6,21 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import { LuLock, LuDownload, LuEye } from "react-icons/lu";
 import { useAuth } from "@/contexts/AuthContext";
-import { getProduct, getProductContent, getDownloadLink, getMyShopPayments } from "@/lib/shop";
+import { getProduct, getProductContent, getDownloadLink, getProductFile, getMyShopPayments } from "@/lib/shop";
 import { PRODUCT_TYPE_META, formatTaka } from "@/lib/shopMeta";
 import type { ShopProductDetail, ShopProductContent } from "@/types/shop";
 import ShopCheckoutModal from "@/components/shop/ShopCheckoutModal";
+
+const saveBlob = (blob: Blob, filename: string) => {
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = filename;
+    document.body.appendChild(anchor);
+    anchor.click();
+    anchor.remove();
+    URL.revokeObjectURL(url);
+};
 
 export default function ProductDetailPage() {
     const { id } = useParams<{ id: string }>();
@@ -18,6 +29,8 @@ export default function ProductDetailPage() {
 
     const [product, setProduct] = useState<ShopProductDetail | null>(null);
     const [content, setContent] = useState<ShopProductContent | null>(null);
+    const [pdfUrl, setPdfUrl] = useState<string | null>(null);
+    const [externalFileId, setExternalFileId] = useState<string | null>(null);
     const [loading, setLoading] = useState(true);
     const [checkoutOpen, setCheckoutOpen] = useState(false);
     const [pending, setPending] = useState(false);
@@ -37,9 +50,25 @@ export default function ProductDetailPage() {
             .catch(() => {});
     }, [isLoggedIn, product]);
 
+    useEffect(() => {
+        return () => {
+            if (pdfUrl) URL.revokeObjectURL(pdfUrl);
+        };
+    }, [pdfUrl]);
+
     const handleView = async () => {
         try {
-            setContent(await getProductContent(Number(id)));
+            const loaded = await getProductContent(Number(id));
+            setContent(loaded);
+
+            if (!loaded.html) {
+                try {
+                    setPdfUrl(URL.createObjectURL(await getProductFile(Number(id))));
+                } catch {
+                    // Legacy external reference (for example a Google Drive file id).
+                    setExternalFileId(loaded.fileId ?? null);
+                }
+            }
         } catch {
             toast.error("You don't have access to this product yet.");
         }
@@ -48,7 +77,13 @@ export default function ProductDetailPage() {
     const handleDownload = async () => {
         try {
             const link = await getDownloadLink(Number(id));
-            toast.success(`Download ready (demo): ${link.fileId}`);
+
+            if (link.url.startsWith("/")) {
+                // Served by our backend, so it carries the buyer's watermark.
+                saveBlob(await getProductFile(Number(id)), `${product?.title ?? "product"}.pdf`);
+            } else {
+                window.open(link.url, "_blank", "noopener");
+            }
         } catch {
             toast.error("Download not permitted for this account.");
         }
@@ -148,9 +183,17 @@ export default function ProductDetailPage() {
                     <div className="relative">
                         {content.html ? (
                             <div className="prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: content.html }} />
+                        ) : pdfUrl ? (
+                            <iframe src={pdfUrl} title={product.title} className="w-full h-[70vh] border-0 rounded-lg" />
+                        ) : externalFileId ? (
+                            <iframe
+                                src={`https://drive.google.com/file/d/${externalFileId}/preview`}
+                                title={product.title}
+                                className="w-full h-[70vh] border-0 rounded-lg"
+                            />
                         ) : (
                             <div className="text-center py-10 text-gray-500">
-                                <p className="font-medium text-gray-700 mb-1">PDF viewer (demo)</p>
+                                <p className="font-medium text-gray-700 mb-1">Preparing your watermarked copy…</p>
                                 <p className="text-sm">{content.pageCount} pages · streamed in-app, watermarked, no download.</p>
                             </div>
                         )}

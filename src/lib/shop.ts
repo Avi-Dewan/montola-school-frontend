@@ -61,6 +61,16 @@ export const getDownloadLink = async (id: number) => {
     return res.data;
 };
 
+/**
+ * The watermarked file itself, streamed with the caller's credentials.
+ * Only works for products the backend stores; external references fall back
+ * to their own link.
+ */
+export const getProductFile = async (id: number) => {
+    const res = await api.get(`/v1/shop/products/${id}/file`, { responseType: "blob" });
+    return res.data as Blob;
+};
+
 // ==================== Purchases & payments ====================
 
 export const getMyPurchases = async () => {
