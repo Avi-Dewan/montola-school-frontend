@@ -42,72 +42,82 @@ export default function AdminDashboardPage() {
 
     const statsCards = [
         {
-            title: "Total Classes",
+            title: "Total classes",
             value: stats?.courseStats.totalClasses || 0,
             icon: HiBookOpen,
-            color: "bg-blue-500",
+            iconClass: "bg-blue-50 text-blue-600",
             href: "/admin/classes",
         },
         {
-            title: "Total Subjects",
+            title: "Total subjects",
             value: stats?.courseStats.totalSubjects || 0,
             icon: HiLibrary,
-            color: "bg-green-500",
+            iconClass: "bg-emerald-50 text-emerald-600",
             href: "/admin/subjects",
         },
         {
-            title: "Total Chapters",
+            title: "Total chapters",
             value: stats?.courseStats.totalChapters || 0,
             icon: HiDocumentText,
-            color: "bg-purple-500",
+            iconClass: "bg-purple-50 text-purple-600",
             href: "/admin/chapters",
         },
         {
-            title: "Draft Chapters",
+            title: "Draft chapters",
             value: stats?.chapterStats.totalDraft || 0,
             icon: HiClock,
-            color: "bg-yellow-500",
+            iconClass: "bg-amber-50 text-amber-600",
             href: "/admin/chapters?status=DRAFT",
         },
         {
-            title: "Published Chapters",
+            title: "Published chapters",
             value: stats?.chapterStats.totalPublished || 0,
             icon: HiDocumentText,
-            color: "bg-green-600",
+            iconClass: "bg-primary-50 text-primary-600",
             href: "/admin/chapters?status=PUBLISHED",
         },
         {
-            title: "Free Chapters",
+            title: "Free chapters",
             value: stats?.chapterStats.totalFree || 0,
             icon: HiDocumentText,
-            color: "bg-primary-500",
+            iconClass: "bg-teal-50 text-teal-600",
             href: "/admin/chapters",
         },
     ];
 
+    const userStats = [
+        { label: "Total users", value: stats?.userStats.totalUsers },
+        { label: "Active users", value: stats?.userStats.activeUsers },
+        { label: "Admins", value: stats?.userStats.admins },
+        { label: "Managers", value: stats?.userStats.managers },
+        { label: "Teachers", value: stats?.userStats.teachers },
+        { label: "Students", value: stats?.userStats.students },
+    ];
+
     return (
-        <div className="space-y-6">
-            <div className="flex items-center justify-between">
-                <h1 className="text-3xl font-bold text-gray-800">Dashboard Overview</h1>
+        <div className="space-y-8">
+            <div>
+                <h1 className="text-2xl md:text-3xl font-bold tracking-tight text-gray-900">Dashboard overview</h1>
+                <p className="text-sm text-gray-500 mt-1">A snapshot of your courses, users and content.</p>
             </div>
 
             {/* Statistics Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
                 {statsCards.map((card, index) => {
                     const Icon = card.icon;
                     return (
                         <div
                             key={index}
                             onClick={() => router.push(card.href)}
-                            className="bg-white rounded-lg shadow-md p-6 cursor-pointer hover:shadow-lg transition-shadow border border-gray-200"
+                            className="bg-white rounded-xl border border-gray-200 p-5 cursor-pointer shadow-sm hover:shadow-md hover:border-gray-300 transition-all"
                         >
                             <div className="flex items-center justify-between">
                                 <div>
-                                    <p className="text-sm text-gray-600 mb-2">{card.title}</p>
-                                    <p className="text-3xl font-bold text-gray-800">{card.value}</p>
+                                    <p className="text-sm font-medium text-gray-500 mb-1.5">{card.title}</p>
+                                    <p className="text-3xl font-bold tracking-tight text-gray-900 tabular-nums">{card.value}</p>
                                 </div>
-                                <div className={`${card.color} p-3 rounded-lg`}>
-                                    <Icon className="w-8 h-8 text-white" />
+                                <div className={`${card.iconClass} w-12 h-12 rounded-xl flex items-center justify-center`}>
+                                    <Icon className="w-6 h-6" />
                                 </div>
                             </div>
                         </div>
@@ -117,64 +127,46 @@ export default function AdminDashboardPage() {
 
             {/* User Statistics Section */}
             {stats?.userStats && (
-                <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-                    <h2 className="text-xl font-bold text-gray-800 mb-4">User Statistics</h2>
-                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-                        <div className="text-center">
-                            <p className="text-2xl font-bold text-primary-500">{stats.userStats.totalUsers}</p>
-                            <p className="text-sm text-gray-600 mt-1">Total Users</p>
-                        </div>
-                        <div className="text-center">
-                            <p className="text-2xl font-bold text-green-500">{stats.userStats.activeUsers}</p>
-                            <p className="text-sm text-gray-600 mt-1">Active Users</p>
-                        </div>
-                        <div className="text-center">
-                            <p className="text-2xl font-bold text-red-500">{stats.userStats.admins}</p>
-                            <p className="text-sm text-gray-600 mt-1">Admins</p>
-                        </div>
-                        <div className="text-center">
-                            <p className="text-2xl font-bold text-blue-500">{stats.userStats.managers}</p>
-                            <p className="text-sm text-gray-600 mt-1">Managers</p>
-                        </div>
-                        <div className="text-center">
-                            <p className="text-2xl font-bold text-purple-500">{stats.userStats.teachers}</p>
-                            <p className="text-sm text-gray-600 mt-1">Teachers</p>
-                        </div>
-                        <div className="text-center">
-                            <p className="text-2xl font-bold text-gray-700">{stats.userStats.students}</p>
-                            <p className="text-sm text-gray-600 mt-1">Students</p>
-                        </div>
+                <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                    <h2 className="text-lg font-semibold text-gray-900 mb-5">User statistics</h2>
+                    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                        {userStats.map((s) => (
+                            <div key={s.label} className="bg-gray-50 rounded-lg px-4 py-4 text-center">
+                                <p className="text-2xl font-bold tracking-tight text-gray-900 tabular-nums">{s.value ?? 0}</p>
+                                <p className="text-xs font-medium text-gray-500 mt-1">{s.label}</p>
+                            </div>
+                        ))}
                     </div>
                 </div>
             )}
 
             {/* Quick Actions */}
-            <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200">
-                <h2 className="text-xl font-bold text-gray-800 mb-4">Quick Actions</h2>
-                <div className="flex flex-wrap gap-4">
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm p-6">
+                <h2 className="text-lg font-semibold text-gray-900 mb-5">Quick actions</h2>
+                <div className="flex flex-wrap gap-3">
                     <button
                         onClick={() => router.push("/admin/classes?action=create")}
-                        className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+                        className="px-4 py-2.5 text-sm font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
                     >
-                        Create New Class
+                        Create new class
                     </button>
                     <button
                         onClick={() => router.push("/admin/subjects?action=create")}
-                        className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+                        className="px-4 py-2.5 text-sm font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
                     >
-                        Create New Subject
+                        Create new subject
                     </button>
                     <button
                         onClick={() => router.push("/admin/chapters?action=create")}
-                        className="px-4 py-2 bg-primary-500 text-white rounded-lg hover:bg-primary-600 transition-colors"
+                        className="px-4 py-2.5 text-sm font-medium bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition-colors"
                     >
-                        Create New Chapter
+                        Create new chapter
                     </button>
                     <button
                         onClick={() => router.push("/admin/payments/unverified")}
-                        className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
+                        className="px-4 py-2.5 text-sm font-medium border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
                     >
-                        View Unverified Payments
+                        Review unverified payments
                     </button>
                 </div>
             </div>
