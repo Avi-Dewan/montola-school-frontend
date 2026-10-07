@@ -48,6 +48,25 @@ export default function ShopProductForm({ isOpen, onClose, onSaved, product, lev
     const [file, setFile] = useState<File | null>(null);
     const set = (k: string, v: any) => setF((s) => ({ ...s, [k]: v }));
 
+    /**
+     * Interactive content is markup, not a file, so an uploaded .html simply fills
+     * the HTML box — the admin can review it, and saving then works exactly as if
+     * it had been pasted.
+     */
+    const handleHtmlFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const picked = e.target.files?.[0];
+        // Allow re-picking the same file, which otherwise fires no change event.
+        e.target.value = "";
+
+        if (!picked) return;
+
+        try {
+            set("html", await picked.text());
+        } catch {
+            toast.error("Could not read that file.");
+        }
+    };
+
     const submit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!f.title.trim()) return toast.error("Title is required.");
@@ -164,6 +183,17 @@ export default function ShopProductForm({ isOpen, onClose, onSaved, product, lev
                         <textarea className="w-full p-2 border border-gray-300 rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                             rows={4} placeholder={editing ? "Leave blank to keep existing content" : "<h2>…</h2>"}
                             value={f.html} onChange={(e) => set("html", e.target.value)} />
+
+                        <label className="block mt-3 mb-1 font-semibold text-gray-700">Or upload an .html file</label>
+                        <input
+                            type="file"
+                            accept=".html,.htm,text/html"
+                            onChange={handleHtmlFile}
+                            className="block w-full text-sm text-gray-700 file:mr-4 file:rounded-lg file:border-0 file:bg-gray-900 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-gray-800"
+                        />
+                        <p className="mt-1 text-xs text-gray-500">
+                            The file's markup fills the box above, so it can be checked before saving.
+                        </p>
                     </div>
                 ) : (
                     <>
