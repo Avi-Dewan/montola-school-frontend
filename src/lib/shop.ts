@@ -146,6 +146,21 @@ export const deleteProduct = async (id: number) => {
     await api.delete(`/v1/shop/admin/products/${id}`);
 };
 
+/**
+ * Uploads the product's PDF to the configured bucket and points the product at it.
+ * Only available while the backend runs an object-storage provider.
+ */
+export const uploadProductFile = async (id: number, file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await api.post<ShopProductCard>(`/v1/shop/admin/products/${id}/file`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    return res.data;
+};
+
 // ==================== Admin: manage bundles ====================
 
 export const getAdminBundles = async () => {

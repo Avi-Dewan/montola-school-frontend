@@ -48,7 +48,16 @@ export default function ProductDetailPage() {
     const handleDownload = async () => {
         try {
             const link = await getDownloadLink(Number(id));
-            toast.success(`Download ready (demo): ${link.fileId}`);
+
+            // With object storage this is a short-lived presigned URL. Opening it
+            // directly avoids needing a CORS policy on the bucket, which fetching
+            // the bytes as a blob would require.
+            if (!/^https?:\/\//i.test(link.url)) {
+                toast.error("This product still points at an external reference, so there is nothing to open.");
+                return;
+            }
+
+            window.open(link.url, "_blank", "noopener");
         } catch {
             toast.error("Download not permitted for this account.");
         }
