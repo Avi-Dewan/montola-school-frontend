@@ -197,6 +197,13 @@ export default function ShopProductForm({ isOpen, onClose, onSaved, product, lev
                     </div>
                 ) : (
                     <>
+                        {editing && product?.fileAttached && (
+                            <p className="mb-3 text-xs text-green-800 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
+                                A file is already attached. Leave the fields below blank to keep it, or pick a
+                                new file to replace it.
+                            </p>
+                        )}
+
                         <div className="grid grid-cols-2 gap-4">
                             <Input label="File id" placeholder={editing ? "Leave blank to keep" : "demo_file_id"} value={f.fileId} onChange={(e) => set("fileId", e.target.value)} />
                             <Input label="Page count" type="number" value={f.pageCount} onChange={(e) => set("pageCount", e.target.value)} />

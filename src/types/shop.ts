@@ -39,6 +39,8 @@ export interface ShopProductCard {
     featured: boolean;
     preview: string;
     downloadable: boolean;
+    /** Whether a file is attached. The reference itself is never sent. */
+    fileAttached: boolean;
     levelId: number | null;
     levelName: string | null;
     classId: number | null;
@@ -63,6 +65,8 @@ export interface ShopProductContent {
     html?: string;
     fileId?: string;
     pageCount?: number;
+    /** Short-lived URL for reading an attached file in place. */
+    viewUrl?: string;
 }
 
 export interface ShopBundle {
