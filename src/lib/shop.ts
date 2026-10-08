@@ -2,6 +2,7 @@ import api from "./api";
 import {
     ShopLevel,
     ShopClass,
+    ShopAdminProduct,
     ShopProductCard,
     ShopProductDetail,
     ShopProductContent,
@@ -128,7 +129,7 @@ export const rejectShopPayment = async (id: number) => {
 // ==================== Admin: manage products ====================
 
 export const getAdminProducts = async () => {
-    const res = await api.get<ShopProductCard[]>("/v1/shop/admin/products");
+    const res = await api.get<ShopAdminProduct[]>("/v1/shop/admin/products");
     return res.data;
 };
 
@@ -144,6 +145,21 @@ export const updateProduct = async (id: number, data: any) => {
 
 export const deleteProduct = async (id: number) => {
     await api.delete(`/v1/shop/admin/products/${id}`);
+};
+
+/**
+ * Uploads the product's PDF to the configured bucket and points the product at it.
+ * Only available while the backend runs an object-storage provider.
+ */
+export const uploadProductFile = async (id: number, file: File) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    const res = await api.post<ShopProductCard>(`/v1/shop/admin/products/${id}/file`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
+    });
+
+    return res.data;
 };
 
 // ==================== Admin: manage bundles ====================

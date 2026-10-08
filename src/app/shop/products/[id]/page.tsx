@@ -11,6 +11,9 @@ import { PRODUCT_TYPE_META, formatTaka } from "@/lib/shopMeta";
 import type { ShopProductDetail, ShopProductContent } from "@/types/shop";
 import ShopCheckoutModal from "@/components/shop/ShopCheckoutModal";
 
+/** Only a real http(s) URL can be opened or framed; a raw storage reference cannot. */
+const isViewableUrl = (value?: string) => !!value && /^https?:\/\//i.test(value);
+
 export default function ProductDetailPage() {
     const { id } = useParams<{ id: string }>();
     const router = useRouter();
@@ -48,7 +51,16 @@ export default function ProductDetailPage() {
     const handleDownload = async () => {
         try {
             const link = await getDownloadLink(Number(id));
-            toast.success(`Download ready (demo): ${link.fileId}`);
+
+            // With object storage this is a short-lived presigned URL. Opening it
+            // directly avoids needing a CORS policy on the bucket, which fetching
+            // the bytes as a blob would require.
+            if (!isViewableUrl(link.url)) {
+                toast.error("This product still points at an external reference, so there is nothing to open.");
+                return;
+            }
+
+            window.open(link.url, "_blank", "noopener");
         } catch {
             toast.error("Download not permitted for this account.");
         }
@@ -148,10 +160,19 @@ export default function ProductDetailPage() {
                     <div className="relative">
                         {content.html ? (
                             <div className="prose prose-sm max-w-none" dangerouslySetInnerHTML={{ __html: content.html }} />
+                        ) : isViewableUrl(content.viewUrl) ? (
+                            <iframe
+                                src={content.viewUrl}
+                                title={product.title}
+                                className="w-full h-[75vh] rounded-lg border border-gray-200"
+                            />
                         ) : (
                             <div className="text-center py-10 text-gray-500">
-                                <p className="font-medium text-gray-700 mb-1">PDF viewer (demo)</p>
-                                <p className="text-sm">{content.pageCount} pages · streamed in-app, watermarked, no download.</p>
+                                <p className="font-medium text-gray-700 mb-1">This file is not available yet</p>
+                                <p className="text-sm">
+                                    {content.pageCount ? `${content.pageCount} pages. ` : ""}
+                                    No file has been attached to this product.
+                                </p>
                             </div>
                         )}
                         <p className="mt-4 text-[11px] text-gray-400">{content.watermark}</p>

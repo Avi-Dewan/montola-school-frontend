@@ -7,8 +7,8 @@ import Input from "@/components/ui/Input";
 import Select from "@/components/ui/Select";
 import Button from "@/components/ui/Button";
 import { PRODUCT_TYPE_META } from "@/lib/shopMeta";
-import { createProduct, updateProduct } from "@/lib/shop";
-import type { ShopProductCard, ShopLevel, ShopClass } from "@/types/shop";
+import { createProduct, updateProduct, uploadProductFile } from "@/lib/shop";
+import type { ShopAdminProduct, ShopLevel, ShopClass } from "@/types/shop";
 
 interface Option { id: number; label: string }
 
@@ -16,7 +16,7 @@ interface Props {
     isOpen: boolean;
     onClose: () => void;
     onSaved: () => void;
-    product?: ShopProductCard | null;
+    product?: ShopAdminProduct | null;
     levels: ShopLevel[];
     classes: ShopClass[];
     subjects: Option[];
@@ -45,7 +45,27 @@ export default function ShopProductForm({ isOpen, onClose, onSaved, product, lev
         pageCount: "",
     });
     const [loading, setLoading] = useState(false);
+    const [file, setFile] = useState<File | null>(null);
     const set = (k: string, v: any) => setF((s) => ({ ...s, [k]: v }));
+
+    /**
+     * Interactive content is markup, not a file, so an uploaded .html simply fills
+     * the HTML box — the admin can review it, and saving then works exactly as if
+     * it had been pasted.
+     */
+    const handleHtmlFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const picked = e.target.files?.[0];
+        // Allow re-picking the same file, which otherwise fires no change event.
+        e.target.value = "";
+
+        if (!picked) return;
+
+        try {
+            set("html", await picked.text());
+        } catch {
+            toast.error("Could not read that file.");
+        }
+    };
 
     const submit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -71,8 +91,26 @@ export default function ShopProductForm({ isOpen, onClose, onSaved, product, lev
         if (f.format === "PDF" && f.fileId.trim()) payload.content = { fileId: f.fileId.trim(), pageCount: Number(f.pageCount) || 0 };
 
         try {
-            if (editing) await updateProduct(product!.id, payload);
-            else await createProduct(payload);
+            // The upload endpoint is keyed by product id, so the product has to exist
+            // before its file can be attached.
+            const saved = editing ? await updateProduct(product!.id, payload) : await createProduct(payload);
+
+            if (file) {
+                try {
+                    await uploadProductFile(saved.id, file);
+                } catch (uploadErr: any) {
+                    // The product was saved but has no file. Say so explicitly,
+                    // otherwise the admin assumes the save failed and creates a duplicate.
+                    toast.error(
+                        uploadErr.response?.data?.message
+                            || "Product saved, but the PDF upload failed. Re-open the product and upload again."
+                    );
+                    onSaved();
+                    onClose();
+                    return;
+                }
+            }
+
             toast.success(editing ? "Product updated." : "Product created.");
             onSaved();
             onClose();
@@ -145,12 +183,50 @@ export default function ShopProductForm({ isOpen, onClose, onSaved, product, lev
                         <textarea className="w-full p-2 border border-gray-300 rounded-lg font-mono text-sm focus:outline-none focus:ring-2 focus:ring-primary-500"
                             rows={4} placeholder={editing ? "Leave blank to keep existing content" : "<h2>…</h2>"}
                             value={f.html} onChange={(e) => set("html", e.target.value)} />
+
+                        <label className="block mt-3 mb-1 font-semibold text-gray-700">Or upload an .html file</label>
+                        <input
+                            type="file"
+                            accept=".html,.htm,text/html"
+                            onChange={handleHtmlFile}
+                            className="block w-full text-sm text-gray-700 file:mr-4 file:rounded-lg file:border-0 file:bg-gray-900 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-gray-800"
+                        />
+                        <p className="mt-1 text-xs text-gray-500">
+                            The file's markup fills the box above, so it can be checked before saving.
+                        </p>
                     </div>
                 ) : (
-                    <div className="grid grid-cols-2 gap-4">
-                        <Input label="File id" placeholder={editing ? "Leave blank to keep" : "demo_file_id"} value={f.fileId} onChange={(e) => set("fileId", e.target.value)} />
-                        <Input label="Page count" type="number" value={f.pageCount} onChange={(e) => set("pageCount", e.target.value)} />
-                    </div>
+                    <>
+                        {editing && product?.fileAttached && (
+                            <div className="mb-3 rounded-lg border border-green-200 bg-green-50 px-3 py-2">
+                                <p className="text-xs font-semibold text-green-800">Attached file</p>
+                                <p className="mt-0.5 break-all font-mono text-[11px] text-green-900">
+                                    {product.fileId || "reference not available"}
+                                </p>
+                                <p className="mt-1 text-[11px] text-green-800">
+                                    Shown for reference and not resubmitted. Pick a new file below to replace it.
+                                </p>
+                            </div>
+                        )}
+
+                        <div className="grid grid-cols-2 gap-4">
+                            <Input label="External file id" placeholder={editing ? "Leave empty to keep the current reference" : "e.g. a Google Drive file id"} value={f.fileId} onChange={(e) => set("fileId", e.target.value)} />
+                            <Input label="Page count" type="number" value={f.pageCount} onChange={(e) => set("pageCount", e.target.value)} />
+                        </div>
+
+                        <div className="mb-4">
+                            <label className="block mb-1 font-semibold text-gray-700">Or upload a PDF</label>
+                            <input
+                                type="file"
+                                accept="application/pdf"
+                                onChange={(e) => setFile(e.target.files?.[0] ?? null)}
+                                className="block w-full text-sm text-gray-700 file:mr-4 file:rounded-lg file:border-0 file:bg-gray-900 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-gray-800"
+                            />
+                            <p className="mt-1 text-xs text-gray-500">
+                                Stored in the configured bucket and served from there, instead of the file id above.
+                            </p>
+                        </div>
+                    </>
                 )}
 
                 <div className="flex gap-3 pt-2">
