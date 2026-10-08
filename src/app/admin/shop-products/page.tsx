@@ -5,20 +5,20 @@ import { toast } from "react-toastify";
 import { getAdminProducts, deleteProduct, getLevels, getShopClasses } from "@/lib/shop";
 import { getAllSubjects, getAllChapters } from "@/lib/admin";
 import { PRODUCT_TYPE_META, formatTaka } from "@/lib/shopMeta";
-import type { ShopProductCard, ShopLevel, ShopClass } from "@/types/shop";
+import type { ShopAdminProduct, ShopLevel, ShopClass } from "@/types/shop";
 import ShopProductForm from "@/components/admin/ShopProductForm";
 
 interface Option { id: number; label: string }
 
 export default function AdminShopProductsPage() {
-    const [products, setProducts] = useState<ShopProductCard[]>([]);
+    const [products, setProducts] = useState<ShopAdminProduct[]>([]);
     const [levels, setLevels] = useState<ShopLevel[]>([]);
     const [classes, setClasses] = useState<ShopClass[]>([]);
     const [subjects, setSubjects] = useState<Option[]>([]);
     const [chapters, setChapters] = useState<Option[]>([]);
     const [loading, setLoading] = useState(true);
     const [formOpen, setFormOpen] = useState(false);
-    const [editing, setEditing] = useState<ShopProductCard | null>(null);
+    const [editing, setEditing] = useState<ShopAdminProduct | null>(null);
 
     const load = () => {
         setLoading(true);
@@ -34,9 +34,9 @@ export default function AdminShopProductsPage() {
     }, []);
 
     const openNew = () => { setEditing(null); setFormOpen(true); };
-    const openEdit = (p: ShopProductCard) => { setEditing(p); setFormOpen(true); };
+    const openEdit = (p: ShopAdminProduct) => { setEditing(p); setFormOpen(true); };
 
-    const remove = async (p: ShopProductCard) => {
+    const remove = async (p: ShopAdminProduct) => {
         if (!confirm(`Delete "${p.title}"? This cannot be undone.`)) return;
         try {
             await deleteProduct(p.id);
@@ -47,7 +47,7 @@ export default function AdminShopProductsPage() {
         }
     };
 
-    const scope = (p: ShopProductCard) =>
+    const scope = (p: ShopAdminProduct) =>
         [p.levelName, p.className, p.subjectName, p.chapterTitle].filter(Boolean).join(" · ") || "—";
 
     return (
