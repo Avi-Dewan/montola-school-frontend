@@ -2,6 +2,7 @@ import api from "./api";
 import {
     ShopLevel,
     ShopClass,
+    ShopAdminProduct,
     ShopProductCard,
     ShopProductDetail,
     ShopProductContent,
@@ -128,7 +129,7 @@ export const rejectShopPayment = async (id: number) => {
 // ==================== Admin: manage products ====================
 
 export const getAdminProducts = async () => {
-    const res = await api.get<ShopProductCard[]>("/v1/shop/admin/products");
+    const res = await api.get<ShopAdminProduct[]>("/v1/shop/admin/products");
     return res.data;
 };
 

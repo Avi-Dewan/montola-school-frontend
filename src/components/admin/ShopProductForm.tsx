@@ -8,7 +8,7 @@ import Select from "@/components/ui/Select";
 import Button from "@/components/ui/Button";
 import { PRODUCT_TYPE_META } from "@/lib/shopMeta";
 import { createProduct, updateProduct, uploadProductFile } from "@/lib/shop";
-import type { ShopProductCard, ShopLevel, ShopClass } from "@/types/shop";
+import type { ShopAdminProduct, ShopLevel, ShopClass } from "@/types/shop";
 
 interface Option { id: number; label: string }
 
@@ -16,7 +16,7 @@ interface Props {
     isOpen: boolean;
     onClose: () => void;
     onSaved: () => void;
-    product?: ShopProductCard | null;
+    product?: ShopAdminProduct | null;
     levels: ShopLevel[];
     classes: ShopClass[];
     subjects: Option[];
@@ -198,14 +198,19 @@ export default function ShopProductForm({ isOpen, onClose, onSaved, product, lev
                 ) : (
                     <>
                         {editing && product?.fileAttached && (
-                            <p className="mb-3 text-xs text-green-800 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
-                                A file is already attached. Leave the fields below blank to keep it, or pick a
-                                new file to replace it.
-                            </p>
+                            <div className="mb-3 rounded-lg border border-green-200 bg-green-50 px-3 py-2">
+                                <p className="text-xs font-semibold text-green-800">Attached file</p>
+                                <p className="mt-0.5 break-all font-mono text-[11px] text-green-900">
+                                    {product.fileId || "reference not available"}
+                                </p>
+                                <p className="mt-1 text-[11px] text-green-800">
+                                    Shown for reference and not resubmitted. Pick a new file below to replace it.
+                                </p>
+                            </div>
                         )}
 
                         <div className="grid grid-cols-2 gap-4">
-                            <Input label="File id" placeholder={editing ? "Leave blank to keep" : "demo_file_id"} value={f.fileId} onChange={(e) => set("fileId", e.target.value)} />
+                            <Input label="External file id" placeholder={editing ? "Leave empty to keep the current reference" : "e.g. a Google Drive file id"} value={f.fileId} onChange={(e) => set("fileId", e.target.value)} />
                             <Input label="Page count" type="number" value={f.pageCount} onChange={(e) => set("pageCount", e.target.value)} />
                         </div>
 

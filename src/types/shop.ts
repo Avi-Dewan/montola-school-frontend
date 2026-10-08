@@ -56,6 +56,14 @@ export interface ShopProductDetail extends ShopProductCard {
     canDownload: boolean;
 }
 
+/**
+ * Admin product list entry: the card plus the stored file reference, so the edit
+ * form can show what is attached. Never returned by a public endpoint.
+ */
+export interface ShopAdminProduct extends ShopProductCard {
+    fileId: string | null;
+}
+
 export interface ShopProductContent {
     id: number;
     title: string;
